@@ -8,8 +8,6 @@ package com.github.ipcam;
  */
 public enum CameraSupportedDriver {
 
-    HIKVISION,
-
-    XMEYE
+    HIKVISION, XMEYE
 
 }

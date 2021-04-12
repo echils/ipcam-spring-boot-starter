@@ -14,7 +14,7 @@ public interface ICameraCloseable extends AutoCloseable {
     /**
      * network camera general close connection
      *
-     * @throws CameraConnectionException
+     * @throws CameraConnectionException see {@link CameraConnectionException}
      */
     void close() throws CameraConnectionException;
 

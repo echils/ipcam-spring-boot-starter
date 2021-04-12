@@ -4,6 +4,7 @@ import com.github.ipcam.entity.jnax.W32API;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
+import com.sun.jna.Structure;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.win32.StdCallLibrary;
 
@@ -52,6 +53,7 @@ public interface NetSDK extends Library {
 
     boolean H264_DVR_MakeKeyFrame(long userHandle, int channel, int stream);
 
+    boolean H264_DVR_SetDevConfig(long lHandle, long dwCommand, int channel, Structure lpInBuffer, long dwInBufferSize);
 
     interface fDisConnect extends StdCallLibrary.StdCallCallback {
         void invoke(int userHandle, String dvRIP, int nDVRPort, int user);

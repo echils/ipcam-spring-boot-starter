@@ -1,6 +1,10 @@
 package com.github.ipcam.pool;
 
-import com.github.ipcam.*;
+import com.github.ipcam.DefaultCameraConnectionFactory;
+import com.github.ipcam.ICameraConnection;
+import com.github.ipcam.ICameraConnectionFactory;
+import com.github.ipcam.ICameraSupplier;
+import com.github.ipcam.entity.NetworkCamera;
 import com.github.ipcam.entity.exception.CameraConnectionException;
 import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
@@ -23,10 +27,13 @@ import java.util.Map;
 public class CameraConnectionPoolFactory extends BaseKeyedPooledObjectFactory<String, ICameraConnection> {
 
 
-    private static final Map<String, NetworkCamera> networkCameraPool = new LinkedHashMap<>();
-    private Logger logger = LoggerFactory.getLogger(CameraConnectionPoolFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(CameraConnectionPoolFactory.class);
+
     private ICameraSupplier cameraSupplier;
+
     private ICameraConnectionFactory cameraConnectionFactory;
+
+    private static final Map<String, NetworkCamera> networkCameraPool = new LinkedHashMap<>();
 
     @Autowired
     private CameraConnectionPoolProperties connectionPoolProperties;

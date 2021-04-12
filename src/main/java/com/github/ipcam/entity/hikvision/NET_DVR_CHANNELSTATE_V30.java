@@ -1,5 +1,6 @@
 package com.github.ipcam.entity.hikvision;
 
+import com.github.ipcam.entity.NetworkCameraContext;
 import com.sun.jna.Structure;
 
 /**

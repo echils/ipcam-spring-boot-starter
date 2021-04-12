@@ -2,11 +2,14 @@ package com.github.ipcam.entity.hikvision;
 
 
 import com.github.ipcam.entity.LongStructure;
+import com.github.ipcam.entity.NetworkCameraContext;
 import com.github.ipcam.entity.exception.HikException;
 import com.sun.jna.ptr.IntByReference;
 
 import java.math.RoundingMode;
 import java.text.NumberFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Hikvision Tools
@@ -72,6 +75,7 @@ public class HikTools {
     public static NET_DVR_TIME transferTime(String date) {
         NET_DVR_TIME netDvrTime = new NET_DVR_TIME();
         if (date.length() == 14) {
+//            Calendar.getInstance().setTime();
             netDvrTime.dwYear = Integer.parseInt(date.substring(0, 4));
             netDvrTime.dwMonth = Integer.parseInt(date.substring(4, 6));
             netDvrTime.dwDay = Integer.parseInt(date.substring(6, 8));

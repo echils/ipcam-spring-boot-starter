@@ -7,12 +7,10 @@ package com.github.ipcam;
  * @author echils
  * @since 2020-03-27 16:11
  */
-public interface ICameraConnection extends ICameraCloseable {
+public interface ICameraConnection extends ICameraCloseable, ICameraSupportDriver, ICameraBasicFeature {
 
     /**
      * connect to network camera
-     *
-     * @return
      */
     void connect();
 

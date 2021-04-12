@@ -1,6 +1,8 @@
 package com.github.ipcam;
 
 
+import com.github.ipcam.entity.NetworkCamera;
+
 /**
  * ICameraConnectionFactory
  *
@@ -13,7 +15,7 @@ public interface ICameraConnectionFactory {
     /**
      * create connection of network camera
      *
-     * @param camera connection network information.
+     * @param camera {@link NetworkCamera}
      */
     ICameraConnection create(NetworkCamera camera) throws Exception;
 
@@ -21,7 +23,7 @@ public interface ICameraConnectionFactory {
     /**
      * destroy object
      *
-     * @param connection
+     * @param connection {@link ICameraConnection}
      */
     void destroy(ICameraConnection connection);
 

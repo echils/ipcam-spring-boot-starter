@@ -1,5 +1,6 @@
-package com.github.ipcam;
+package com.github.ipcam.entity;
 
+import com.github.ipcam.CameraSupportedDriver;
 import lombok.Data;
 
 /**
@@ -11,10 +12,6 @@ import lombok.Data;
 @Data
 public class NetworkCamera {
 
-    /**
-     * The driver of the camera
-     */
-    private CameraSupportedDriver driverType;
 
     /**
      * The ip of the camera
@@ -35,6 +32,11 @@ public class NetworkCamera {
      * The password of the camera
      */
     private String password;
+
+    /**
+     * The driver of the camera
+     */
+    private CameraSupportedDriver driverType;
 
     /**
      * Does the camera support infrared function

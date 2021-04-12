@@ -1,4 +1,6 @@
-package com.github.ipcam.entity.hikvision;
+package com.github.ipcam.entity;
+
+import com.github.ipcam.entity.hikvision.NET_DVR_DEVICEINFO_V30;
 
 /**
  * NetworkCameraContext
@@ -87,6 +89,13 @@ public class NetworkCameraContext {
     public static final int ISAPI_STATUS_LEN = 4 * 4096;
     public static final String ISAPI_PTZ_PRESET = "PTZPreset";
     public static final int USER = 0;    /*无意义*/
+    public static final int MIN_PASSWD_LEN = 8;
+    public static final int PASSWD_LEN = 16;
+    public static final int MAX_USERNUM_V30 = 32;
+    public static final int MAX_RIGHT = 32;
+    public static final int MAX_CHANNUM_V30 = (MAX_ANALOG_CHANNUM + MAX_IP_CHANNEL);//64
+    public static final int NET_DVR_GET_USERCFG_V30 = 1006;
+    public static final int NET_DVR_SET_USERCFG_V30 = 1007;
 
 
     //    *********************** XMEYE ***********************
@@ -94,7 +103,9 @@ public class NetworkCameraContext {
     public static final int MEANINGLESS = 9999;    /*无意义*/
     public static final int NET_MAX_PATH_LENGTH = 260;            //路径长度
     public static final int TCPSOCKET = 0;            //最多日志条数
+    public static final int NET_MAX_MAC_LEN = 32;
     public static NET_DVR_DEVICEINFO_V30 deviceInfo = new NET_DVR_DEVICEINFO_V30();
+    public static final int E_SDK_CONFIG_MODIFY_PSW = 8;
 
 
 }

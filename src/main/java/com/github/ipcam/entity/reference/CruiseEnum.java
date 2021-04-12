@@ -1,7 +1,7 @@
 package com.github.ipcam.entity.reference;
 
 /**
- * 巡航枚举
+ * CruiseEnum
  *
  * @author echils
  * @since 2020-03-19 13:36

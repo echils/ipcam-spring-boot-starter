@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 public class CameraConnectionPool extends GenericKeyedObjectPool<String, ICameraConnection> {
 
 
-    private Logger logger = LoggerFactory.getLogger(CameraConnectionPool.class);
+    private static final Logger logger = LoggerFactory.getLogger(CameraConnectionPool.class);
 
 
     /**

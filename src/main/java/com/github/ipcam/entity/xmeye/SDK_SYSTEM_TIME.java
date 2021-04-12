@@ -10,20 +10,20 @@ import com.sun.jna.Structure;
  */
 public class SDK_SYSTEM_TIME extends Structure {
 
-    public int year;        ///< 年。
+    public int year;
 
-    public int month;        ///< 月，January = 1, February = 2, and so on.
+    public int month;
 
-    public int day;        ///< 日。
+    public int day;
 
-    public int wday;        ///< 星期，Sunday = 0, Monday = 1, and so on
+    public int wday;
 
-    public int hour;        ///< 时。
+    public int hour;
 
-    public int minute;    ///< 分。
+    public int minute;
 
-    public int second;    ///< 秒。
+    public int second;
 
-    public int isdst;        ///< 夏令时标识。
+    public int isdst;
 
 }

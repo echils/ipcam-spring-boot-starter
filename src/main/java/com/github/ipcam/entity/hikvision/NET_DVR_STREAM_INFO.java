@@ -2,7 +2,7 @@ package com.github.ipcam.entity.hikvision;
 
 import com.sun.jna.Structure;
 
-import static com.github.ipcam.entity.hikvision.NetworkCameraContext.STREAM_ID_LEN;
+import static com.github.ipcam.entity.NetworkCameraContext.STREAM_ID_LEN;
 
 
 /**

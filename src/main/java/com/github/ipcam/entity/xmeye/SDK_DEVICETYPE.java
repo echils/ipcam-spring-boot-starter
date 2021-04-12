@@ -11,17 +11,17 @@ import com.sun.jna.Structure;
  */
 public class SDK_DEVICETYPE extends Structure {
 
-    public int SDK_DEVICE_TYPE_DVR;    ///< 普通DVR设备
+    public int SDK_DEVICE_TYPE_DVR;
 
-    public int SDK_DEVICE_TYPE_NVS;    ///< NVS设备
+    public int SDK_DEVICE_TYPE_NVS;
 
-    public int SDK_DEVICE_TYPE_IPC;    ///< IPC设备
+    public int SDK_DEVICE_TYPE_IPC;
 
-    public int SDK_DEVICE_TYPE_HVR;    ///<混合dvr
+    public int SDK_DEVICE_TYPE_HVR;
 
-    public int SDK_DEVICE_TYPE_IVR;    ///<智能dvr
+    public int SDK_DEVICE_TYPE_IVR;
 
-    public int SDK_DEVICE_TYPE_MVR;    ///<车载dvr
+    public int SDK_DEVICE_TYPE_MVR;
 
     public int SDK_DEVICE_TYPE_NR;
 }

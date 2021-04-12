@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static com.github.ipcam.utils.FileUtils.createParentDirectory;
+
 /**
  * GraphicsUtils
  *
@@ -51,6 +53,7 @@ public class GraphicsUtils {
             return false;
         }
 
+        createParentDirectory(targetPath);
         newWidth = Math.max(newWidth, IMAGE_MIN_MEASURE);
         newWidth = Math.min(newWidth, IMAGE_MAX_MEASURE);
         newHeight = Math.max(newHeight, IMAGE_MIN_MEASURE);
