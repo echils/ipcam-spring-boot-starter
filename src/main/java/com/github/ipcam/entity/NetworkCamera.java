@@ -1,6 +1,6 @@
 package com.github.ipcam.entity;
 
-import com.github.ipcam.CameraSupportedDriver;
+import com.github.ipcam.support.CameraSupportedDriver;
 import lombok.Data;
 
 /**
@@ -43,5 +43,8 @@ public class NetworkCamera {
      */
     private boolean thermal;
 
-
+    /**
+     * Does the camera is nvr
+     */
+    private boolean nvr;
 }

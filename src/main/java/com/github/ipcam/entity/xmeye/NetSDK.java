@@ -42,10 +42,10 @@ public interface NetSDK extends Library {
     long H264_DVR_RealPlay(long userHandle, H264_DVR_CLIENTINFO clientInfo);
 
 
-    boolean H264_DVR_StopRealPlay(long realHandle, W32API.HWND hWnd);
+    boolean H264_DVR_StopRealPlay(long previewHandle, W32API.HWND hWnd);
 
 
-    boolean H264_DVR_SetRealDataCallBack(long realHandle, fRealDataCallBack realData, int user);
+    boolean H264_DVR_SetRealDataCallBack(long previewHandle, fRealDataCallBack realData, int user);
 
 
     boolean H264_DVR_CatchPic(long userHandle, int channel, String fileName, int type);
@@ -60,7 +60,7 @@ public interface NetSDK extends Library {
     }
 
     interface fRealDataCallBack extends StdCallLibrary.StdCallCallback {
-        void invoke(long realHandle, int dwDataType, Pointer pBuffer,
+        void invoke(long previewHandle, int dwDataType, Pointer pBuffer,
                     long buffSize, long user);
     }
 

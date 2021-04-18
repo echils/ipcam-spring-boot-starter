@@ -18,4 +18,6 @@ public class HikException extends RuntimeException {
     public HikException(Throwable cause) {
         super(cause);
     }
+
+
 }

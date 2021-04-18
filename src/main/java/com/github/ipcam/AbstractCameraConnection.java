@@ -2,6 +2,7 @@ package com.github.ipcam;
 
 import com.github.ipcam.entity.NetworkCamera;
 import com.github.ipcam.entity.exception.CameraConnectionException;
+import com.github.ipcam.support.CameraSupportedDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,47 +18,38 @@ import static com.github.ipcam.entity.NetworkCameraContext.FAILED;
  * @author echils
  * @since 2021-04-12 21:54:14
  */
-public abstract class AbstractCameraConnection implements ICameraConnection, ICameraOutputSupport{
+public abstract class AbstractCameraConnection implements ICameraConnection {
 
-
-    private static final Logger logger = LoggerFactory.getLogger(AbstractCameraConnection.class);
 
     /**
      * preview cache of network camera
-     *
      */
     static final Map<String, Map<Long, Map<String, Long>>> previewCache = new ConcurrentHashMap<>();
-
     /**
      * Audio output state of network camera
      */
     static final Map<String, Boolean> audioOutputSateCache = new ConcurrentHashMap<>();
-
     /**
      * Audio output handle of network camera
      */
     static final Map<String, Long> audioCameraOutputHandleCache = new ConcurrentHashMap<>();
-
     /**
      * Audio output stream of network camera
      */
     static final Map<String, OutputStream> audioOutputStreamManager = new ConcurrentHashMap<>();
-
     /**
      * Video output state of network camera
      */
     static final Map<String, Boolean> videoOutputSateCache = new ConcurrentHashMap<>();
-
     /**
      * Video output handle of network camera
      */
     static final Map<String, Long> videoOutputHandleCache = new ConcurrentHashMap<>();
-
     /**
      * Video output stream of network camera
      */
     static final Map<String, OutputStream> videoOutputStreamManager = new ConcurrentHashMap<>();
-
+    private static final Logger logger = LoggerFactory.getLogger(AbstractCameraConnection.class);
     /**
      * userHandle of the network camera
      */
@@ -74,7 +66,7 @@ public abstract class AbstractCameraConnection implements ICameraConnection, ICa
     private boolean health = true;
 
 
-    public AbstractCameraConnection(NetworkCamera networkCamera) {
+    AbstractCameraConnection(NetworkCamera networkCamera) {
         this.networkCamera = networkCamera;
     }
 
@@ -115,7 +107,7 @@ public abstract class AbstractCameraConnection implements ICameraConnection, ICa
 
     @Override
     public void close() throws CameraConnectionException {
-        logger.info("disconnecting from the network camera {}...",networkCamera.getIp());
+        logger.info("disconnecting from the network camera {}...", networkCamera.getIp());
         if (this.isConnected()) {
             try {
                 Map<Long, Map<String, Long>> userHandleMap = previewCache.get(networkCamera.getIp());

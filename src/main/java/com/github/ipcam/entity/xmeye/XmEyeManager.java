@@ -7,18 +7,16 @@ import static com.github.ipcam.entity.exception.XmEyeException.ErrorMap;
 import static com.github.ipcam.entity.xmeye.NetSDK.netSDK;
 
 /**
- * XmEyeTools
+ * XmEyeManager
  *
  * @author echils
  * @since 2020-03-25 13:41
  */
-public class XmEyeTools {
+public class XmEyeManager {
 
 
     /**
      * Get exception code and message
-     *
-     * @return
      */
     public static String getErrorMsg() {
         return getErrorMsg(netSDK.H264_DVR_GetLastError());
@@ -27,29 +25,24 @@ public class XmEyeTools {
 
     /**
      * Get exception code and message
-     *
-     * @return
      */
     public static String getErrorMsg(int errorCode) {
         return "Error code：[" + errorCode + "],Error msg: [" + ErrorMap.get(errorCode) + "]";
     }
 
-
     /**
      * handle the chanelNum to get the realChanelNum
      * <p>
      * the "A" ,"I","D" Used to distinguish between different types of cameras
-     * example：channelNum= 'D10',  After deal with  get the realChanelNum = '10';
+     * example：channel= 'D10',  After deal with  get the realChanelNum = '10';
      *
-     * @param channelNum
-     * @return
+     * @param channel the ip channel of camera
      */
-    public static int handleChannel(String channelNum) {
-        if (channelNum.equals("A1")) {
+    public static int handleChannel(String channel) {
+        if (channel.equals("A1")) {
             return 0;
         }
-        throw new XmEyeException("Error code：[null],Error msg: [channelNum error]");
+        throw new XmEyeException("Error code：[null],Error msg: [channel error]");
     }
-
 
 }

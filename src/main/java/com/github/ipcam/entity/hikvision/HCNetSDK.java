@@ -36,27 +36,27 @@ public interface HCNetSDK extends Library {
     int NET_DVR_RealPlay_V40(int userHandle, LPNET_DVR_PREVIEWINFO previewInfo,
                              FRealDataCallBack_V30 dataCallBack, Pointer user);
 
-    boolean NET_DVR_StopRealPlay(int realHandle);
+    boolean NET_DVR_StopRealPlay(int previewHandle);
 
     boolean NET_DVR_SetSDKLocalCfg(int enumType, Structure buffer);
 
-    boolean NET_DVR_SaveRealData_V30(int realHandle, int transType, String fileName);
+    boolean NET_DVR_SaveRealData_V30(int previewHandle, int transType, String fileName);
 
-    boolean NET_DVR_StopSaveRealData(int realHandle);
+    boolean NET_DVR_StopSaveRealData(int previewHandle);
 
     boolean NET_DVR_MakeKeyFrame(int userHandle, int channel);
 
     boolean NET_DVR_MakeKeyFrameSub(int userHandle, int channel);
 
-    boolean NET_DVR_PTZControl(int realHandle, int ptzCommand, int stop);
+    boolean NET_DVR_PTZControl(int previewHandle, int ptzCommand, int stop);
 
-    boolean NET_DVR_PTZPreset(int realHandle, int presetCommand, int presetIndex);
+    boolean NET_DVR_PTZPreset(int previewHandle, int presetCommand, int presetIndex);
 
-    boolean NET_DVR_PTZCruise(int realHandle, int ptzCruiseCommand, int cruiseRoute, int cruisePoint, int input);
+    boolean NET_DVR_PTZCruise(int previewHandle, int ptzCruiseCommand, int cruiseRoute, int cruisePoint, int input);
 
-    boolean NET_DVR_PTZTrack(int realHandle, int ptzTrackCommand);
+    boolean NET_DVR_PTZTrack(int previewHandle, int ptzTrackCommand);
 
-    boolean NET_DVR_PTZControlWithSpeed(int realHandle, int ptzCommand, int stop, int speed);
+    boolean NET_DVR_PTZControlWithSpeed(int previewHandle, int ptzCommand, int stop, int speed);
 
     int NET_DVR_FindFile(int userHandle, int channel, int fileType, NET_DVR_TIME startTime, NET_DVR_TIME stopTime);
 
@@ -127,7 +127,7 @@ public interface HCNetSDK extends Library {
     }
 
     interface FRealDataCallBack_V30 extends StdCallLibrary.StdCallCallback {
-        void invoke(int realHandle, int dataType, ByteByReference buffer, int bufSize, Pointer user) throws InterruptedException;
+        void invoke(int previewHandle, int dataType, ByteByReference buffer, int bufSize, Pointer user) throws InterruptedException;
     }
 
     boolean NET_DVR_STDXMLConfig(int lUserID, NET_DVR_XML_CONFIG_INPUT lpInputParam, NET_DVR_XML_CONFIG_OUTPUT lpOutputParam);

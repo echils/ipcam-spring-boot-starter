@@ -1,4 +1,4 @@
-package com.github.ipcam;
+package com.github.ipcam.support;
 
 /**
  * CameraSupportedDriver

@@ -22,7 +22,7 @@ public class PTZ {
     private int tilt;
 
     /**
-     * The depth  value
+     * The depth value
      */
     private int zoom;
 

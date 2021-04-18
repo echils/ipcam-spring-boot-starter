@@ -1,6 +1,7 @@
-package com.github.ipcam;
+package com.github.ipcam.support;
 
 
+import com.github.ipcam.entity.exception.CameraNotSupportException;
 import com.github.ipcam.entity.reference.StreamTypeEnum;
 
 import java.io.OutputStream;
@@ -16,16 +17,18 @@ public interface ICameraOutputSupport {
 
 
     /**
-     * take photo from the camera,The path must contain the file name
+     * Take photo from the camera,The path must contain the file name
      *
      * @param channel    The channel of network camera
      * @param targetPath The full path where the file is saved
      */
-    void imageOutput(String channel, String targetPath);
+    default void imageOutput(String channel, String targetPath) {
+        throw new CameraNotSupportException();
+    }
 
 
     /**
-     * video collect from the camera or nvr,The path must contain the file name
+     * Video collect from the camera or nvr,The path must contain the file name
      *
      * @param channel    The channel of network camera
      * @param startTime  Start time of collect
@@ -33,17 +36,21 @@ public interface ICameraOutputSupport {
      * @param targetPath The full path where the file is saved
      * @throws InterruptedException see {@link InterruptedException}
      */
-    void videoOutput(String channel, Date startTime, Date endTime, String targetPath) throws InterruptedException;
+    default void videoOutput(String channel, Date startTime, Date endTime, String targetPath) throws InterruptedException {
+        throw new CameraNotSupportException();
+    }
 
 
     /**
-     * audio collect from the camera,The path must contain the file name
+     * Audio collect from the camera,The path must contain the file name
      *
      * @param targetPath The full path where the file is saved
      * @param duration   Collect duration
      * @throws InterruptedException see {@link InterruptedException}
      */
-    void audioOutput(String targetPath, int duration) throws InterruptedException;
+    default void audioOutput(String targetPath, int duration) throws InterruptedException {
+        throw new CameraNotSupportException();
+    }
 
 
     /**
@@ -55,7 +62,9 @@ public interface ICameraOutputSupport {
      * @param path       picture save path contains filename
      * @return an operation handle that can be used to interrupt the output operation at any time
      */
-    String videoStreamOutput(String channel, StreamTypeEnum streamType, String path);
+    default String videoStreamOutput(String channel, StreamTypeEnum streamType, String path) {
+        throw new CameraNotSupportException();
+    }
 
 
     /**
@@ -67,7 +76,9 @@ public interface ICameraOutputSupport {
      * @param outputStream The output stream
      * @return an operation handle that can be used to interrupt the output operation at any time
      */
-    String videoStreamOutput(String channel, StreamTypeEnum streamType, OutputStream outputStream);
+    default String videoStreamOutput(String channel, StreamTypeEnum streamType, OutputStream outputStream) {
+        throw new CameraNotSupportException();
+    }
 
 
     /**
@@ -75,6 +86,8 @@ public interface ICameraOutputSupport {
      *
      * @param dataOutputHandle the return value of {@link #videoStreamOutput}
      */
-    void stopVideoStreamOutput(String dataOutputHandle);
+    default void stopVideoStreamOutput(String dataOutputHandle) {
+        throw new CameraNotSupportException();
+    }
 
 }

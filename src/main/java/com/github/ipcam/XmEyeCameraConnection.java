@@ -1,9 +1,9 @@
 package com.github.ipcam;
 
 import com.github.ipcam.entity.ByteArrayStructure;
+import com.github.ipcam.entity.CameraInfo;
 import com.github.ipcam.entity.NetworkCamera;
 import com.github.ipcam.entity.exception.CameraConnectionException;
-import com.github.ipcam.entity.exception.CameraNotSupportException;
 import com.github.ipcam.entity.exception.XmEyeException;
 import com.github.ipcam.entity.reference.ResolutionEnum;
 import com.github.ipcam.entity.reference.StreamTypeEnum;
@@ -23,8 +23,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import static com.github.ipcam.entity.NetworkCameraContext.*;
 import static com.github.ipcam.entity.xmeye.NetSDK.netSDK;
 import static com.github.ipcam.entity.xmeye.XNetSDK.xNetSDK;
-import static com.github.ipcam.entity.xmeye.XmEyeTools.getErrorMsg;
-import static com.github.ipcam.entity.xmeye.XmEyeTools.handleChannel;
+import static com.github.ipcam.entity.xmeye.XmEyeManager.getErrorMsg;
+import static com.github.ipcam.entity.xmeye.XmEyeManager.handleChannel;
 import static com.github.ipcam.utils.FileUtils.createParentDirectory;
 import static com.github.ipcam.utils.FileUtils.getFileSuffix;
 import static com.github.ipcam.utils.GraphicsUtils.createNewImage;
@@ -102,7 +102,7 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
 
 
     @Override
-    public List<String> getChannel() {
+    public List<String> getChannels() {
         return Collections.singletonList("A1");
     }
 
@@ -159,19 +159,6 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
             throw new CameraConnectionException("Xmeye runtime error");
         }
     }
-
-
-    @Override
-    public void videoOutput(String channel, Date startTime, Date endTime, String targetPath) {
-        throw new CameraNotSupportException("Xmeye not support video output operation");
-    }
-
-
-    @Override
-    public void audioOutput(String targetPath, int duration) {
-        throw new CameraNotSupportException("Xmeye not support audio output operation");
-    }
-
 
     @Override
     public String videoStreamOutput(String channel, StreamTypeEnum streamType, String path) {
@@ -274,6 +261,11 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
         }
     }
 
+
+    @Override
+    public CameraInfo getBasicInfo(String channel) {
+        return null;
+    }
 
     private static class RealDataCallBack implements NetSDK.fRealDataCallBack {
 

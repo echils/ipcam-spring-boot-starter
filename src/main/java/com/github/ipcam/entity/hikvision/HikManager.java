@@ -8,16 +8,14 @@ import com.sun.jna.ptr.IntByReference;
 
 import java.math.RoundingMode;
 import java.text.NumberFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
- * Hikvision Tools
+ * HikManager
  *
  * @author echils
  * @since 2018/12/19 18:04
  */
-public class HikTools {
+public class HikManager {
 
     private static NumberFormat numberFormat = NumberFormat.getNumberInstance();
 

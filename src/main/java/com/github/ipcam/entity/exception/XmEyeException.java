@@ -11,6 +11,7 @@ import java.util.Map;
  */
 public class XmEyeException extends RuntimeException {
 
+
     public static Map ErrorMap = new HashMap() {{
         put(0, "没有错误");
         put(1, "返回成功");
@@ -95,8 +96,8 @@ public class XmEyeException extends RuntimeException {
         super(message);
     }
 
-
     public XmEyeException(Throwable cause) {
         super(cause);
     }
+
 }

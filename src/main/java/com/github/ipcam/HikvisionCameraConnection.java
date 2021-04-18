@@ -3,10 +3,12 @@ package com.github.ipcam;
 import com.github.ipcam.entity.*;
 import com.github.ipcam.entity.exception.HikException;
 import com.github.ipcam.entity.hikvision.*;
-import com.github.ipcam.entity.reference.DownloadEnum;
 import com.github.ipcam.entity.reference.PTZControlEnum;
 import com.github.ipcam.entity.reference.PresetEnum;
 import com.github.ipcam.entity.reference.StreamTypeEnum;
+import com.github.ipcam.support.ICameraNVRSupport;
+import com.github.ipcam.support.ICameraPTZSupport;
+import com.github.ipcam.support.ICameraThermalSupport;
 import com.sun.jna.ptr.IntByReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.github.ipcam.entity.NetworkCameraContext.*;
 import static com.github.ipcam.entity.hikvision.HCNetSDK.hcNetSDK;
-import static com.github.ipcam.entity.hikvision.HikTools.*;
+import static com.github.ipcam.entity.hikvision.HikManager.*;
 import static com.github.ipcam.utils.FileUtils.createParentDirectory;
 
 /**
@@ -56,7 +58,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
      * @param tryTime  The tryTime of camera
      * @return
      */
-    public int login(String ip, int port, String username, String password, int waitTime, int tryTime) {
+    public long login(String ip, int port, String username, String password, int waitTime, int tryTime) {
         //Device initialize
         if (!hcNetSDK.NET_DVR_Init()) {
             throw new HikException(getErrorMsg());
@@ -85,7 +87,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
     }
 
     @Override
-    public List<String> getChannel() {
+    public List<String> getChannels() {
         List<String> channelList = new LinkedList();
         //get the device reference config
         NET_DVR_IPPARACFG param = new NET_DVR_IPPARACFG();
@@ -134,12 +136,12 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
 
             //get the preview handle
             previewInfo.write();
-            int realHandle = hcNetSDK.NET_DVR_RealPlay_V40(Math.toIntExact(userHandle),
+            int realPlayV40 = hcNetSDK.NET_DVR_RealPlay_V40(Math.toIntExact(userHandle),
                     previewInfo, null, null);
-            if (realHandle == FAILED) {
+            if (realPlayV40 == FAILED) {
                 throw new HikException(getErrorMsg());
             }
-            return (long) realHandle;
+            return (long) realPlayV40;
         });
 
         AtomicInteger count = new AtomicInteger();
@@ -189,6 +191,11 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
                 param.getPointer(), ISAPI_DATA_LEN, new IntByReference(param.size()))) {
             throw new HikException(getErrorMsg());
         }
+    }
+
+    @Override
+    public CameraInfo getBasicInfo(String channel) {
+        return null;
     }
 
     @Override
@@ -311,25 +318,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         return null;
     }
 
-    @Override
-    public List<Temperature> tempAll() {
-        return null;
-    }
 
-    @Override
-    public Temperature temp(int infraredNo) {
-        return null;
-    }
-
-    @Override
-    public String getInfraredPointName(int presetNo, int infraredNo) {
-        return null;
-    }
-
-    @Override
-    public void setInfraredPointName(int presetNo, int infraredNo, String name) {
-
-    }
 
     @Override
     public void setInfraredPoint(Temperature temperature) {
