@@ -2,12 +2,17 @@ package com.github.ipcam.entity.hikvision;
 
 
 import com.github.ipcam.entity.LongStructure;
+import com.github.ipcam.entity.NVRChannelInfo;
 import com.github.ipcam.entity.NetworkCameraContext;
+import com.github.ipcam.entity.exception.CameraConnectionException;
 import com.github.ipcam.entity.exception.HikException;
 import com.sun.jna.ptr.IntByReference;
 
 import java.math.RoundingMode;
 import java.text.NumberFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * HikManager
@@ -20,15 +25,9 @@ public class HikManager {
     private static NumberFormat numberFormat = NumberFormat.getNumberInstance();
 
     /**
-     * Find video files
-     *
-     * @param userHandle
-     * @param channelNum
-     * @param startDate  format  yyyyMMddHHmmss
-     * @param endDate    format  yyyyMMddHHmmss
-     * @return
+     * Find video files from camera
      */
-    public static int findRecord(int userHandle, String channelNum, String startDate, String endDate) {
+    public static int findRecord(int userHandle, String channelNum, Date startDate, Date endDate) {
         int status;
         NET_DVR_FIND_DATA net_dvr_find_data = new NET_DVR_FIND_DATA();
         NET_DVR_TIME startTime = transferTime(startDate);
@@ -66,24 +65,44 @@ public class HikManager {
 
     /**
      * Conversion time type
-     *
-     * @param date
-     * @return
      */
-    public static NET_DVR_TIME transferTime(String date) {
-        NET_DVR_TIME netDvrTime = new NET_DVR_TIME();
-        if (date.length() == 14) {
-//            Calendar.getInstance().setTime();
-            netDvrTime.dwYear = Integer.parseInt(date.substring(0, 4));
-            netDvrTime.dwMonth = Integer.parseInt(date.substring(4, 6));
-            netDvrTime.dwDay = Integer.parseInt(date.substring(6, 8));
-            netDvrTime.dwHour = Integer.parseInt(date.substring(8, 10));
-            netDvrTime.dwMinute = Integer.parseInt(date.substring(10, 12));
-            netDvrTime.dwSecond = Integer.parseInt(date.substring(12, 14));
-        } else {
-            throw new HikException("Time format error");
+    public static NET_DVR_TIME transferTime(Date date) {
+        if (date == null) {
+            throw new CameraConnectionException("Time is null");
         }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        NET_DVR_TIME netDvrTime = new NET_DVR_TIME();
+        netDvrTime.dwYear = calendar.get(Calendar.YEAR);
+        netDvrTime.dwMonth = calendar.get(Calendar.MONTH) + 1;
+        netDvrTime.dwDay = calendar.get(Calendar.DAY_OF_MONTH);
+        netDvrTime.dwHour = calendar.get(Calendar.HOUR_OF_DAY);
+        netDvrTime.dwMinute = calendar.get(Calendar.MINUTE);
+        netDvrTime.dwSecond = calendar.get(Calendar.SECOND);
         return netDvrTime;
+    }
+
+
+    public static NVRChannelInfo convert(Object channelInfo) {
+        NVRChannelInfo nvrChannel = new NVRChannelInfo();
+        try {
+            Map<String, Object> channelInfoParam = (Map) channelInfo;
+            nvrChannel.setChannelNo(String.valueOf(channelInfoParam.get("id")));
+            nvrChannel.setChannelName(String.valueOf(channelInfoParam.get("name")));
+
+            Map<String, Object> sourceInputPortDescriptor
+                    = (Map<String, Object>) channelInfoParam.get("sourceInputPortDescriptor");
+            nvrChannel.setIpv4(String.valueOf(sourceInputPortDescriptor.get("ipAddress")));
+            nvrChannel.setManagerPort(Integer.parseInt(sourceInputPortDescriptor.get("managePortNo").toString()));
+            nvrChannel.setUsername(String.valueOf(sourceInputPortDescriptor.get("userName")));
+            nvrChannel.setProxyProtocol(String.valueOf(sourceInputPortDescriptor.get("proxyProtocol")));
+            nvrChannel.setDeviceChannelNo(String.valueOf(sourceInputPortDescriptor.get("srcInputPort")));
+            nvrChannel.setStreamType(String.valueOf(sourceInputPortDescriptor.get("streamType")));
+            nvrChannel.setAddressFormatType(String.valueOf(sourceInputPortDescriptor.get("addressingFormatType")));
+        } catch (NumberFormatException e) {
+            throw new CameraConnectionException(e);
+        }
+        return nvrChannel;
     }
 
 

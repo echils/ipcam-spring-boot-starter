@@ -91,7 +91,7 @@ public interface ICameraConfigSupport {
      * @param channel the camera ip channel
      * @return {@link ScreenEffect}
      */
-    default ScreenEffect getScrren(String channel) {
+    default ScreenEffect getScreen(String channel) {
         throw new CameraNotSupportException();
     }
 
@@ -101,7 +101,7 @@ public interface ICameraConfigSupport {
      *
      * @param channel the camera ip channel
      */
-    default void resetScrren(String channel) {
+    default void resetScreen(String channel) {
         throw new CameraNotSupportException();
     }
 
@@ -401,5 +401,5 @@ public interface ICameraConfigSupport {
         throw new CameraNotSupportException();
     }
 
-    //TODO 录像计划配置
+
 }

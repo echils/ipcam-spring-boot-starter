@@ -28,7 +28,30 @@ public interface ICameraOutputSupport {
 
 
     /**
-     * Video collect from the camera or nvr,The path must contain the file name
+     * Video collect from camera
+     *
+     * @param channel    The channel of network camera
+     * @param streamType {@link StreamTypeEnum}
+     * @param targetPath The full path where the file is saved
+     */
+    default void videoOutput(String channel, StreamTypeEnum streamType, String targetPath) {
+        throw new CameraNotSupportException();
+    }
+
+
+    /**
+     * Stop video collect operation
+     *
+     * @param channel    The channel of network camera
+     * @param streamType {@link StreamTypeEnum}
+     */
+    default void stopVideoOutput(String channel, StreamTypeEnum streamType) {
+        throw new CameraNotSupportException();
+    }
+
+
+    /**
+     * Video download from the camera or nvr,The path must contain the file name
      *
      * @param channel    The channel of network camera
      * @param startTime  Start time of collect
@@ -36,7 +59,7 @@ public interface ICameraOutputSupport {
      * @param targetPath The full path where the file is saved
      * @throws InterruptedException see {@link InterruptedException}
      */
-    default void videoOutput(String channel, Date startTime, Date endTime, String targetPath) throws InterruptedException {
+    default void videoDownload(String channel, Date startTime, Date endTime, String targetPath) throws InterruptedException {
         throw new CameraNotSupportException();
     }
 
@@ -82,12 +105,13 @@ public interface ICameraOutputSupport {
 
 
     /**
-     * Cut off video stream output operation
+     * Cut off video stream byte output operation
      *
      * @param dataOutputHandle the return value of {@link #videoStreamOutput}
      */
     default void stopVideoStreamOutput(String dataOutputHandle) {
         throw new CameraNotSupportException();
     }
+
 
 }

@@ -11,13 +11,17 @@ import com.github.ipcam.entity.xmeye.CONF_MODIFY_PSW;
 import com.github.ipcam.entity.xmeye.H264_DVR_CLIENTINFO;
 import com.github.ipcam.entity.xmeye.H264_DVR_DEVICEINFO;
 import com.github.ipcam.entity.xmeye.NetSDK;
+import com.github.ipcam.support.CameraSupportedDriver;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.github.ipcam.entity.NetworkCameraContext.*;
@@ -39,12 +43,12 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
 
 
     private static final Logger logger = LoggerFactory.getLogger(XmEyeCameraConnection.class);
+    private H264_DVR_DEVICEINFO deviceInfo = new H264_DVR_DEVICEINFO();
 
 
     public XmEyeCameraConnection(NetworkCamera networkCamera) {
         super(networkCamera);
     }
-
 
     @Override
     public long login(String ip, int port, String username, String password) {
@@ -64,7 +68,6 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
      */
     public long login(String ip, int port, String username, String password, int waitTime, int tryTime) {
 
-        H264_DVR_DEVICEINFO deviceInfo = new H264_DVR_DEVICEINFO();
         IntByReference error = new IntByReference(MEANINGLESS);
 
         //Device initialize
@@ -85,7 +88,7 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
             }
             throw new XmEyeException(getErrorMsg());
         }
-
+        deviceInfo.read();
         this.userHandle = userHandle;
         return userHandle;
     }
@@ -103,7 +106,7 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
 
     @Override
     public List<String> getChannels() {
-        return Collections.singletonList("A1");
+        return Collections.singletonList(DEFAULT_DVR_CHANNEL);
     }
 
 
@@ -219,7 +222,7 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
                     try {
                         videoOutputStreamManager.get(dataOutputHandle).close();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        throw new CameraConnectionException(e);
                     }
                 }
             }
@@ -264,7 +267,15 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
 
     @Override
     public CameraInfo getBasicInfo(String channel) {
-        return null;
+        CameraInfo cameraInfo = new CameraInfo();
+        cameraInfo.setIp(networkCamera.getIp());
+        cameraInfo.setName(networkCamera.getIp());
+        cameraInfo.setUsername(networkCamera.getUsername());
+        cameraInfo.setPassword(networkCamera.getPassword());
+        cameraInfo.setModelNo(new String(deviceInfo.sHardWare).trim());
+        cameraInfo.setSerialNo(new String(deviceInfo.sSerialNumber).trim());
+        cameraInfo.setManufacturer(CameraSupportedDriver.XMEYE);
+        return cameraInfo;
     }
 
     private static class RealDataCallBack implements NetSDK.fRealDataCallBack {

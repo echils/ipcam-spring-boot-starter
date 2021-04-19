@@ -96,6 +96,8 @@ public class NetworkCameraContext {
     public static final int MAX_CHANNUM_V30 = (MAX_ANALOG_CHANNUM + MAX_IP_CHANNEL);//64
     public static final int NET_DVR_GET_USERCFG_V30 = 1006;
     public static final int NET_DVR_SET_USERCFG_V30 = 1007;
+    public static final int DEV_TYPE_NAME_LEN = 24;    //用户名长度
+    public static final int NET_DVR_GET_DEVICECFG_V40 = 1100;//获取预置点名称
 
 
     //    *********************** XMEYE ***********************
@@ -106,6 +108,7 @@ public class NetworkCameraContext {
     public static final int NET_MAX_MAC_LEN = 32;
     public static NET_DVR_DEVICEINFO_V30 deviceInfo = new NET_DVR_DEVICEINFO_V30();
     public static final int E_SDK_CONFIG_MODIFY_PSW = 8;
+    public static final String DEFAULT_DVR_CHANNEL = "A1";
 
 
 }

@@ -101,9 +101,10 @@ public interface ICameraPTZSupport {
     /**
      * Network camera track operation
      *
+     * @param channel   camera ip channel
      * @param trackEnum {@link TrackEnum}
      */
-    default void track(TrackEnum trackEnum) {
+    default void track(String channel, TrackEnum trackEnum) {
         throw new CameraNotSupportException();
     }
 
