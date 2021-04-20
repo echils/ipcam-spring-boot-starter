@@ -1,18 +1,17 @@
 package com.github.ipcam.entity.hikvision;
 
 
-import com.github.ipcam.entity.LongStructure;
-import com.github.ipcam.entity.NVRChannelInfo;
-import com.github.ipcam.entity.NetworkCameraContext;
+import com.github.ipcam.entity.Temperature;
+import com.github.ipcam.entity.comm.LongStructure;
+import com.github.ipcam.entity.comm.StructureContext;
 import com.github.ipcam.entity.exception.CameraConnectionException;
 import com.github.ipcam.entity.exception.HikException;
+import com.github.ipcam.entity.infos.NVRChannelInfo;
 import com.sun.jna.ptr.IntByReference;
 
 import java.math.RoundingMode;
 import java.text.NumberFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 /**
  * HikManager
@@ -40,13 +39,13 @@ public class HikManager {
         } else {
             while (true) {
                 status = HCNetSDK.hcNetSDK.NET_DVR_FindNextFile(findHandle, net_dvr_find_data);
-                if (status == NetworkCameraContext.NET_DVR_FILE_SUCCESS) {
+                if (status == StructureContext.NET_DVR_FILE_SUCCESS) {
                     break;
                 } else {
-                    if (status == NetworkCameraContext.NET_DVR_ISFINDING) {
+                    if (status == StructureContext.NET_DVR_ISFINDING) {
                         continue;
                     } else {
-                        if (status == NetworkCameraContext.NET_DVR_FILE_NOFIND) {
+                        if (status == StructureContext.NET_DVR_FILE_NOFIND) {
                             break;
                         } else {
                             boolean flag = HCNetSDK.hcNetSDK.NET_DVR_FindClose_V30(findHandle);
@@ -82,7 +81,9 @@ public class HikManager {
         return netDvrTime;
     }
 
-
+    /**
+     * Convert object to NVRChannelInfo
+     */
     public static NVRChannelInfo convert(Object channelInfo) {
         NVRChannelInfo nvrChannel = new NVRChannelInfo();
         try {
@@ -105,33 +106,11 @@ public class HikManager {
         return nvrChannel;
     }
 
-
-    /**
-     * get video reference
-     *
-     * @return
-     */
-    public static NET_DVR_RECORD_V30 getDWSize(int userHandle, String channelNum) {
-        IntByReference intByReference = new IntByReference(0);
-        NET_DVR_RECORD_V30 dvrRecord = new NET_DVR_RECORD_V30();
-        dvrRecord.write();
-        boolean result = HCNetSDK.hcNetSDK.NET_DVR_GetDVRConfig(userHandle, NetworkCameraContext.NET_DVR_GET_RECORDCFG_V30,
-                handleChannel(channelNum), dvrRecord.getPointer(), dvrRecord.size(), intByReference);
-        dvrRecord.read();
-        if (!result) {
-            throw new HikException(getErrorMsg());
-        }
-        return dvrRecord;
-    }
-
     /**
      * handle the chanelNum to get the realChanelNum
      * <p>
      * the "A" ,"I","D" Used to distinguish between different types of cameras
      * example：channelNum= 'D10',  After deal with  get the realChanelNum = '10';
-     *
-     * @param channelNum
-     * @return
      */
     public static int handleChannel(String channelNum) {
         if (channelNum.charAt(0) == 'A') {
@@ -147,8 +126,6 @@ public class HikManager {
 
     /**
      * Get exception code and message
-     *
-     * @return
      */
     public static String getErrorMsg() {
         int i = HCNetSDK.hcNetSDK.NET_DVR_GetLastError();
@@ -158,11 +135,8 @@ public class HikManager {
 
     /**
      * Format the PTZ data
-     *
-     * @param position
-     * @return
      */
-    public static PTZPosition handlePTZ(PTZPosition position, boolean beSet) {
+    public static PTZ_POSITION_STRUCTURE handlePTZ(PTZ_POSITION_STRUCTURE position, boolean beSet) {
         if (position != null) {
             if (beSet) {
                 position.panPos = Short.parseShort(String.valueOf(position.panPos), 16);
@@ -188,9 +162,6 @@ public class HikManager {
 
     /**
      * Decimal to hexadecimal
-     *
-     * @param var1
-     * @return
      */
     public static String intToHex(int var1) {
         StringBuilder var2 = new StringBuilder(8);
@@ -202,84 +173,72 @@ public class HikManager {
         return var2.reverse().toString();
     }
 
-//    /**
-//     * data filter
-//     *
-//     * @param thermometry
-//     * @return
-//     */
-//    public static Temperature convert(NET_DVR_THERMOMETRY_UPLOAD thermometry) {
-//
-//        Box box = new Box();
-//        Temperature temperature = new Temperature();
-//        temperature.setRuleId(String.valueOf(thermometry.byRuleID));
-//
-//        byte type = thermometry.byRuleCalibType;
-//        temperature.setRuleType(String.valueOf(type));
-//
-//        if (type == 0) {
-//
-//            temperature.setMaxTemperature(thermometry.struPointThermCfg.fTemperature);
-//            temperature.setMinTemperature(thermometry.struPointThermCfg.fTemperature);
-//
-//            NET_VCA_POINT point = thermometry.struPointThermCfg.struPoint;
-//
-//            box.setXmin(point.fX);
-//            box.setXmax(point.fX);
-//            box.setYmin(point.fY);
-//            box.setYmax(point.fY);
-//
-//            temperature.setBox(box);
-//        } else {
-//
-//            temperature.setMaxTemperature(thermometry.struLinePolygonThermCfg.fMaxTemperature);
-//            temperature.setMinTemperature(thermometry.struLinePolygonThermCfg.fMinTemperature);
-//
-//            NET_VCA_POINT[] points = thermometry.struLinePolygonThermCfg.struRegion.struPos;
-//            int pointNum = thermometry.struLinePolygonThermCfg.struRegion.dwPointNum;
-//
-//            List<Float> abscissa = new ArrayList<>();
-//            List<Float> ordinate = new ArrayList<>();
-//
-//            for (int i = 0; i < points.length; i++) {
-//                abscissa.add(points[i].fX);
-//                ordinate.add(points[i].fY);
-//            }
-//
-//            int abscissaNum = abscissa.size();
-//            int ordinateNum = ordinate.size();
-//
-//            Collections.sort(abscissa);
-//            Collections.sort(ordinate);
-//
-//            abscissa = abscissa.subList(abscissaNum - pointNum, abscissaNum);
-//            ordinate = ordinate.subList(ordinateNum - pointNum, ordinateNum);
-//
-//            box.setXmin(abscissa.get(0));
-//            box.setXmax(abscissa.get(abscissa.size() - 1));
-//            box.setYmin(ordinate.get(0));
-//            box.setYmax(ordinate.get(ordinate.size() - 1));
-//
-//            temperature.setBox(box);
-//        }
-//
-//        return temperature;
-//
-//    }
+    /**
+     * data filter
+     */
+    public static Temperature convert(NET_DVR_THERMOMETRY_UPLOAD thermometry) {
+
+        Temperature temperature = new Temperature();
+        temperature.setInfraredNo(thermometry.byRuleID);
+
+        byte type = thermometry.byRuleCalibType;
+
+        if (type == 0) {
+            temperature.setMaxTemperature(thermometry.struPointThermCfg.fTemperature);
+            temperature.setMinTemperature(thermometry.struPointThermCfg.fTemperature);
+            NET_VCA_POINT point = thermometry.struPointThermCfg.struPoint;
+            Temperature.Region region = new Temperature.Region(point.fX, point.fY);
+            temperature.setRegions(new Temperature.Region[]{region, region, region, region});
+        } else {
+
+            temperature.setMaxTemperature(thermometry.struLinePolygonThermCfg.fMaxTemperature);
+            temperature.setMinTemperature(thermometry.struLinePolygonThermCfg.fMinTemperature);
+
+            NET_VCA_POINT[] points = thermometry.struLinePolygonThermCfg.struRegion.struPos;
+            int pointNum = thermometry.struLinePolygonThermCfg.struRegion.dwPointNum;
+
+            List<Float> abscissa = new ArrayList<>();
+            List<Float> ordinate = new ArrayList<>();
+
+            for (int i = 0; i < points.length; i++) {
+                abscissa.add(points[i].fX);
+                ordinate.add(points[i].fY);
+            }
+
+            int abscissaNum = abscissa.size();
+            int ordinateNum = ordinate.size();
+
+            Collections.sort(abscissa);
+            Collections.sort(ordinate);
+
+            abscissa = abscissa.subList(abscissaNum - pointNum, abscissaNum);
+            ordinate = ordinate.subList(ordinateNum - pointNum, ordinateNum);
+
+            Float xMin = abscissa.get(0);
+            Float xMax = abscissa.get(abscissa.size() - 1);
+            Float yMin = ordinate.get(0);
+            Float yMax = ordinate.get(ordinate.size() - 1);
+            Temperature.Region regionA = new Temperature.Region(xMin, yMax);
+            Temperature.Region regionB = new Temperature.Region(xMax, yMax);
+            Temperature.Region regionC = new Temperature.Region(xMin, yMin);
+            Temperature.Region regionD = new Temperature.Region(xMax, yMin);
+
+            temperature.setRegions(new Temperature.Region[]{regionA, regionB, regionC, regionD});
+        }
+
+        return temperature;
+
+    }
 
 
     /**
      * get camera config
-     *
-     * @param userHandle
-     * @param channelNum
-     * @return
      */
     public static NET_DVR_CAMERAPARAMCFG_EX getCameraConfig(int userHandle, String channelNum) {
         NET_DVR_CAMERAPARAMCFG_EX param = new NET_DVR_CAMERAPARAMCFG_EX();
         param.write();
         int size = param.size();
-        boolean getDVRConfig = HCNetSDK.hcNetSDK.NET_DVR_GetDVRConfig(userHandle, NetworkCameraContext.NET_DVR_CAMERAPARAMCFG_EX_GET, handleChannel(channelNum),
+        boolean getDVRConfig = HCNetSDK.hcNetSDK.NET_DVR_GetDVRConfig(userHandle, StructureContext.NET_DVR_CAMERAPARAMCFG_EX_GET, handleChannel(channelNum),
                 param.getPointer(), size, new IntByReference(param.size()));
         param.read();
         if (!getDVRConfig) {
@@ -291,17 +250,13 @@ public class HikManager {
 
     /**
      * get camera config
-     *
-     * @param userHandle
-     * @param channelNum
-     * @return
      */
     public static NET_DVR_AEMODECFG getExposureConfig(int userHandle, String channelNum) {
 
         NET_DVR_AEMODECFG param = new NET_DVR_AEMODECFG();
         param.write();
         int size = param.size();
-        boolean getDVRConfig = HCNetSDK.hcNetSDK.NET_DVR_GetDVRConfig(userHandle, NetworkCameraContext.NET_DVR_AEMODECFG_GET, handleChannel(channelNum),
+        boolean getDVRConfig = HCNetSDK.hcNetSDK.NET_DVR_GetDVRConfig(userHandle, StructureContext.NET_DVR_AEMODECFG_GET, handleChannel(channelNum),
                 param.getPointer(), size, new IntByReference(param.size()));
         param.read();
         if (!getDVRConfig) {
@@ -313,16 +268,12 @@ public class HikManager {
 
     /**
      * get camera config
-     *
-     * @param userHandle
-     * @param channelNum
-     * @return
      */
     public static NET_DVR_COMPRESSIONCFG_V30 getCompressionConfig(int userHandle, String channelNum) {
 
         NET_DVR_COMPRESSIONCFG_V30 compression = new NET_DVR_COMPRESSIONCFG_V30();
         compression.write();
-        boolean get = HCNetSDK.hcNetSDK.NET_DVR_GetDVRConfig(userHandle, NetworkCameraContext.NET_DVR_COMPRESSIONCFG_V30_GET, handleChannel(channelNum),
+        boolean get = HCNetSDK.hcNetSDK.NET_DVR_GetDVRConfig(userHandle, StructureContext.NET_DVR_COMPRESSIONCFG_V30_GET, handleChannel(channelNum),
                 compression.getPointer(), compression.size(), new IntByReference());
         compression.read();
         if (!get) {
@@ -334,16 +285,12 @@ public class HikManager {
 
     /**
      * get audio input config
-     *
-     * @param userHandle
-     * @param channelNum
-     * @return
      */
     public static NET_DVR_AUDIO_INPUT_PARAM getAudioInputConfig(int userHandle, String channelNum) {
 
         NET_DVR_AUDIO_INPUT_PARAM param = new NET_DVR_AUDIO_INPUT_PARAM();
         param.write();
-        boolean get = HCNetSDK.hcNetSDK.NET_DVR_GetDVRConfig(userHandle, NetworkCameraContext.NET_DVR_AUDIO_INPUT_PARAM_GET, handleChannel(channelNum),
+        boolean get = HCNetSDK.hcNetSDK.NET_DVR_GetDVRConfig(userHandle, StructureContext.NET_DVR_AUDIO_INPUT_PARAM_GET, handleChannel(channelNum),
                 param.getPointer(), param.size(), new IntByReference());
         param.read();
         if (!get) {
@@ -354,10 +301,6 @@ public class HikManager {
 
     /**
      * 获取红外摄像头制定预置点下的信息
-     *
-     * @param userHandle
-     * @param presetNo
-     * @return
      */
     public static NET_DVR_THERMOMETRY_PRESETINFO getInfraredInfo(int userHandle, int presetNo) {
 
@@ -381,7 +324,7 @@ public class HikManager {
         stdConfig.lpOutBuffer = info.getPointer();
 
         stdConfig.write();
-        boolean config = HCNetSDK.hcNetSDK.NET_DVR_GetSTDConfig(userHandle, NetworkCameraContext.NET_DVR_GET_THERMOMETRY_PRESETINFO, stdConfig.getPointer());
+        boolean config = HCNetSDK.hcNetSDK.NET_DVR_GetSTDConfig(userHandle, StructureContext.NET_DVR_GET_THERMOMETRY_PRESETINFO, stdConfig.getPointer());
         stdConfig.read();
         info.read();
 
@@ -391,36 +334,9 @@ public class HikManager {
         return info;
     }
 
-//    /**
-//     * xml参数转换
-//     *
-//     * @param channelInfo
-//     * @return
-//     */
-//    public static NVRChannelInfo convertChannelInfo(Object channelInfo) {
-//        Map<String, Object> channelInfoParam = (Map) channelInfo;
-//        NVRChannelInfo nvrChannel = new NVRChannelInfo();
-//        nvrChannel.setChannelNo("D"+channelInfoParam.get("id"));
-//        nvrChannel.setChannelName(String.valueOf(channelInfoParam.get("name")));
-//
-//        Map<String, Object> sourceInputPortDescriptor = (Map<String, Object>) channelInfoParam.get("sourceInputPortDescriptor");
-//        nvrChannel.setIpv4(String.valueOf(sourceInputPortDescriptor.get("ipAddress")));
-//        nvrChannel.setManagerPort(Integer.parseInt(sourceInputPortDescriptor.get("managePortNo").toString()));
-//        nvrChannel.setUsername(String.valueOf(sourceInputPortDescriptor.get("userName")));
-//        nvrChannel.setProxyProtocol(String.valueOf(sourceInputPortDescriptor.get("proxyProtocol")));
-//        nvrChannel.setDeviceChannelNo("A" + sourceInputPortDescriptor.get("srcInputPort"));
-//        nvrChannel.setStreamType(String.valueOf(sourceInputPortDescriptor.get("streamType")));
-//        nvrChannel.setAddressFormatType(String.valueOf(sourceInputPortDescriptor.get("addressingFormatType")));
-//
-//        return nvrChannel;
-//    }
 
     /**
      * byte[] to string with charset
-     *
-     * @param buffer
-     * @param charsetName
-     * @return
      */
     public static String byteToStr(byte[] buffer, String charsetName) {
         try {
@@ -439,10 +355,6 @@ public class HikManager {
 
     /**
      * number format
-     *
-     * @param source
-     * @param num
-     * @return
      */
     public static Double numFormat(Float source, int num) {
         numberFormat.setMaximumFractionDigits(num);

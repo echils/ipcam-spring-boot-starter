@@ -2,7 +2,7 @@ package com.github.ipcam.support;
 
 import com.github.ipcam.entity.PTZ;
 import com.github.ipcam.entity.PTZScope;
-import com.github.ipcam.entity.PresetPointInfo;
+import com.github.ipcam.entity.infos.PresetPointInfo;
 import com.github.ipcam.entity.exception.CameraNotSupportException;
 import com.github.ipcam.entity.reference.CruiseEnum;
 import com.github.ipcam.entity.reference.PTZControlEnum;
@@ -74,12 +74,13 @@ public interface ICameraPTZSupport {
     /**
      * Network camera cruise operation
      *
+     * @param channel     camera ip channel
      * @param cruiseEnum  {@link CruiseEnum}
      * @param cruiseRoute the index of currently configured cruise route
      * @param cruisePoint the point index of the currently configured cruise route
      * @param value       different cruise commands have different values: preset point (maximum 300), time (maximum 255), speed (maximum 40)
      */
-    default void cruise(CruiseEnum cruiseEnum, int cruiseRoute, int cruisePoint, int value) {
+    default void cruise(String channel, CruiseEnum cruiseEnum, int cruiseRoute, int cruisePoint, int value) {
         throw new CameraNotSupportException();
     }
 

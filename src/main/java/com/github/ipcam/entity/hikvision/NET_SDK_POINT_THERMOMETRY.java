@@ -12,6 +12,9 @@ import com.sun.jna.Structure;
 public class NET_SDK_POINT_THERMOMETRY extends Structure {
 
     public float fPointTemperature;
+
     public NET_VCA_POINT struPoint;
+
     public byte[] byRes = new byte[20];
+
 }

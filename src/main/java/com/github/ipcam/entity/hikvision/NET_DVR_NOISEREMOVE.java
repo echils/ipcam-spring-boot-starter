@@ -11,11 +11,17 @@ import com.sun.jna.Structure;
 public class NET_DVR_NOISEREMOVE extends Structure {
 
     public byte byDigitalNoiseRemoveEnable;
+
     public byte byDigitalNoiseRemoveLevel;
+
     public byte bySpectralLevel;
+
     public byte byTemporalLevel;
+
     public byte byDigitalNoiseRemove2DEnable;
+
     public byte byDigitalNoiseRemove2DLevel;
+
     public byte[] byRes = new byte[2];
 
 }

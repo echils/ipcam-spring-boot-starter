@@ -24,6 +24,10 @@ public interface HCNetSDK extends Library {
 
     boolean NET_DVR_Cleanup();
 
+    boolean NET_DVR_RebootDVR(int lUserID);
+
+    boolean NET_DVR_RestoreConfig(int lUserID);
+
     boolean NET_DVR_Logout(int userHandle);
 
     int NET_DVR_Login_V30(String ip, int port, String username, String password,
@@ -47,8 +51,6 @@ public interface HCNetSDK extends Library {
     boolean NET_DVR_MakeKeyFrame(int userHandle, int channel);
 
     boolean NET_DVR_MakeKeyFrameSub(int userHandle, int channel);
-
-    boolean NET_DVR_PTZControl(int previewHandle, int ptzCommand, int stop);
 
     boolean NET_DVR_PTZPreset(int previewHandle, int presetCommand, int presetIndex);
 
@@ -75,10 +77,6 @@ public interface HCNetSDK extends Library {
 
     int NET_DVR_GetDownloadPos(int fileHandle);
 
-    boolean NET_DVR_StartDVRRecord(int userHandle, int channel, int recordType);
-
-    boolean NET_DVR_StopDVRRecord(int userHandle, int channel);
-
     boolean NET_DVR_CaptureJPEGPicture(int userHandle, int channel, NET_DVR_JPEGPARA jpegPara, String fileName);
 
     boolean NET_DVR_GetDVRConfig(int userHandle, int command, int channel, Pointer buffer,
@@ -104,19 +102,21 @@ public interface HCNetSDK extends Library {
     int NET_DVR_StartRemoteConfig(int userHandle, int command, Pointer buffer, int inBufferLen,
                                   FremoteConfigCallback stateCallback, Pointer userData);
 
-    boolean NET_DVR_SetDVRMessageCallBack_V31(FMSGCallBack_V31 messageCallBack, Pointer user);
-
-    int NET_DVR_SetupAlarmChan_V41(int userHandle, NET_DVR_SETUPALARM_PARAM setupParam);
-
-    boolean NET_DVR_CloseAlarmChan_V30(int alarmHandle);
-
     boolean NET_DVR_StopRemoteConfig(int handle);
 
     boolean NET_DVR_SetSTDConfig(int userHandle, int command, LPNET_DVR_STD_CONFIG configParam);
 
-    interface FMSGCallBack_V31 extends StdCallLibrary.StdCallCallback {
-        boolean invoke(int command, NET_DVR_ALARMER alarm, Pointer alarmInfo, int dwBufLen, Pointer user);
-    }
+    boolean NET_DVR_STDXMLConfig(int lUserID, NET_DVR_XML_CONFIG_INPUT lpInputParam, NET_DVR_XML_CONFIG_OUTPUT lpOutputParam);
+
+    long NET_DVR_SDKChannelToISAPI(long lUserID, long lInChannel, boolean bSDKToISAPI);
+
+    boolean NET_DVR_PTZControlWithSpeed_Other(int userHandel, int channel, int dwPTZCommand, int dwStop, int dwSpeed);
+
+    boolean NET_DVR_PTZPreset_Other(int userHandel, int channel, int command, int dwPresetIndex);
+
+    boolean NET_DVR_PTZCruise_Other(int userHandel, int channel, int dwPTZCruiseCmd, int byCruiseRoute, int byCruisePoint, int wInput);
+
+    boolean NET_DVR_PTZTrack_Other(int userHandel, int channel, int dwPTZTrackCmd);
 
     interface FremoteConfigCallback extends StdCallLibrary.StdCallCallback {
         void invoke(int type, Pointer buffer, int bufLen, Pointer userData);
@@ -129,20 +129,6 @@ public interface HCNetSDK extends Library {
     interface FRealDataCallBack_V30 extends StdCallLibrary.StdCallCallback {
         void invoke(int previewHandle, int dataType, ByteByReference buffer, int bufSize, Pointer user) throws InterruptedException;
     }
-
-    boolean NET_DVR_STDXMLConfig(int lUserID, NET_DVR_XML_CONFIG_INPUT lpInputParam, NET_DVR_XML_CONFIG_OUTPUT lpOutputParam);
-
-    long NET_DVR_SDKChannelToISAPI(long lUserID, long lInChannel, boolean bSDKToISAPI);
-
-    boolean NET_DVR_PTZControlWithSpeed_Other(int userHandel, int channel, int dwPTZCommand, int dwStop, int dwSpeed);
-
-    boolean NET_DVR_PTZControl_Other(int userHandel, int channel, int command, int dwStop);
-
-    boolean NET_DVR_PTZPreset_Other(int userHandel, int channel, int command, int dwPresetIndex);
-
-    boolean NET_DVR_PTZCruise_Other(int userHandel, int channel, int dwPTZCruiseCmd, int byCruiseRoute, int byCruisePoint, int wInput);
-
-    boolean NET_DVR_PTZTrack_Other(int userHandel, int channel, int dwPTZTrackCmd);
 
 
 }

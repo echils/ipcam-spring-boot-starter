@@ -1,7 +1,7 @@
 package com.github.ipcam;
 
-import com.github.ipcam.entity.ByteArrayStructure;
-import com.github.ipcam.entity.CameraInfo;
+import com.github.ipcam.entity.comm.ByteArrayStructure;
+import com.github.ipcam.entity.infos.CameraInfo;
 import com.github.ipcam.entity.NetworkCamera;
 import com.github.ipcam.entity.exception.CameraConnectionException;
 import com.github.ipcam.entity.exception.XmEyeException;
@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.github.ipcam.entity.NetworkCameraContext.*;
+import static com.github.ipcam.entity.comm.StructureContext.*;
 import static com.github.ipcam.entity.xmeye.NetSDK.netSDK;
 import static com.github.ipcam.entity.xmeye.XNetSDK.xNetSDK;
 import static com.github.ipcam.entity.xmeye.XmEyeManager.getErrorMsg;
@@ -50,7 +50,57 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
         super(networkCamera);
     }
 
+
     @Override
+    public void connect() {
+        logger.info("Connecting to the xmeye camera...");
+        if (this.isConnected()) {
+            logger.error("Already connected to xmeye camera with：{}", networkCamera);
+            throw new CameraConnectionException("Already connected to xmeye camera");
+        }
+        this.userHandle = this.login(networkCamera.getIp(), networkCamera.getPort(),
+                networkCamera.getUsername(), networkCamera.getPassword());
+        logger.info("Connect to the xmeye camera success");
+        if (userHandle < 0) {
+            throw new CameraConnectionException("Connect to xmeye camera failed");
+        }
+    }
+
+
+    @Override
+    public void close() throws CameraConnectionException {
+        logger.info("Disconnecting from the xmeye camera {}...", networkCamera.getIp());
+        if (this.isConnected()) {
+            try {
+                Map<Long, Map<String, Long>> userHandleMap = previewCache.get(networkCamera.getIp());
+                if (userHandleMap != null && userHandleMap.size() != 0) {
+                    Map<String, Long> previewMap = userHandleMap.get(userHandle);
+                    if (previewMap != null && previewMap.size() != 0) {
+                        previewMap.forEach((k, v) -> this.release(k));
+                        previewMap.clear();
+                    }
+                    userHandleMap.remove(userHandle);
+                }
+
+                this.logout();
+                userHandle = (long) FAILED;
+                logger.info("Disconnect from the xmeye camera success");
+            } catch (Exception e) {
+                logger.error("Disconnect from the xmeye camera failed:{}", networkCamera.getIp());
+                throw new CameraConnectionException(e);
+            }
+        }
+    }
+
+
+    /**
+     * Login into network camera
+     *
+     * @param ip       The ip of camera
+     * @param port     The port of camera
+     * @param username The username of camera
+     * @param password The password of camera
+     */
     public long login(String ip, int port, String username, String password) {
         return this.login(ip, port, username, password, LOGIN_DEFAULT_WAIT_TIME, LOGIN_DEFAULT_TRY_TIME);
     }
@@ -94,7 +144,9 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
     }
 
 
-    @Override
+    /**
+     * Logout from network camera
+     */
     public void logout() {
         if (netSDK.H264_DVR_Logout(userHandle) == ACTION) {
             if (!netSDK.H264_DVR_Cleanup()) {
@@ -110,7 +162,12 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
     }
 
 
-    @Override
+    /**
+     * Get a preview handle from camera
+     *
+     * @param channel    The channel of network camera
+     * @param streamType {@link StreamTypeEnum}
+     */
     public long preview(String channel, StreamTypeEnum streamType) {
         Map<Long, Map<String, Long>> userHandleMap = previewCache.computeIfAbsent(networkCamera.getIp(),
                 ip -> new ConcurrentHashMap<>());
@@ -134,7 +191,11 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
     }
 
 
-    @Override
+    /**
+     * Release the preview handle of the camera
+     *
+     * @param channel The channel of network camera
+     */
     public void release(String channel) {
         Map<Long, Map<String, Long>> userHandleMap = previewCache.computeIfAbsent(networkCamera.getIp(),
                 ip -> new ConcurrentHashMap<>());
@@ -278,6 +339,18 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
         return cameraInfo;
     }
 
+    private byte[] getBytes(String str, int arrLen) {
+        byte[] result = new byte[arrLen];
+        byte[] strBytes = str.getBytes();
+        if (arrLen < strBytes.length) {
+            throw new CameraConnectionException("Array length is small");
+        }
+        for (int i = 0; i < strBytes.length; i++) {
+            result[i] = strBytes[i];
+        }
+        return result;
+    }
+
     private static class RealDataCallBack implements NetSDK.fRealDataCallBack {
 
         private byte[] byteArray;
@@ -325,18 +398,6 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
                 }
             }
         }
-    }
-
-    private byte[] getBytes(String str, int arrLen) {
-        byte[] result = new byte[arrLen];
-        byte[] strBytes = str.getBytes();
-        if (arrLen < strBytes.length) {
-            throw new CameraConnectionException("Array length is small");
-        }
-        for (int i = 0; i < strBytes.length; i++) {
-            result[i] = strBytes[i];
-        }
-        return result;
     }
 
 }

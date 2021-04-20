@@ -1,6 +1,6 @@
 package com.github.ipcam.entity.hikvision;
 
-import com.github.ipcam.entity.NetworkCameraContext;
+import com.github.ipcam.entity.comm.StructureContext;
 import com.sun.jna.Structure;
 
 /**
@@ -12,8 +12,12 @@ import com.sun.jna.Structure;
 public class NET_DVR_THERMOMETRY_PRESETINFO extends Structure {
 
     public int dwSize;
+
     public short wPresetNo;
+
     public byte[] byRes = new byte[2];
-    public NET_DVR_THERMOMETRY_PRESETINFO_PARAM[] struPresetInfo = new NET_DVR_THERMOMETRY_PRESETINFO_PARAM[NetworkCameraContext.MAX_THERMOMETRY_REGION_NUM];
+
+    public NET_DVR_THERMOMETRY_PRESETINFO_PARAM[] struPresetInfo =
+            new NET_DVR_THERMOMETRY_PRESETINFO_PARAM[StructureContext.MAX_THERMOMETRY_REGION_NUM];
 
 }

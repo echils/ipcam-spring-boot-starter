@@ -25,6 +25,4 @@ public class NET_DVR_XML_CONFIG_OUTPUT extends Structure {
 
     public byte[] byRes = new byte[32];
 
-    public NET_DVR_XML_CONFIG_OUTPUT() {
-    }
 }

@@ -11,8 +11,11 @@ import com.sun.jna.Structure;
 public class NET_DVR_AUDIO_INPUT_PARAM extends Structure {
 
     public byte byAudioInputType;
+
     public byte byVolume;
+
     public byte byEnableNoiseFilter;
+
     public byte[] byres = new byte[5];
 
 }

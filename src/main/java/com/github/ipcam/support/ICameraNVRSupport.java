@@ -1,7 +1,7 @@
 package com.github.ipcam.support;
 
 
-import com.github.ipcam.entity.NVRChannelInfo;
+import com.github.ipcam.entity.infos.NVRChannelInfo;
 import com.github.ipcam.entity.exception.CameraNotSupportException;
 
 import java.util.List;

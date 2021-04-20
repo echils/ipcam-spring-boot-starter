@@ -3,8 +3,8 @@ package com.github.ipcam.entity.reference;
 /**
  * PtzOSDParam
  *
- * @Date 2020-05-15 15:18
- * @Author jiaweit
+ * @author echils
+ * @since 2020-05-15 15:18
  */
 public enum PtzOSDParam {
     /**

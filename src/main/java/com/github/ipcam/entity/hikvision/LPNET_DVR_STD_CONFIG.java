@@ -12,15 +12,27 @@ import com.sun.jna.Structure;
 public class LPNET_DVR_STD_CONFIG extends Structure {
 
     public Pointer lpCondBuffer;
+
     public int dwCondSize;
+
     public Pointer lpInBuffer;
+
     public int dwInSize;
+
     public Pointer lpOutBuffer;
+
     public int dwOutSize;
+
     public Pointer lpStatusBuffer;
+
     public int dwStatusSize;
+
     public Pointer lpXmlBuffer;
+
     public int dwXmlSize;
+
     public byte byDataType;
+
     public byte[] byRes = new byte[23];
+
 }

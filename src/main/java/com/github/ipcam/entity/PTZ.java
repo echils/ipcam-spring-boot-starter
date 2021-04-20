@@ -26,6 +26,11 @@ public class PTZ {
      */
     private int zoom;
 
+    public PTZ(int pan, int tilt, int zoom) {
+        this.pan = pan;
+        this.tilt = tilt;
+        this.zoom = zoom;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,4 +1,4 @@
-package com.github.ipcam.entity;
+package com.github.ipcam.entity.infos;
 
 import lombok.Data;
 

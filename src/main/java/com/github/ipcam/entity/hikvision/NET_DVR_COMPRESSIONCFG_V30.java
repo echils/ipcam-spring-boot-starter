@@ -11,9 +11,13 @@ import com.sun.jna.Structure;
 public class NET_DVR_COMPRESSIONCFG_V30 extends Structure {
 
     public int dwSize;
+
     public NET_DVR_COMPRESSION_INFO_V30 struNormHighRecordPara = new NET_DVR_COMPRESSION_INFO_V30();
+
     public NET_DVR_COMPRESSION_INFO_V30 struRes = new NET_DVR_COMPRESSION_INFO_V30();
+
     public NET_DVR_COMPRESSION_INFO_V30 struEventRecordPara = new NET_DVR_COMPRESSION_INFO_V30();
+
     public NET_DVR_COMPRESSION_INFO_V30 struNetPara = new NET_DVR_COMPRESSION_INFO_V30();
 
 }

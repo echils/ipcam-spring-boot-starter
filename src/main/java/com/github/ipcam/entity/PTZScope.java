@@ -36,7 +36,6 @@ public class PTZScope {
      */
     private int zoomMin;
 
-
     /**
      * The supported max depth value
      */

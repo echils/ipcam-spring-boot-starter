@@ -12,7 +12,6 @@ import lombok.Data;
 @Data
 public class NetworkCamera {
 
-
     /**
      * The ip of the camera
      */
@@ -47,4 +46,5 @@ public class NetworkCamera {
      * Does the camera is nvr
      */
     private boolean nvr;
+
 }

@@ -11,9 +11,15 @@ import com.sun.jna.Structure;
 public class NET_DVR_PTZSCOPE extends Structure {
 
     public short panPosMin;
+
     public short panPosMax;
+
     public short tiltPosMin;
+
     public short tiltPosMax;
+
     public short zoomPosMin;
+
     public short zoomPosMax;
+
 }

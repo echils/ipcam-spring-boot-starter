@@ -17,7 +17,7 @@ public class NET_DVR_XML_CONFIG_INPUT extends Structure {
 
     public int dwRequestUrlLen;
 
-    public Pointer lpInBuffer;
+    public String lpInBuffer;
 
     public int dwInBufferSize;
 
@@ -29,6 +29,4 @@ public class NET_DVR_XML_CONFIG_INPUT extends Structure {
 
     public byte[] byRes = new byte[30];
 
-    public NET_DVR_XML_CONFIG_INPUT() {
-    }
 }

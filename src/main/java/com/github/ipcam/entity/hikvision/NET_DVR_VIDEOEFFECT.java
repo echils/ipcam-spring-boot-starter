@@ -11,11 +11,19 @@ import com.sun.jna.Structure;
 public class NET_DVR_VIDEOEFFECT extends Structure {
 
     public byte byBrightnessLevel;
+
     public byte byContrastLevel;
+
     public byte bySharpnessLevel;
+
     public byte bySaturationLevel;
+
     public byte byHueLevel;
+
     public byte byEnableFunc;
+
     public byte byLightInhibitLevel;
+
     public byte byGrayLevel;
+
 }

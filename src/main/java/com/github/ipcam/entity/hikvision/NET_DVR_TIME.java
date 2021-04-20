@@ -9,10 +9,17 @@ import com.sun.jna.Structure;
  * @since 2020-03-19 13:42
  */
 public class NET_DVR_TIME extends Structure {
-    public int dwYear;        //年
-    public int dwMonth;        //月
-    public int dwDay;        //日
-    public int dwHour;        //时
-    public int dwMinute;        //分
-    public int dwSecond;        //秒
+
+    public int dwYear;
+
+    public int dwMonth;
+
+    public int dwDay;
+
+    public int dwHour;
+
+    public int dwMinute;
+
+    public int dwSecond;
+
 }

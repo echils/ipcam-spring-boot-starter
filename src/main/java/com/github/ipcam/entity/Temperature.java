@@ -2,7 +2,7 @@ package com.github.ipcam.entity;
 
 import lombok.Data;
 
-import static com.github.ipcam.entity.NetworkCameraContext.INFRARED_POINT_NUM;
+import static com.github.ipcam.entity.comm.StructureContext.INFRARED_POINT_NUM;
 
 /**
  * Temperature
@@ -16,7 +16,12 @@ public class Temperature {
     /**
      * Monitored area code
      */
-    private String infraredNo;
+    private int infraredNo;
+
+    /**
+     * Monitored area name
+     */
+    private String infraredName;
 
     /**
      * The preset point code of the camera
@@ -52,6 +57,10 @@ public class Temperature {
          */
         private double y;
 
+        public Region(double x, double y) {
+            this.x = x;
+            this.y = y;
+        }
     }
 
 }

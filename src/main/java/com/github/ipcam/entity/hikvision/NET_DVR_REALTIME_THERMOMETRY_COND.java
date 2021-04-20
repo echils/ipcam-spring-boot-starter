@@ -11,8 +11,13 @@ import com.sun.jna.Structure;
 public class NET_DVR_REALTIME_THERMOMETRY_COND extends Structure {
 
     public int dwSize;
+
     public int dwChan = 2;
+
     public byte byRuleID;
+
     public byte byMode = 0;
+
     public byte[] byRes = new byte[62];
+
 }

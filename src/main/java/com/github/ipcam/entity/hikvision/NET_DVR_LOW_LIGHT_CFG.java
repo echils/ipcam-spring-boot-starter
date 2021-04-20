@@ -11,7 +11,11 @@ import com.sun.jna.Structure;
 public class NET_DVR_LOW_LIGHT_CFG extends Structure {
 
     public int dwSize;
+
     public byte byLowLightLimt;
+
     public byte byLowLightLimtLevel;
+
     public byte[] byRes = new byte[66];
+
 }

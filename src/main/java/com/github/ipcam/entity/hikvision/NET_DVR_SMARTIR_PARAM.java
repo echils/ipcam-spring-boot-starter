@@ -9,8 +9,13 @@ import com.sun.jna.Structure;
  * @since 2020-03-19 13:42
  */
 public class NET_DVR_SMARTIR_PARAM extends Structure {
+
     public byte byMode;
+
     public byte byIRDistance;
+
     public byte byShortIRDistance;
+
     public byte byLongIRDistance;
+
 }

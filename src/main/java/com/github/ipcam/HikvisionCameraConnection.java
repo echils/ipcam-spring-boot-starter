@@ -1,31 +1,42 @@
 package com.github.ipcam;
 
 import com.github.ipcam.entity.*;
+import com.github.ipcam.entity.comm.ByteArrayStructure;
 import com.github.ipcam.entity.exception.CameraConnectionException;
 import com.github.ipcam.entity.exception.HikException;
 import com.github.ipcam.entity.hikvision.*;
+import com.github.ipcam.entity.infos.CameraInfo;
+import com.github.ipcam.entity.infos.NVRChannelInfo;
+import com.github.ipcam.entity.infos.PresetPointInfo;
 import com.github.ipcam.entity.reference.*;
 import com.github.ipcam.support.CameraSupportedDriver;
 import com.github.ipcam.support.ICameraNVRSupport;
 import com.github.ipcam.support.ICameraPTZSupport;
 import com.github.ipcam.support.ICameraThermalSupport;
 import com.github.ipcam.utils.XmlToJsonUtils;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.ByteByReference;
 import com.sun.jna.ptr.IntByReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
-import static com.github.ipcam.entity.NetworkCameraContext.*;
+import static com.github.ipcam.entity.comm.StructureContext.*;
 import static com.github.ipcam.entity.hikvision.HCNetSDK.hcNetSDK;
 import static com.github.ipcam.entity.hikvision.HikManager.*;
 import static com.github.ipcam.utils.FileUtils.createParentDirectory;
+import static java.util.Calendar.HOUR_OF_DAY;
 
 /**
  * HikvisionCameraConnection
@@ -45,12 +56,70 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
 
 
     @Override
+    public void connect() {
+        logger.info("Connecting to the hikvision camera...");
+        if (this.isConnected()) {
+            logger.error("Already connected to hikvision camera with：{}", networkCamera);
+            throw new CameraConnectionException("Already connected to hikvision camera");
+        }
+        this.userHandle = this.login(networkCamera.getIp(), networkCamera.getPort(),
+                networkCamera.getUsername(), networkCamera.getPassword());
+        logger.info("Connect to the hikvision camera success");
+        if (userHandle < 0) {
+            throw new CameraConnectionException("Connect to hikvision camera failed");
+        }
+    }
+
+
+    @Override
+    public void close() throws CameraConnectionException {
+        logger.info("Disconnecting from the hikvision camera {}...", networkCamera.getIp());
+        if (this.isConnected()) {
+            try {
+                Map<Long, Map<String, Long>> userHandleMap = previewCache.get(networkCamera.getIp());
+                if (userHandleMap != null && userHandleMap.size() != 0) {
+                    Map<String, Long> previewMap = userHandleMap.get(userHandle);
+                    if (previewMap != null && previewMap.size() != 0) {
+                        previewMap.forEach((k, v) -> this.release(k));
+                        previewMap.clear();
+                    }
+                    userHandleMap.remove(userHandle);
+                }
+
+                this.logout();
+                userHandle = (long) FAILED;
+                logger.info("Disconnect from the hikvision camera success");
+            } catch (Exception e) {
+                logger.error("Disconnect from the hikvision camera failed:{}", networkCamera.getIp());
+                throw new CameraConnectionException(e);
+            }
+        }
+    }
+
+
+    /**
+     * Login into network camera
+     *
+     * @param ip       The ip of camera
+     * @param port     The port of camera
+     * @param username The username of camera
+     * @param password The password of camera
+     */
     public long login(String ip, int port, String username, String password) {
         return this.login(ip, port, username, password, LOGIN_DEFAULT_WAIT_TIME, LOGIN_DEFAULT_TRY_TIME);
     }
 
 
-    @Override
+    /**
+     * Login into network camera with waitTime and tryTime
+     *
+     * @param ip       The ip of camera
+     * @param port     The port of camera
+     * @param username The username of camera
+     * @param password The password of camera
+     * @param waitTime The waitTime of camera
+     * @param tryTime  The tryTime of camera
+     */
     public long login(String ip, int port, String username, String password, int waitTime, int tryTime) {
         //Device initialize
         if (!hcNetSDK.NET_DVR_Init()) {
@@ -70,7 +139,9 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
     }
 
 
-    @Override
+    /**
+     * Logout from network camera
+     */
     public void logout() {
         if (hcNetSDK.NET_DVR_Logout(Math.toIntExact(userHandle))) {
             if (!hcNetSDK.NET_DVR_Cleanup()) {
@@ -111,7 +182,12 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         return channelList;
     }
 
-    @Override
+    /**
+     * Get a preview handle from camera
+     *
+     * @param channel    The channel of network camera
+     * @param streamType {@link StreamTypeEnum}
+     */
     public long preview(String channel, StreamTypeEnum streamType) {
         Map<Long, Map<String, Long>> userHandleMap = previewCache.computeIfAbsent(networkCamera.getIp(),
                 ip -> new ConcurrentHashMap<>());
@@ -143,7 +219,11 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         return previewHandle;
     }
 
-    @Override
+    /**
+     * Release the preview handle of the camera
+     *
+     * @param channel The channel of network camera
+     */
     public void release(String channel) {
         Map<Long, Map<String, Long>> userHandleMap = previewCache.computeIfAbsent(networkCamera.getIp(),
                 ip -> new ConcurrentHashMap<>());
@@ -155,6 +235,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             }
         }
     }
+
 
     @Override
     public void changePassword(String channel, String newPassword) {
@@ -478,13 +559,18 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
     }
 
     @Override
-    public void cruise(CruiseEnum cruiseEnum, int cruiseRoute, int cruisePoint, int value) {
-
+    public void cruise(String channel, CruiseEnum cruiseEnum, int cruiseRoute, int cruisePoint, int value) {
+        if (!hcNetSDK.NET_DVR_PTZCruise(Math.toIntExact(
+                this.preview(channel, StreamTypeEnum.SUB_STREAM)), cruiseEnum.key(), cruiseRoute, cruisePoint, value)) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void cruiseExpand(String channel, CruiseEnum cruiseEnum, int cruiseRoute, int cruisePoint, int value) {
-
+        if (!hcNetSDK.NET_DVR_PTZCruise_Other(userHandle.intValue(), handleChannel(channel), cruiseEnum.key(), cruiseRoute, cruisePoint, value)) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
@@ -505,252 +591,908 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
     @Override
     public void setPresetName(int index, String name) {
 
+        NET_DVR_PRESET_NAME presetName = new NET_DVR_PRESET_NAME();
+        presetName.dwSize = presetName.size();
+        presetName.byName = name.getBytes();
+        presetName.wPresetNum = (short) index;
+        presetName.write();
+
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_SET_PRESET_NAME, ACTION,
+                presetName, presetName.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public String getPresetName(int index) {
-        return null;
+        PRESET_NAME_STRUCTURE name = new PRESET_NAME_STRUCTURE();
+        IntByReference bytesReturned = new IntByReference();
+        name.write();
+        if (!hcNetSDK.NET_DVR_GetDVRConfig(userHandle.intValue(), NET_DVR_GET_PRESET_NAME, ACTION,
+                name.getPointer(), new NET_DVR_PRESET_NAME().size() * 256, bytesReturned)) {
+            throw new HikException(getErrorMsg());
+        }
+        name.read();
+        try {
+            return new String(name.name[index - 1].byName, "GBK");
+        } catch (UnsupportedEncodingException e) {
+            throw new CameraConnectionException(e);
+        }
     }
 
     @Override
     public PTZScope getPresetScope(String channel) {
-        return null;
+        NET_DVR_PTZSCOPE scope = new NET_DVR_PTZSCOPE();
+        scope.write();
+        Pointer pointer = scope.getPointer();
+        if (!hcNetSDK.NET_DVR_GetDVRConfig(userHandle.intValue(), NET_DVR_GET_PTZSCOPE, handleChannel(channel),
+                pointer, DEFAULT_BUFFER, new IntByReference(scope.size()))) {
+            throw new HikException(getErrorMsg());
+        }
+        scope.read();
+        PTZScope ptzScope = new PTZScope();
+        ptzScope.setPanMin(scope.panPosMin);
+        ptzScope.setPanMax(scope.panPosMax);
+        ptzScope.setTiltMin(scope.tiltPosMin);
+        ptzScope.setPanMax(scope.tiltPosMax);
+        ptzScope.setZoomMin(scope.zoomPosMin);
+        ptzScope.setZoomMax(scope.zoomPosMax);
+        return ptzScope;
     }
 
-    @Override
-    public List<Temperature> measureAll() {
-        return null;
-    }
-
-    @Override
-    public Temperature measure(int infraredNo) {
-        return null;
-    }
-
-    @Override
-    public String getInfraredPointName(int presetNo, int infraredNo) {
-        return null;
-    }
-
-    @Override
-    public void setInfraredPointName(int presetNo, int infraredNo, String name) {
-
-    }
 
     @Override
     public PTZ getCurrentPosition(String channel) {
-        return null;
+        PTZ_POSITION_STRUCTURE position = new PTZ_POSITION_STRUCTURE();
+        position.write();
+        Pointer pointer = position.getPointer();
+        if (!hcNetSDK.NET_DVR_GetDVRConfig(Math.toIntExact(userHandle), NET_DVR_GET_PTZPOS, handleChannel(channel),
+                pointer, DEFAULT_BUFFER, new IntByReference(PTZ_BUFFER_SIZE))) {
+            throw new HikException(getErrorMsg());
+        }
+        position.read();
+        position = handlePTZ(position, false);
+        PTZ networkCameraPTZ = new PTZ(position.panPos, position.tiltPos, position.zoomPos);
+        logger.info("Camera:{} with channel {},current ptz{}", networkCamera.getIp(), channel, networkCameraPTZ);
+        return networkCameraPTZ;
     }
 
     @Override
     public void gotoPresetPoint(String channel, int presetIndex, PTZ ptz) throws InterruptedException {
-
+        logger.info("Camera:{} goto preset point with channel:{} and index:{}", networkCamera.getIp(), channel, presetIndex);
+        this.presetExpand(channel, PresetEnum.GOTO_PRESET, presetIndex);
+        long time = System.currentTimeMillis();
+        while (true) {
+            PTZ curPTZ = this.getCurrentPosition(channel);
+            if (curPTZ.equals(ptz)) {
+                break;
+            }
+            if (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - time) > 30) {
+                throw new CameraConnectionException("Goto preset timeout 30 seconds");
+            }
+            Thread.sleep(500);
+        }
+        logger.info("Goto preset complete. used {} seconds", TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - time));
     }
 
     @Override
     public void locate(String channel, int pan, int tilt, int zoom) throws InterruptedException {
+        PTZ ptz = new PTZ(pan, tilt, zoom);
+        PTZ_POSITION_STRUCTURE position = handlePTZ(new PTZ_POSITION_STRUCTURE(ACTION, pan, tilt, zoom), true);
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(Math.toIntExact(userHandle), NET_DVR_SET_PTZPOS, handleChannel(channel),
+                position, position.size())) {
+            throw new HikException(getErrorMsg());
+        }
+        long time = System.currentTimeMillis();
+        while (true) {
+            PTZ curPTZ = this.getCurrentPosition(channel);
+            if (curPTZ.equals(ptz)) {
+                break;
+            }
+            if (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - time) > 30) {
+                throw new CameraConnectionException("Goto position timeout 30 seconds");
+            }
+            Thread.sleep(500);
+        }
+        logger.info("Goto position complete. used {} seconds", TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - time));
 
     }
 
     @Override
     public List<PresetPointInfo> getActivatedPresetPoints(String channel) {
+        logger.info("Camera:{} get preset points that have been used with channel:{}", networkCamera.getIp(), channel);
+
+        long actualChannel = hcNetSDK.NET_DVR_SDKChannelToISAPI(userHandle, handleChannel(channel), true);
+        if (actualChannel == FAILED) {
+            throw new HikException(getErrorMsg());
+        }
+
+        String url = "GET /ISAPI/PTZCtrl/channels/" + actualChannel + "/presets";
+        NET_DVR_XML_CONFIG_INPUT input = new NET_DVR_XML_CONFIG_INPUT();
+        ByteArrayStructure array = new ByteArrayStructure(url.length());
+        System.arraycopy(url.getBytes(), 0, array.byValue, 0, url.length());
+        array.write();
+
+        input.read();
+        input.lpRequestUrl = array.getPointer();
+        input.dwSize = input.size();
+        input.dwRequestUrlLen = url.getBytes().length;
+        input.write();
+
+        NET_DVR_XML_CONFIG_OUTPUT output = new NET_DVR_XML_CONFIG_OUTPUT();
+        output.dwSize = output.size();
+        output.dwOutBufferSize = new ByteArrayStructure(ISAPI_DATA_LEN).size();
+        output.lpOutBuffer = new ByteArrayStructure(ISAPI_DATA_LEN).getPointer();
+        output.lpStatusBuffer = new ByteArrayStructure(ISAPI_STATUS_LEN).getPointer();
+        output.dwStatusSize = new ByteArrayStructure(ISAPI_STATUS_LEN).size();
+        output.write();
+        if (!hcNetSDK.NET_DVR_STDXMLConfig(Math.toIntExact(userHandle), input, output)) {
+            throw new HikException(getErrorMsg());
+        }
+        output.read();
+
+        JsonObject jsonObject = XmlToJsonUtils.toJson(new String(output.lpOutBuffer
+                .getByteArray(0, output.dwReturnedXMLSize)).trim());
+        if (jsonObject != null) {
+            Object ptzPreset = jsonObject.get(ISAPI_PTZ_PRESET);
+            if (ptzPreset != null) {
+                Gson gson = new Gson();
+                List<PresetPointInfo> presetPointInfos;
+                if (ptzPreset instanceof JsonArray) {
+                    presetPointInfos = gson.fromJson(ptzPreset.toString(), new TypeToken<List<PresetPointInfo>>() {
+                    }.getType());
+                } else {
+                    presetPointInfos =
+                            Collections.singletonList(gson.fromJson(ptzPreset.toString(), new TypeToken<PresetPointInfo>() {
+                            }.getType()));
+                }
+                return presetPointInfos;
+            }
+        }
         return null;
     }
 
+    @Override
+    public List<Temperature> measureAll() {
+        return this.getTargetTemperature(0);
+    }
+
+    @Override
+    public Temperature measure(int infraredNo) {
+        List<Temperature> targetTemperatures = this.getTargetTemperature(infraredNo);
+        if (targetTemperatures == null || targetTemperatures.size() == 0) {
+            logger.error("Temperature get failed,infraredNo:{} maybe not configuration", infraredNo);
+            throw new CameraConnectionException("Temperature get failed,infraredNo maybe not configuration, infraredNo " + infraredNo);
+        }
+        return targetTemperatures.get(0);
+    }
+
+    /**
+     * Get the temperature from network camera
+     *
+     * @param ruleId infrared point id
+     * @return
+     */
+    public List<Temperature> getTargetTemperature(int ruleId) {
+        //Real-time temperature detection config
+        NET_DVR_REALTIME_THERMOMETRY_COND cond = new NET_DVR_REALTIME_THERMOMETRY_COND();
+        cond.dwSize = cond.size();
+        if (ruleId >= MIN_RULE && ruleId <= MAX_RULE) {
+            cond.byRuleID = (byte) ruleId;
+        } else {
+            throw new CameraConnectionException("Get temperature failed,ruleId out of bounds]");
+        }
+        cond.write();
+        //temperatures callback
+        RemoteConfigCallback callback = new RemoteConfigCallback();
+        int remoteHandle = hcNetSDK.NET_DVR_StartRemoteConfig(Math.toIntExact(userHandle), NET_DVR_GET_REALTIME_THERMOMETRY,
+                cond.getPointer(), cond.size(), callback, null);
+        if (remoteHandle == FAILED) {
+            throw new HikException(getErrorMsg());
+        }
+        try {
+            Thread.sleep(DEFAULT_BUFFER);
+        } catch (InterruptedException ignored) {
+        } finally {
+            if (!hcNetSDK.NET_DVR_StopRemoteConfig(remoteHandle)) {
+                throw new HikException(getErrorMsg());
+            }
+        }
+        return callback.getTemperatures();
+    }
 
     @Override
     public void setInfraredPoint(Temperature temperature) {
+        LPNET_DVR_STD_CONFIG stdConfig = new LPNET_DVR_STD_CONFIG();
+        NET_DVR_THERMOMETRY_PRESETINFO infraredInfo = getInfraredInfo(Math.toIntExact(userHandle), temperature.getPresetNo());
+        NET_DVR_THERMOMETRY_COND cond = new NET_DVR_THERMOMETRY_COND();
+        //lpCondBuffer config
+        cond.dwSize = cond.size();
+        cond.wPresetNo = (short) temperature.getPresetNo();
+        cond.write();
+        stdConfig.lpCondBuffer = cond.getPointer();
+        stdConfig.dwCondSize = cond.size();
+        //ruleName
+        try {
 
+            byte[] newName = new byte[32];
+            int length = StringUtils.isEmpty(temperature.getInfraredName()) ? 0 : temperature.getInfraredName().getBytes().length;
+            for (int i = 0; i < newName.length; i++) {
+                if (i < length) {
+                    newName[i] = temperature.getInfraredName().getBytes()[i];
+                } else {
+                    newName[i] = 0;
+                }
+            }
+            int index = temperature.getInfraredNo() - 1;
+            infraredInfo.struPresetInfo[index].byRuleCalibType = (byte) ACTION;
+            NET_VCA_POLYGON polygon = infraredInfo.struPresetInfo[index].struRegion;
+            polygon.dwPointNum = INFRARED_POINT_NUM;
+            NET_VCA_POINT[] structurePoints = polygon.struPos;
+            Temperature.Region[] regions = temperature.getRegions();
+            for (int i = 0; i < INFRARED_POINT_NUM; i++) {
+                structurePoints[i].fX = (float) regions[i].getX();
+                structurePoints[i].fY = (float) regions[i].getY();
+            }
+            polygon.struPos = structurePoints;
+            infraredInfo.struPresetInfo[index].szRuleName = new String(newName).getBytes("GBK");
+            infraredInfo.struPresetInfo[index].struRegion = polygon;
+            infraredInfo.struPresetInfo[index].byEnabled = (byte) ACTION;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        stdConfig.dwInSize = infraredInfo.size();
+        infraredInfo.write();
+        stdConfig.lpInBuffer = infraredInfo.getPointer();
+        stdConfig.write();
+        if (!hcNetSDK.NET_DVR_SetSTDConfig(Math.toIntExact(userHandle), NET_DVR_SET_THERMOMETRY_PRESETINFO, stdConfig)) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public Temperature getInfraredPoint(int presetNo, int infraredNo) {
+        NET_DVR_THERMOMETRY_PRESETINFO infraredInfo = getInfraredInfo(Math.toIntExact(userHandle), presetNo);
+        NET_DVR_THERMOMETRY_PRESETINFO_PARAM param = infraredInfo.struPresetInfo[infraredNo - 1];
+
+        if (param.byEnabled == (byte) ACTION) {
+            Temperature temperature = new Temperature();
+            temperature.setPresetNo(presetNo);
+            temperature.setInfraredNo(infraredNo);
+            temperature.setInfraredName(byteToStr(param.szRuleName, "GBK"));
+            NET_VCA_POINT[] points = param.struRegion.struPos;
+            for (int i = 0; i < INFRARED_POINT_NUM; i++) {
+                temperature.getRegions()[i] = new Temperature.Region(numFormat(points[i].fX, 3), numFormat(points[i].fY, 3));
+            }
+            return temperature;
+        }
         return null;
     }
 
     @Override
     public void deleteInfraredPoint(int presetNo, int infraredNo) {
+        LPNET_DVR_STD_CONFIG stdConfig = new LPNET_DVR_STD_CONFIG();
+        NET_DVR_THERMOMETRY_PRESETINFO infraredInfo = getInfraredInfo(Math.toIntExact(userHandle), presetNo);
+        NET_DVR_THERMOMETRY_COND cond = new NET_DVR_THERMOMETRY_COND();
+        NET_DVR_THERMOMETRY_PRESETINFO_PARAM param = infraredInfo.struPresetInfo[infraredNo - 1];
 
+
+        //lpCondBuffer config
+        cond.dwSize = cond.size();
+        cond.wPresetNo = (short) presetNo;
+        cond.write();
+        stdConfig.lpCondBuffer = cond.getPointer();
+        stdConfig.dwCondSize = cond.size();
+
+        param.byEnabled = (byte) INIT;
+        param.struRegion.struPos = new NET_VCA_POINT[VCA_MAX_POLYGON_POINT_NUM];
+        param.szRuleName = new byte[NAME_LEN];
+
+        infraredInfo.write();
+        stdConfig.dwInSize = infraredInfo.size();
+        stdConfig.lpInBuffer = infraredInfo.getPointer();
+        stdConfig.write();
+        if (!hcNetSDK.NET_DVR_SetSTDConfig(Math.toIntExact(userHandle), NET_DVR_SET_THERMOMETRY_PRESETINFO, stdConfig)) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void reboot() {
-
+        if (!hcNetSDK.NET_DVR_RebootDVR(userHandle.intValue())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void restore() {
-
+        if (!hcNetSDK.NET_DVR_RestoreConfig(userHandle.intValue())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void setZoomLimit(String channel, int zoomValue) {
+        long actualChannel = hcNetSDK.NET_DVR_SDKChannelToISAPI(userHandle, handleChannel(channel), true);
+        if (actualChannel == FAILED) {
+            throw new HikException(getErrorMsg());
+        }
 
+        String url = "PUT /ISAPI/Image/channels/" + actualChannel + "/ZoomLimit";
+        ByteArrayStructure array = new ByteArrayStructure(url.length());
+        System.arraycopy(url.getBytes(), 0, array.byValue, 0, url.length());
+        array.write();
+
+        String request = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<ZoomLimit version=\"2.0\" xmlns=\"http://www.hikvision.com/ver20/XMLSchema\">\n" +
+                "<ZoomLimitRatio>" + zoomValue + "</ZoomLimitRatio>\n" +
+                "</ZoomLimit>";
+        ByteArrayStructure requestArray = new ByteArrayStructure(request.length());
+        System.arraycopy(url.getBytes(), 0, array.byValue, 0, url.length());
+        requestArray.write();
+        NET_DVR_XML_CONFIG_INPUT input = new NET_DVR_XML_CONFIG_INPUT();
+        input.dwSize = input.size();
+        input.lpRequestUrl = array.getPointer();
+        input.dwRequestUrlLen = url.getBytes().length;
+        input.lpInBuffer = request;
+        input.dwInBufferSize = request.getBytes().length;
+        input.write();
+
+        NET_DVR_XML_CONFIG_OUTPUT output = new NET_DVR_XML_CONFIG_OUTPUT();
+        output.dwSize = output.size();
+        output.write();
+        if (!hcNetSDK.NET_DVR_STDXMLConfig(userHandle.intValue(), input, output)) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void openLensInitialization(String channel) {
-
+        setLensInitialization(userHandle.intValue(), channel, true);
+        close();
     }
 
     @Override
     public void closeLensInitialization(String channel) {
+        setLensInitialization(userHandle.intValue(), channel, false);
+        close();
+    }
 
+
+    private void setLensInitialization(int userHandle, String channel, boolean open) {
+        long actualChannel = hcNetSDK.NET_DVR_SDKChannelToISAPI(userHandle, handleChannel(channel), true);
+        if (actualChannel == FAILED) {
+            throw new HikException(getErrorMsg());
+        }
+        String url = "PUT /ISAPI/Image/channels/" + actualChannel + "/lensInitialization";
+        ByteArrayStructure array = new ByteArrayStructure(url.length());
+        System.arraycopy(url.getBytes(), 0, array.byValue, 0, url.length());
+        array.write();
+
+        String request = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<LensInitialization version=\"2.0\" xmlns=\"http://www.hikvision.com/ver20/XMLSchema\">\n" +
+                "<enabled>" + open + "</enabled>\n" +
+                "</LensInitialization>";
+        ByteArrayStructure requestArray = new ByteArrayStructure(request.length());
+        System.arraycopy(url.getBytes(), 0, array.byValue, 0, url.length());
+        requestArray.write();
+        NET_DVR_XML_CONFIG_INPUT input = new NET_DVR_XML_CONFIG_INPUT();
+        input.dwSize = input.size();
+        input.lpRequestUrl = array.getPointer();
+        input.dwRequestUrlLen = url.getBytes().length;
+        input.lpInBuffer = request;
+        input.dwInBufferSize = request.getBytes().length;
+        input.write();
+
+        NET_DVR_XML_CONFIG_OUTPUT output = new NET_DVR_XML_CONFIG_OUTPUT();
+        output.dwSize = output.size();
+        output.write();
+        if (!hcNetSDK.NET_DVR_STDXMLConfig(userHandle, input, output)) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void setMaxElevationAngle(String channel, int elevationValue) {
+        long actualChannel = hcNetSDK.NET_DVR_SDKChannelToISAPI(userHandle, handleChannel(channel), true);
+        if (actualChannel == FAILED) {
+            throw new HikException(getErrorMsg());
+        }
+        String url = "PUT /ISAPI/PTZCtrl/channels/" + actualChannel + "/maxelevation";
+        ByteArrayStructure array = new ByteArrayStructure(url.length());
+        System.arraycopy(url.getBytes(), 0, array.byValue, 0, url.length());
+        array.write();
 
+        String request =
+                "<MaxElevation version=\"2.0\" xmlns=\"http://www.hikvision.com/ver20/XMLSchema\">" +
+                        "<mElevation>" + elevationValue + "</mElevation>" +
+                        "</MaxElevation>";
+        ByteArrayStructure requestArray = new ByteArrayStructure(request.length());
+        System.arraycopy(url.getBytes(), 0, array.byValue, 0, url.length());
+        requestArray.write();
+        NET_DVR_XML_CONFIG_INPUT input = new NET_DVR_XML_CONFIG_INPUT();
+        input.lpRequestUrl = array.getPointer();
+        input.dwSize = input.size();
+        input.lpInBuffer = request;
+        input.dwInBufferSize = request.getBytes().length;
+        input.dwRequestUrlLen = url.getBytes().length;
+        input.write();
+
+        NET_DVR_XML_CONFIG_OUTPUT output = new NET_DVR_XML_CONFIG_OUTPUT();
+        output.dwSize = output.size();
+        output.write();
+        if (!hcNetSDK.NET_DVR_STDXMLConfig(userHandle.intValue(), input, output)) {
+            throw new HikException(getErrorMsg());
+        }
+        logout();
     }
 
     @Override
     public void setScreen(String channel, ScreenEffectEnum screenEffectEnum, int value) {
-
+        NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
+        switch (screenEffectEnum) {
+            case BRIGHT:
+                param.struVideoEffect.byBrightnessLevel = (byte) value;
+                break;
+            case HUE:
+                param.struVideoEffect.byHueLevel = (byte) value;
+                break;
+            case CONTRAST:
+                param.struVideoEffect.byContrastLevel = (byte) value;
+                break;
+            case SATURATION:
+                param.struVideoEffect.bySaturationLevel = (byte) value;
+                break;
+            case SHARPNESS:
+                param.struVideoEffect.bySharpnessLevel = (byte) value;
+                break;
+        }
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_CAMERAPARAMCFG_EX_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public ScreenEffect getScreen(String channel) {
-        return null;
+        NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
+        ScreenEffect videoEffect = new ScreenEffect();
+        videoEffect.setBrightness(param.struVideoEffect.byBrightnessLevel);
+        videoEffect.setContrast(param.struVideoEffect.byContrastLevel);
+        videoEffect.setSaturation(param.struVideoEffect.bySaturationLevel);
+        videoEffect.setHue(param.struVideoEffect.byHueLevel);
+        videoEffect.setSharpness(param.struVideoEffect.bySharpnessLevel);
+        return videoEffect;
     }
 
     @Override
     public void resetScreen(String channel) {
-
+        setScreen(channel, ScreenEffectEnum.BRIGHT, 50);
+        setScreen(channel, ScreenEffectEnum.HUE, 50);
+        setScreen(channel, ScreenEffectEnum.CONTRAST, 50);
+        setScreen(channel, ScreenEffectEnum.SATURATION, 50);
+        setScreen(channel, ScreenEffectEnum.SHARPNESS, 50);
     }
 
     @Override
     public void setDayNightConversionMode(String channel, DayNightEnum dayNightEnum) {
-
+        NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
+        param.struDayNight.byDayNightFilterType = dayNightEnum.getValue();
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_CAMERAPARAMCFG_EX_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void setCustomDayNightConversionMode(String channel, Calendar dayStart, Calendar dayEnd) {
+        NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
+        param.struDayNight.byDayNightFilterType = CUSTOM;
+        param.struDayNight.byBeginTime = (byte) dayStart.get(HOUR_OF_DAY);
+        param.struDayNight.byBeginTimeMin = (byte) dayStart.get(Calendar.MINUTE);
+        param.struDayNight.byBeginTimeSec = (byte) dayStart.get(Calendar.SECOND);
+        param.struDayNight.byEndTime = (byte) dayEnd.get(HOUR_OF_DAY);
+        param.struDayNight.byEndTimeMin = (byte) dayEnd.get(Calendar.MINUTE);
+        param.struDayNight.byEndTimeSec = (byte) dayEnd.get(Calendar.SECOND);
 
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_CAMERAPARAMCFG_EX_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void setBackLightCompensationMode(String channel, BackLightEnum backLightEnum) {
-
+        NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
+        param.struBackLight.byBacklightMode = backLightEnum.getValue();
+        param.struBackLight.byBacklightLevel = DEFAULT_BACK_LIGHT_LEVEL;
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_CAMERAPARAMCFG_EX_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void setBackLightCompensationMode(String channel, BackLightEnum backLightEnum, int value) {
+        NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
+        param.struBackLight.byBacklightMode = backLightEnum.getValue();
 
+        if (value >= 0 && value <= 15) {
+            param.struBackLight.byBacklightLevel = (byte) value;
+        } else {
+            param.struBackLight.byBacklightLevel = DEFAULT_BACK_LIGHT_LEVEL;
+        }
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_CAMERAPARAMCFG_EX_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void setWhiteBalanceMode(String channel, WhiteBalanceEnum whiteBalanceEnum) {
+        NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
+        param.struWhiteBalance.byWhiteBalanceMode = whiteBalanceEnum.getKey();
 
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_CAMERAPARAMCFG_EX_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void openStrongLightInhibitionMode(String channel) {
+        NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
+        param.struVideoEffect.byEnableFunc = LightEnum.STRONG_LIGHT_INHIBITION_ON.getValue();
 
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_CAMERAPARAMCFG_EX_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void closeStrongLightInhibitionMode(String channel) {
-
+        openPreventOverexposureMode(channel);
     }
 
     @Override
     public void openPreventOverexposureMode(String channel) {
+        NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
+        param.struVideoEffect.byEnableFunc = LightEnum.PREVENT_OVEREXPOSURE_ON.getValue();
 
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_CAMERAPARAMCFG_EX_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void closePreventOverexposureMode(String channel) {
-
+        openStrongLightInhibitionMode(channel);
     }
 
     @Override
     public void closeLightInhibitionAndPreventOverexposureMode(String channel) {
+        NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
+        param.struVideoEffect.byEnableFunc = LightEnum.ALL_OFF.getValue();
 
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_CAMERAPARAMCFG_EX_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void setWideDynamicMode(String channel, WDREnum wdrEnum) {
+        NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
+        param.struWdr.byWDREnabled = wdrEnum.getKey();
 
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_CAMERAPARAMCFG_EX_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void setWideDynamicMode(String channel, WDREnum wdrEnum, int value) {
+        NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
+        param.struWdr.byWDRLevel1 = (byte) value;
 
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_CAMERAPARAMCFG_EX_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void setNoiseReductionMode(String channel, NoiseReductionEnum noiseReductionEnum) {
+        NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
+        param.struNoiseRemove.byDigitalNoiseRemoveEnable = noiseReductionEnum.getKey();
 
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_CAMERAPARAMCFG_EX_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void setNoiseReductionValue(String channel, NoiseReductionLevelEnum noiseReductionLevelEnum, int value) {
+        NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
+        switch (noiseReductionLevelEnum) {
+            case DIGITAL_NOISE_REDUCTION_LEVEL:
+                param.struNoiseRemove.byDigitalNoiseRemoveLevel = (byte) value;
+                break;
+            case AIRSPACE_NOISE_REDUCTION_LEVEL:
+                param.struNoiseRemove.bySpectralLevel = (byte) value;
+                break;
+            case TIME_DOMAIN_NOISE_REDUCTION_LEVEL:
+                param.struNoiseRemove.byTemporalLevel = (byte) value;
+                break;
+        }
 
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_CAMERAPARAMCFG_EX_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void openDefogMode(String channel) {
+        NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
+        param.struDefogCfg.byMode = OPEN_DEFOG;
 
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_CAMERAPARAMCFG_EX_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void closeDefogMode(String channel) {
+        NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
+        param.struDefogCfg.byMode = CLOSE_DEFOG;
 
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_CAMERAPARAMCFG_EX_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void openElectronicStabilizationMode(String channel) {
+        NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
+        param.struElectronicStabilization.byEnable = OPEN_ELECTRONIC_STABILIZATION;
 
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_CAMERAPARAMCFG_EX_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void closeElectronicStabilizationMode(String channel) {
+        NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
+        param.struElectronicStabilization.byEnable = CLOSE_ELECTRONIC_STABILIZATION;
 
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_CAMERAPARAMCFG_EX_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void setExposureMode(String channel, ExposureMode exposureMode) {
+        NET_DVR_AEMODECFG param = getExposureConfig(userHandle.intValue(), channel);
+        param.byExposureModeSet = exposureMode.getKey();
 
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_AEMODECFG_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void setExposureParam(String channel, ExposureParam exposureParam, int value) {
-
+        NET_DVR_AEMODECFG param = getExposureConfig(userHandle.intValue(), channel);
+        switch (exposureParam) {
+            case EXPOSURE_LEVEL:
+                param.byExposureLevel = (byte) value;
+                break;
+            case MAX_IRIS:
+                param.byMaxIrisSet = (byte) value;
+                break;
+            case MIN_IRIS:
+                param.byMinIrisSet = (byte) value;
+                break;
+            case MAX_SHUTTER:
+                param.byMaxShutterSet = (byte) value;
+                break;
+            case MIN_SHUTTER:
+                param.byMinShutterSet = (byte) value;
+                break;
+        }
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_AEMODECFG_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void setFocusMode(String channel, FocusMode focusMode) {
-
+        NET_DVR_FOCUSMODE_CFG mode = new NET_DVR_FOCUSMODE_CFG();
+        if (!hcNetSDK.NET_DVR_GetDVRConfig(userHandle.intValue(), NET_DVR_FOCUSMODE_CFG_GET, handleChannel(channel),
+                mode.getPointer(), mode.size(), new IntByReference())) {
+            throw new HikException(getErrorMsg());
+        }
+        mode.read();
+        mode.byFocusMode = focusMode.getKey();
+        mode.write();
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_FOCUSMODE_CFG_SET, handleChannel(channel),
+                mode, mode.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void setFocusDistance(String channel, int value) {
-
+        NET_DVR_FOCUSMODE_CFG mode = new NET_DVR_FOCUSMODE_CFG();
+        if (!hcNetSDK.NET_DVR_GetDVRConfig(userHandle.intValue(), NET_DVR_FOCUSMODE_CFG_GET, handleChannel(channel),
+                mode.getPointer(), mode.size(), new IntByReference())) {
+            throw new HikException(getErrorMsg());
+        }
+        mode.read();
+        mode.wMinFocusDistance = (short) value;
+        mode.write();
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_FOCUSMODE_CFG_SET, handleChannel(channel),
+                mode, mode.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void resetLens(String channel) {
-
+        if (!hcNetSDK.NET_DVR_ResetLens(userHandle.intValue(), handleChannel(channel))) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void setLowIlluminationElectronicShutterMode(String channel, LowLightShutterEnum lowLightShutterEnum) {
-
+        NET_DVR_LOW_LIGHT_CFG lowLight = new NET_DVR_LOW_LIGHT_CFG();
+        if (!hcNetSDK.NET_DVR_GetDVRConfig(userHandle.intValue(), NET_DVR_LOW_LIGHT_CFG_GET, handleChannel(channel),
+                lowLight.getPointer(), lowLight.size(), new IntByReference())) {
+            throw new HikException(getErrorMsg());
+        }
+        lowLight.read();
+        if (lowLightShutterEnum.getLevel() == LowLightShutterEnum.OFF.getLevel()) {
+            lowLight.byLowLightLimt = lowLightShutterEnum.getLevel();
+        } else {
+            lowLight.byLowLightLimt = LOW_LIGHT_LIMIT_OPEN;
+            lowLight.byLowLightLimtLevel = lowLightShutterEnum.getLevel();
+        }
+        lowLight.write();
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_LOW_LIGHT_CFG_SET, handleChannel(channel),
+                lowLight, lowLight.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void setVideoAndAudioMode(String channel, StreamTypeEnum streamTypeEnum, CompressionEnum compressionEnum, int value) {
+        NET_DVR_COMPRESSIONCFG_V30 compression = getCompressionConfig(userHandle.intValue(), channel);
+        NET_DVR_COMPRESSION_INFO_V30 info = null;
+        switch (streamTypeEnum) {
+            case MAIN_STREAM:
+                info = compression.struNormHighRecordPara;
+                break;
+            case SUB_STREAM:
+                info = compression.struNetPara;
+                break;
+        }
 
+        switch (compressionEnum) {
+            case STREAM_TYPE:
+                info.byStreamType = (byte) value;
+                break;
+            case RESOLUTION:
+                info.byResolution = (byte) value;
+                break;
+            case BITRATE_TYPE:
+                info.byBitrateType = (byte) value;
+                break;
+            case PIC_QUALITY:
+                info.byPicQuality = (byte) value;
+                break;
+            case VIDEO_BITRATE:
+                info.dwVideoBitrate = value;
+                break;
+            case VIDEO_ENCODE_TYPE:
+                info.byVideoEncType = (byte) value;
+                break;
+            case VIDEO_ENCODE_COMPLEXITY:
+                info.byVideoEncComplexity = (byte) value;
+                break;
+            case ENABLE_SVC:
+                info.byEnableSvc = (byte) value;
+                break;
+            case AUDIO_BIT_RATE:
+                info.byAudioBitRate = (byte) value;
+                break;
+            case STEAM_SMOOTH:
+                info.bySteamSmooth = (byte) value;
+                break;
+            case AUDIO_SAMPLING_RATE:
+                info.byAudioSamplingRate = (byte) value;
+                break;
+            case VIDEO_FRAME_RATE:
+                info.dwVideoFrameRate = value;
+                break;
+            case AUDIO_ENCODE_TYPE:
+                info.byAudioEncType = (byte) value;
+                break;
+        }
+
+        switch (streamTypeEnum) {
+            case MAIN_STREAM:
+                compression.struNormHighRecordPara = info;
+                break;
+            case SUB_STREAM:
+                compression.struNetPara = info;
+                break;
+        }
+
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_COMPRESSIONCFG_V30_SET, handleChannel(channel),
+                compression, compression.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void setAudioInputConfig(String channel, AudioInputEnum audioInputEnum, int value) {
+        NET_DVR_AUDIO_INPUT_PARAM param = getAudioInputConfig(userHandle.intValue(), channel);
 
+        switch (audioInputEnum) {
+            case AUDIO_INPUT_TYPE:
+                param.byAudioInputType = (byte) value;
+                break;
+            case AUDIO_INPUT_VOLUME:
+                param.byVolume = (byte) value;
+                break;
+            case AUDIO_INPUT_NOISE_FILTER:
+                param.byEnableNoiseFilter = (byte) value;
+                break;
+        }
+        param.write();
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_AUDIO_INPUT_PARAM_SET, handleChannel(channel),
+                param, param.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
     @Override
     public void setPTZOSDConfigMode(String channel, PtzOSDParam ptzOSDParam, int value) {
-
+        NET_DVR_PTZ_OSDCFG osd = new NET_DVR_PTZ_OSDCFG();
+        if (!hcNetSDK.NET_DVR_GetDVRConfig(userHandle.intValue(), NET_DVR_GET_PTZOSDCFG, handleChannel(channel),
+                osd.getPointer(), ISAPI_DATA_LEN, new IntByReference(osd.size()))) {
+            throw new HikException(getErrorMsg());
+        }
+        osd.read();
+        switch (ptzOSDParam) {
+            case PT_STATUS:
+                osd.byPtStatus = (byte) value;
+                break;
+            case ZOOM_STATUS:
+                osd.byZoomStatus = (byte) value;
+                break;
+            case PRESET_STATUS:
+                osd.byPresetStatus = (byte) value;
+                break;
+        }
+        osd.write();
+        if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_SET_PTZOSDCFG, handleChannel(channel),
+                osd, osd.size())) {
+            throw new HikException(getErrorMsg());
+        }
     }
 
 
@@ -883,5 +1625,34 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
                 e.printStackTrace();
             }
         }
+    }
+
+    private static class RemoteConfigCallback implements HCNetSDK.FremoteConfigCallback {
+
+        private Map<String, Temperature> temperatureMap = new HashMap<>();
+
+        public List<Temperature> getTemperatures() {
+            return temperatureMap.values().stream().filter(t -> t.getInfraredNo() != 0).collect(Collectors.toList());
+        }
+
+        @Override
+        public void invoke(int dwType, Pointer lpBuffer, int dwBufLen, Pointer pUserData) {
+
+            switch (dwType) {
+                case NET_SDK_CALLBACK_TYPE_DATA:
+                    byte[] byteArray = lpBuffer.getByteArray(0, dwBufLen);
+                    NET_DVR_THERMOMETRY_UPLOAD thermometry = new NET_DVR_THERMOMETRY_UPLOAD();
+                    thermometry.write();
+                    thermometry.getPointer().write(0, byteArray, 0, thermometry.size());
+                    thermometry.read();
+
+                    String ruleId = String.valueOf(thermometry.byRuleID);
+                    if (!temperatureMap.containsKey(ruleId)) {
+                        temperatureMap.put(ruleId, convert(thermometry));
+                    }
+                    break;
+            }
+        }
+
     }
 }

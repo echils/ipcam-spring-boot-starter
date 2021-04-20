@@ -12,11 +12,19 @@ import com.sun.jna.Structure;
 public class NET_DVR_PRESET_NAME extends Structure {
 
     public int dwSize;
+
     public short wPresetNum;
+
     public byte[] byRes1 = new byte[2];
+
     public byte[] byName = new byte[32];
+
     public short wPanPos;
+
     public short wTiltPos;
+
     public short wZoomPos;
+
     public byte[] byRes = new byte[58];
+
 }

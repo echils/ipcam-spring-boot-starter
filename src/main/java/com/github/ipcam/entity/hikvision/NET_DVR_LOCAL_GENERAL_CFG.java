@@ -11,9 +11,13 @@ import com.sun.jna.Structure;
 public class NET_DVR_LOCAL_GENERAL_CFG extends Structure {
 
     public byte byExceptionCbDirectly;
+
     public byte byNotSplitRecordFile;
+
     public byte[] bytes = new byte[6];
+
     public int i64FileSize;
+
     public byte[] byRes1 = new byte[240];
 
 }

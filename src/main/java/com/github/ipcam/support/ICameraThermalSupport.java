@@ -69,27 +69,4 @@ public interface ICameraThermalSupport {
     }
 
 
-    /**
-     * get infrared point name
-     *
-     * @param presetNo   preset point index of the camera
-     * @param infraredNo infrared point index of network camera
-     */
-    default String getInfraredPointName(int presetNo, int infraredNo) {
-        throw new CameraNotSupportException();
-    }
-
-
-    /**
-     * set infrared point name
-     *
-     * @param presetNo   preset point index of the camera
-     * @param infraredNo infrared point index of network camera
-     * @param name       infrared point name
-     */
-    default void setInfraredPointName(int presetNo, int infraredNo, String name) {
-        throw new CameraNotSupportException();
-    }
-
-
 }

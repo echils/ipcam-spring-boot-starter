@@ -11,15 +11,25 @@ import com.sun.jna.Structure;
 public class NET_DVR_FOCUSMODE_CFG extends Structure {
 
     public int dwSize;
+
     public byte byFocusMode;
+
     public byte byAutoFocusMode;
+
     public short wMinFocusDistance;
+
     public byte byZoomSpeedLevel;
+
     public byte byFocusSpeedLevel;
+
     public byte byOpticalZoom;
+
     public byte byDigtitalZoom;
+
     public float fOpticalZoomLevel;
+
     public int dwFocusPos;
+
     public byte[] byRes = new byte[56];
 
 }
