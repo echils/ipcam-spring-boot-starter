@@ -12,6 +12,9 @@ import com.sun.jna.Structure;
  */
 public class NET_DVR_IPPARACFG extends Structure {
 
+    /**
+     * Structure size
+     */
     public int dwSize;
 
     public NET_DVR_IPDEVINFO[] struIPDevInfo = new NET_DVR_IPDEVINFO[StructureContext.MAX_IP_DEVICE];

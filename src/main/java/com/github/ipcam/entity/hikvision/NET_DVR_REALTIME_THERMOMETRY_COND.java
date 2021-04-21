@@ -10,6 +10,9 @@ import com.sun.jna.Structure;
  */
 public class NET_DVR_REALTIME_THERMOMETRY_COND extends Structure {
 
+    /**
+     * Structure size
+     */
     public int dwSize;
 
     public int dwChan = 2;
@@ -18,6 +21,9 @@ public class NET_DVR_REALTIME_THERMOMETRY_COND extends Structure {
 
     public byte byMode = 0;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[62];
 
 }

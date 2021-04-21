@@ -10,18 +10,39 @@ import com.sun.jna.Structure;
  */
 public class NET_DVR_CMOSMODECFG extends Structure {
 
+    /**
+     * Catch Mode: 0- Catch Mode 1; 1- Catch Mode 2
+     */
     public byte byCaptureMod;
 
+    /**
+     * Brightness threshold
+     */
     public byte byBrightnessGate;
 
+    /**
+     * Catch gain 1, 0-100
+     */
     public byte byCaptureGain1;
 
+    /**
+     * Catch gain 2, 0-100
+     */
     public byte byCaptureGain2;
 
+    /**
+     * Snap shutter speed 1
+     */
     public int dwCaptureShutterSpeed1;
 
+    /**
+     * Snap shutter speed 2
+     */
     public int dwCaptureShutterSpeed2;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[4];
 
 }

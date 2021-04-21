@@ -10,12 +10,18 @@ import com.sun.jna.Structure;
  */
 public class NET_DVR_THERMOMETRY_COND extends Structure {
 
+    /**
+     * Structure size
+     */
     public int dwSize;
 
     public int dwChannel = 2;
 
     public short wPresetNo;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[62];
 
 }

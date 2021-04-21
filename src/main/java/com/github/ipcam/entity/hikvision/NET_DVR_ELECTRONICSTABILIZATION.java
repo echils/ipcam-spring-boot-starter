@@ -14,6 +14,9 @@ public class NET_DVR_ELECTRONICSTABILIZATION extends Structure {
 
     public byte byLevel;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[6];
 
 }

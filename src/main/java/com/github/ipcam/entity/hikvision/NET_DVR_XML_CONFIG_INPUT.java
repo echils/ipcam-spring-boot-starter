@@ -11,6 +11,9 @@ import com.sun.jna.Structure;
  */
 public class NET_DVR_XML_CONFIG_INPUT extends Structure {
 
+    /**
+     * Structure size
+     */
     public int dwSize;
 
     public Pointer lpRequestUrl;
@@ -27,6 +30,9 @@ public class NET_DVR_XML_CONFIG_INPUT extends Structure {
 
     public byte byNumOfMultiPart;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[30];
 
 }

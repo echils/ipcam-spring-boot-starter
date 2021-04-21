@@ -16,6 +16,9 @@ public class NET_DVR_WHITEBALANCE extends Structure {
 
     public byte byWhiteBalanceModeBGain;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[5];
 
 }

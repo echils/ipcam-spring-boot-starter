@@ -11,6 +11,9 @@ import com.sun.jna.Structure;
  */
 public class NET_DVR_XML_CONFIG_OUTPUT extends Structure {
 
+    /**
+     * Structure size
+     */
     public int dwSize;
 
     public Pointer lpOutBuffer;
@@ -23,6 +26,9 @@ public class NET_DVR_XML_CONFIG_OUTPUT extends Structure {
 
     public int dwStatusSize;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[32];
 
 }

@@ -27,6 +27,9 @@ public class NET_SDK_MANUALTHERM_RULE extends Structure {
 
     public NET_SDK_REGION_THERMOMETRY struRegionTherm;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[512];
 
 }

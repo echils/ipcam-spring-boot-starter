@@ -20,6 +20,9 @@ public class NET_DVR_LINEPOLYGON_THERM_CFG extends Structure {
 
     public NET_VCA_POLYGON struRegion = new NET_VCA_POLYGON();
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[32];
 
 }

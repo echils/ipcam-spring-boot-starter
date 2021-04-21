@@ -15,6 +15,9 @@ public class NET_SDK_POINT_THERMOMETRY extends Structure {
 
     public NET_VCA_POINT struPoint;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[20];
 
 }

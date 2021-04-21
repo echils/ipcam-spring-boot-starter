@@ -12,6 +12,9 @@ public class NET_DVR_OPTICAL_DEHAZE extends Structure {
 
     public byte byEnable;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[7];
 
 }

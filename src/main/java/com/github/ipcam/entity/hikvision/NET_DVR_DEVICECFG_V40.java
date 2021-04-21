@@ -12,6 +12,9 @@ import static com.github.ipcam.entity.comm.StructureContext.*;
  */
 public class NET_DVR_DEVICECFG_V40 extends Structure {
 
+    /**
+     * Structure size
+     */
     public int dwSize;
 
     public byte[] sDVRName = new byte[NAME_LEN];

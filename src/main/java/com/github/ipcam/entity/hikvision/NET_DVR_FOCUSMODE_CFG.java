@@ -10,6 +10,9 @@ import com.sun.jna.Structure;
  */
 public class NET_DVR_FOCUSMODE_CFG extends Structure {
 
+    /**
+     * Structure size
+     */
     public int dwSize;
 
     public byte byFocusMode;
@@ -30,6 +33,9 @@ public class NET_DVR_FOCUSMODE_CFG extends Structure {
 
     public int dwFocusPos;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[56];
 
 }

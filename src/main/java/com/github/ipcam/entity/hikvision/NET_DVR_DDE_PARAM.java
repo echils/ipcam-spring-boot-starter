@@ -16,6 +16,9 @@ public class NET_DVR_DDE_PARAM extends Structure {
 
     public byte byExpertLevel;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[5];
 
 }

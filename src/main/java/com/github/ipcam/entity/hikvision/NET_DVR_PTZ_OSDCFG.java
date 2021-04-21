@@ -10,6 +10,9 @@ import com.sun.jna.Structure;
  */
 public class NET_DVR_PTZ_OSDCFG extends Structure {
 
+    /**
+     * Structure size
+     */
     public int dwSize;
 
     public byte byZoomStatus;
@@ -18,6 +21,9 @@ public class NET_DVR_PTZ_OSDCFG extends Structure {
 
     public byte byPresetStatus;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[125];
 
 }

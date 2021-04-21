@@ -12,6 +12,9 @@ import com.sun.jna.Structure;
  */
 public class NET_DVR_THERMOMETRY_UPLOAD extends Structure {
 
+    /**
+     * Structure size
+     */
     public int dwSize;
 
     public int dwRelativeTime;
@@ -44,6 +47,9 @@ public class NET_DVR_THERMOMETRY_UPLOAD extends Structure {
 
     public byte fLowestPointTemperature;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[112];
 
 }

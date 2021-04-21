@@ -28,6 +28,9 @@ public class NET_DVR_LASER_PARAM_CFG extends Structure {
 
     public byte byLightAngle;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[7];
 
 }

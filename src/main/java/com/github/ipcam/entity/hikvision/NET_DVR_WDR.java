@@ -18,6 +18,9 @@ public class NET_DVR_WDR extends Structure {
 
     public byte byWDRContrastLevel;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[16];
 
 }

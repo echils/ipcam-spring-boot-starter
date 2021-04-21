@@ -22,6 +22,9 @@ public class NET_DVR_TIME_EX extends Structure {
 
     public byte bySecond;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte byRes;
 
 }

@@ -19,6 +19,9 @@ public class NET_DVR_THERMOMETRY_PRESETINFO_PARAM extends Structure {
 
     public float fEmissivity;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[3];
 
     public byte byReflectiveEnabled;

@@ -14,6 +14,9 @@ public class NET_DVR_GAIN extends Structure {
 
     public byte byGainUserSet;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[2];
 
     public int dwMaxGainValue;

@@ -15,6 +15,9 @@ public class NET_DVR_POINT_THERM_CFG extends Structure {
 
     public NET_VCA_POINT struPoint = new NET_VCA_POINT();
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[120];
 
 }

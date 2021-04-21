@@ -22,6 +22,9 @@ public class NET_DVR_NOISEREMOVE extends Structure {
 
     public byte byDigitalNoiseRemove2DLevel;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[2];
 
 }

@@ -36,6 +36,9 @@ public class NET_DVR_USER_INFO_V30 extends Structure {
 
     public byte byPriority;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[17];
 
 }

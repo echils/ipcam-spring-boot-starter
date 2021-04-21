@@ -14,6 +14,9 @@ public class NET_DVR_PIRIS_PARAM extends Structure {
 
     public byte byPIrisAperture;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[6];
 
 }

@@ -20,6 +20,9 @@ public class NET_SDK_REGION_THERMOMETRY extends Structure {
 
     public NET_VCA_POLYGON struRegion;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[20];
 
 }

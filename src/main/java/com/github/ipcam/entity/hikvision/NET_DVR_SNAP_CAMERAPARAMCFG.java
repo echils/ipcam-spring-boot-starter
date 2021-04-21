@@ -40,6 +40,9 @@ public class NET_DVR_SNAP_CAMERAPARAMCFG extends Structure {
 
     public byte byLPDELevel;
 
+    /**
+     * Keep it, set it to 0
+     */
     public byte[] byRes = new byte[35];
 
 }
