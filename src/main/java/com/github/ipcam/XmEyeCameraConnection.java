@@ -43,8 +43,8 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
 
 
     private static final Logger logger = LoggerFactory.getLogger(XmEyeCameraConnection.class);
-    private H264_DVR_DEVICEINFO deviceInfo = new H264_DVR_DEVICEINFO();
 
+    private H264_DVR_DEVICEINFO deviceInfo = new H264_DVR_DEVICEINFO();
 
     public XmEyeCameraConnection(NetworkCamera networkCamera) {
         super(networkCamera);

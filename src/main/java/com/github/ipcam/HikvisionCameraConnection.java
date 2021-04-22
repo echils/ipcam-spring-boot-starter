@@ -50,6 +50,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
 
     private static final Logger logger = LoggerFactory.getLogger(HikvisionCameraConnection.class);
 
+
     public HikvisionCameraConnection(NetworkCamera networkCamera) {
         super(networkCamera);
     }
@@ -182,6 +183,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         return channelList;
     }
 
+
     /**
      * Get a preview handle from camera
      *
@@ -218,6 +220,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         logger.info("Camera {} current number of previews occupied:{}", networkCamera.getIp(), count.get());
         return previewHandle;
     }
+
 
     /**
      * Release the preview handle of the camera
@@ -262,6 +265,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public CameraInfo getBasicInfo(String channel) {
         NET_DVR_DEVICECFG_V40 deviceConfig = new NET_DVR_DEVICECFG_V40();
@@ -283,6 +287,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         return cameraInfo;
     }
 
+
     @Override
     public void imageOutput(String channel, String targetPath) {
         createParentDirectory(targetPath);
@@ -291,6 +296,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void videoDownload(String channel, Date startTime, Date endTime, String targetPath) throws InterruptedException {
@@ -336,6 +342,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void audioOutput(String targetPath, int duration) throws InterruptedException {
@@ -392,6 +399,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public String videoStreamOutput(String channel, StreamTypeEnum streamType, String path) {
         OutputStream outputStream = null;
@@ -403,6 +411,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
         return videoStreamOutput(channel, streamType, outputStream);
     }
+
 
     @Override
     public String videoStreamOutput(String channel, StreamTypeEnum streamType, OutputStream outputStream) {
@@ -430,6 +439,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         return dataOutputHandle;
     }
 
+
     @Override
     public void stopVideoStreamOutput(String dataOutputHandle) {
         try {
@@ -454,6 +464,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             }
         }
     }
+
 
     @Override
     public List<NVRChannelInfo> getChannelInfo() {
@@ -499,6 +510,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         return Collections.emptyList();
     }
 
+
     @Override
     public void control(String channel, PTZControlEnum controlEnum, int status, int speed) {
         if (!hcNetSDK.NET_DVR_PTZControlWithSpeed(Math.toIntExact(
@@ -506,6 +518,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void controlExpand(String channel, PTZControlEnum controlEnum, int status, int speed) {
@@ -515,6 +528,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void preset(String channel, PresetEnum presetEnum, int index) {
         if (!hcNetSDK.NET_DVR_PTZPreset(Math.toIntExact(
@@ -522,6 +536,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void presetExpand(String channel, PresetEnum presetEnum, int index) {
@@ -550,6 +565,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void stopVideoOutput(String channel, StreamTypeEnum streamType) {
         if (!hcNetSDK.NET_DVR_StopSaveRealData(Math.toIntExact(
@@ -557,6 +573,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void cruise(String channel, CruiseEnum cruiseEnum, int cruiseRoute, int cruisePoint, int value) {
@@ -566,12 +583,14 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void cruiseExpand(String channel, CruiseEnum cruiseEnum, int cruiseRoute, int cruisePoint, int value) {
         if (!hcNetSDK.NET_DVR_PTZCruise_Other(userHandle.intValue(), handleChannel(channel), cruiseEnum.key(), cruiseRoute, cruisePoint, value)) {
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void track(String channel, TrackEnum trackEnum) {
@@ -581,12 +600,14 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void trackExpand(String channel, TrackEnum trackEnum) {
         if (!hcNetSDK.NET_DVR_PTZTrack_Other(userHandle.intValue(), handleChannel(channel), trackEnum.key())) {
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void setPresetName(int index, String name) {
@@ -602,6 +623,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public String getPresetName(int index) {
@@ -619,6 +641,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new CameraConnectionException(e);
         }
     }
+
 
     @Override
     public PTZScope getPresetScope(String channel) {
@@ -657,6 +680,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         return networkCameraPTZ;
     }
 
+
     @Override
     public void gotoPresetPoint(String channel, int presetIndex, PTZ ptz) throws InterruptedException {
         logger.info("Camera:{} goto preset point with channel:{} and index:{}", networkCamera.getIp(), channel, presetIndex);
@@ -674,6 +698,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
         logger.info("Goto preset complete. used {} seconds", TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - time));
     }
+
 
     @Override
     public void locate(String channel, int pan, int tilt, int zoom) throws InterruptedException {
@@ -697,6 +722,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         logger.info("Goto position complete. used {} seconds", TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - time));
 
     }
+
 
     @Override
     public List<PresetPointInfo> getActivatedPresetPoints(String channel) {
@@ -752,10 +778,12 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         return null;
     }
 
+
     @Override
     public List<Temperature> measureAll() {
         return this.getTargetTemperature(0);
     }
+
 
     @Override
     public Temperature measure(int infraredNo) {
@@ -766,6 +794,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
         return targetTemperatures.get(0);
     }
+
 
     /**
      * Get the temperature from network camera
@@ -800,6 +829,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
         return callback.getTemperatures();
     }
+
 
     @Override
     public void setInfraredPoint(Temperature temperature) {
@@ -850,6 +880,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public Temperature getInfraredPoint(int presetNo, int infraredNo) {
         NET_DVR_THERMOMETRY_PRESETINFO infraredInfo = getInfraredInfo(Math.toIntExact(userHandle), presetNo);
@@ -868,6 +899,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
         return null;
     }
+
 
     @Override
     public void deleteInfraredPoint(int presetNo, int infraredNo) {
@@ -897,6 +929,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void reboot() {
         if (!hcNetSDK.NET_DVR_RebootDVR(userHandle.intValue())) {
@@ -904,12 +937,14 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void restore() {
         if (!hcNetSDK.NET_DVR_RestoreConfig(userHandle.intValue())) {
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void setZoomLimit(String channel, int zoomValue) {
@@ -946,11 +981,13 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void openLensInitialization(String channel) {
         setLensInitialization(userHandle.intValue(), channel, true);
         close();
     }
+
 
     @Override
     public void closeLensInitialization(String channel) {
@@ -992,6 +1029,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void setMaxElevationAngle(String channel, int elevationValue) {
         long actualChannel = hcNetSDK.NET_DVR_SDKChannelToISAPI(userHandle, handleChannel(channel), true);
@@ -1027,6 +1065,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         logout();
     }
 
+
     @Override
     public void setScreen(String channel, ScreenEffectEnum screenEffectEnum, int value) {
         NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
@@ -1053,6 +1092,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public ScreenEffect getScreen(String channel) {
         NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
@@ -1065,6 +1105,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         return videoEffect;
     }
 
+
     @Override
     public void resetScreen(String channel) {
         setScreen(channel, ScreenEffectEnum.BRIGHT, 50);
@@ -1073,6 +1114,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         setScreen(channel, ScreenEffectEnum.SATURATION, 50);
         setScreen(channel, ScreenEffectEnum.SHARPNESS, 50);
     }
+
 
     @Override
     public void setDayNightConversionMode(String channel, DayNightEnum dayNightEnum) {
@@ -1083,6 +1125,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void setCustomDayNightConversionMode(String channel, Calendar dayStart, Calendar dayEnd) {
@@ -1101,6 +1144,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void setBackLightCompensationMode(String channel, BackLightEnum backLightEnum) {
         NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
@@ -1111,6 +1155,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void setBackLightCompensationMode(String channel, BackLightEnum backLightEnum, int value) {
@@ -1128,6 +1173,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void setWhiteBalanceMode(String channel, WhiteBalanceEnum whiteBalanceEnum) {
         NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
@@ -1138,6 +1184,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void openStrongLightInhibitionMode(String channel) {
@@ -1150,10 +1197,12 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void closeStrongLightInhibitionMode(String channel) {
         openPreventOverexposureMode(channel);
     }
+
 
     @Override
     public void openPreventOverexposureMode(String channel) {
@@ -1166,10 +1215,12 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void closePreventOverexposureMode(String channel) {
         openStrongLightInhibitionMode(channel);
     }
+
 
     @Override
     public void closeLightInhibitionAndPreventOverexposureMode(String channel) {
@@ -1182,6 +1233,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void setWideDynamicMode(String channel, WDREnum wdrEnum) {
         NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
@@ -1192,6 +1244,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void setWideDynamicMode(String channel, WDREnum wdrEnum, int value) {
@@ -1204,6 +1257,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void setNoiseReductionMode(String channel, NoiseReductionEnum noiseReductionEnum) {
         NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
@@ -1214,6 +1268,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void setNoiseReductionValue(String channel, NoiseReductionLevelEnum noiseReductionLevelEnum, int value) {
@@ -1236,6 +1291,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void openDefogMode(String channel) {
         NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
@@ -1246,6 +1302,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void closeDefogMode(String channel) {
@@ -1258,6 +1315,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void openElectronicStabilizationMode(String channel) {
         NET_DVR_CAMERAPARAMCFG_EX param = getCameraConfig(userHandle.intValue(), channel);
@@ -1268,6 +1326,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void closeElectronicStabilizationMode(String channel) {
@@ -1280,6 +1339,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void setExposureMode(String channel, ExposureMode exposureMode) {
         NET_DVR_AEMODECFG param = getExposureConfig(userHandle.intValue(), channel);
@@ -1290,6 +1350,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void setExposureParam(String channel, ExposureParam exposureParam, int value) {
@@ -1317,6 +1378,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void setFocusMode(String channel, FocusMode focusMode) {
         NET_DVR_FOCUSMODE_CFG mode = new NET_DVR_FOCUSMODE_CFG();
@@ -1332,6 +1394,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void setFocusDistance(String channel, int value) {
@@ -1349,12 +1412,14 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void resetLens(String channel) {
         if (!hcNetSDK.NET_DVR_ResetLens(userHandle.intValue(), handleChannel(channel))) {
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void setLowIlluminationElectronicShutterMode(String channel, LowLightShutterEnum lowLightShutterEnum) {
@@ -1376,6 +1441,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void setVideoAndAudioMode(String channel, StreamTypeEnum streamTypeEnum, CompressionEnum compressionEnum, int value) {
@@ -1447,6 +1513,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     @Override
     public void setAudioInputConfig(String channel, AudioInputEnum audioInputEnum, int value) {
         NET_DVR_AUDIO_INPUT_PARAM param = getAudioInputConfig(userHandle.intValue(), channel);
@@ -1468,6 +1535,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
     }
+
 
     @Override
     public void setPTZOSDConfigMode(String channel, PtzOSDParam ptzOSDParam, int value) {
@@ -1560,6 +1628,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
 
     }
 
+
     private static class RealDataCallBack implements HCNetSDK.FRealDataCallBack_V30 {
 
         private OutputStream outputStream;
@@ -1627,6 +1696,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
     }
 
+
     private static class RemoteConfigCallback implements HCNetSDK.FremoteConfigCallback {
 
         private Map<String, Temperature> temperatureMap = new HashMap<>();
@@ -1655,4 +1725,5 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
 
     }
+
 }
