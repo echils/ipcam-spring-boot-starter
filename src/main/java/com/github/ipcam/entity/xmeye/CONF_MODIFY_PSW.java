@@ -10,10 +10,19 @@ import com.sun.jna.Structure;
  */
 public class CONF_MODIFY_PSW extends Structure {
 
+    /**
+     * The username of the device
+     */
     public byte[] sUserName = new byte[32];
 
+    /**
+     * The password of the device
+     */
     public byte[] Password = new byte[32];
 
+    /**
+     * The new password of the device
+     */
     public byte[] NewPassword = new byte[32];
 
 }

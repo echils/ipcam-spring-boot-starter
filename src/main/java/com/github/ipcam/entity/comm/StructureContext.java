@@ -25,12 +25,8 @@ public class StructureContext {
     public static final int NAME_LEN = 32;
     public static final int SERIALNO_LEN = 48;
     public static final int MACADDR_LEN = 6;
-    public static final int MAX_NAMELEN = 16;
     public static final int PASSWORD_LENGTH = 16;
     public static final int SERIAL_LENGTH = 48;
-    public static final int MAX_TIMESEGMENT_V30 = 8;
-    public static final int MAX_DAYS = 7;
-    public static final int MAX_LINK = 6;
     public static final int MAX_ANALOG_CHANNUM = 32;
     public static final int MAX_IP_DEVICE = 32;
     public static final int MAX_IP_CHANNEL = 32;

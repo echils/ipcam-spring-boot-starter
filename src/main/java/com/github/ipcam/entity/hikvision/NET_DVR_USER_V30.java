@@ -11,6 +11,9 @@ public class NET_DVR_USER_V30 extends Structure {
      */
     public int dwSize;
 
+    /**
+     * User information parameter
+     */
     public NET_DVR_USER_INFO_V30[] struUser = new NET_DVR_USER_INFO_V30[MAX_USERNUM_V30];
 
 }

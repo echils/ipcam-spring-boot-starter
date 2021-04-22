@@ -10,6 +10,9 @@ import com.sun.jna.Structure;
  */
 public class NET_DVR_IPADDR extends Structure {
 
+    /**
+     * Ipv4 of the camera
+     */
     public byte[] sIpV4 = new byte[16];
 
     /**

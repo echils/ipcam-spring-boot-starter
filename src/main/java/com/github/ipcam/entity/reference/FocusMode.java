@@ -8,20 +8,30 @@ package com.github.ipcam.entity.reference;
  */
 public enum FocusMode {
 
-    AUTOMATIC(0, "自动"),
-    MANUAL(1, "手动"),
-    SEMI_AUTOMATIC(2, "半自动");
+    /**
+     * Automatic
+     */
+    AUTOMATIC(0),
+
+    /**
+     * Manual
+     */
+    MANUAL(1),
+
+    /**
+     * SEMI-Automatic
+     */
+    SEMI_AUTOMATIC(2);
 
 
     private byte key;
-    private String desc;
 
-    FocusMode(int key, String desc) {
+    FocusMode(int key) {
         this.key = (byte) key;
-        this.desc = desc;
     }
 
     public byte getKey() {
         return key;
     }
+
 }

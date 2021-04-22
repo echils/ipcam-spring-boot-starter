@@ -8,19 +8,29 @@ package com.github.ipcam.entity.reference;
  */
 public enum DownloadEnum {
 
-    NET_DVR_PLAYSTART(1, "Start to download"),
-    NET_DVR_PLAYPAUSE(3, "Pause to download"),
-    NET_DVR_PLAYRESTART(4, "Resume download");
+    /**
+     * Start to download
+     */
+    NET_DVR_PLAYSTART(1),
+
+    /**
+     * Pause to download
+     */
+    NET_DVR_PLAYPAUSE(3),
+
+    /**
+     * Resume download
+     */
+    NET_DVR_PLAYRESTART(4);
 
     private int key;
-    private String implication;
 
-    DownloadEnum(int key, String implication) {
+    DownloadEnum(int key) {
         this.key = key;
-        this.implication = implication;
     }
 
     public Integer key() {
         return key;
     }
+
 }

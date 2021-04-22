@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 
 import static com.github.ipcam.entity.comm.StructureContext.*;
 import static com.github.ipcam.entity.hikvision.HCNetSDK.hcNetSDK;
-import static com.github.ipcam.entity.hikvision.HikManager.*;
+import static com.github.ipcam.entity.hikvision.NetCommonInvoke.*;
 import static com.github.ipcam.utils.FileUtils.createParentDirectory;
 import static java.util.Calendar.HOUR_OF_DAY;
 

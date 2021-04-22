@@ -10,12 +10,24 @@ import com.sun.jna.Structure;
  */
 public class NET_DVR_WDR extends Structure {
 
+    /**
+     * Wide dynamic whether enabled, 0- not enabled, 1- enabled, 2- automatic
+     */
     public byte byWDREnabled;
 
+    /**
+     * 0-F
+     */
     public byte byWDRLevel1;
 
+    /**
+     * 0-F
+     */
     public byte byWDRLevel2;
 
+    /**
+     * 0-100
+     */
     public byte byWDRContrastLevel;
 
     /**

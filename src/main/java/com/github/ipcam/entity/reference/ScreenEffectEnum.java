@@ -8,16 +8,30 @@ package com.github.ipcam.entity.reference;
  */
 public enum ScreenEffectEnum {
 
-    BRIGHT("亮度"), //0-100
-    CONTRAST("对比度"), //0-100
-    SATURATION("饱和度"), //0-100
-    HUE("色度"), //0-100
-    SHARPNESS("锐度"); //0-100
+    /**
+     * Bright:0-100
+     */
+    BRIGHT,
 
-    private String implication;
+    /**
+     * Contrast:0-100
+     */
+    CONTRAST,
 
-    ScreenEffectEnum(String implication) {
-        this.implication = implication;
-    }
+    /**
+     * Saturation:0-100
+     */
+    SATURATION,
+
+    /**
+     * Hue:0-100
+     */
+    HUE,
+
+    /**
+     * Sharpness:0-100
+     */
+    SHARPNESS
+
 
 }

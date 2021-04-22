@@ -10,8 +10,14 @@ import com.sun.jna.Structure;
  */
 public class NET_VCA_POINT extends Structure {
 
+    /**
+     * X axis coordinates, value range [0.001,1]
+     */
     public float fX;
 
+    /**
+     * Y axis coordinates, value range [0.001,1]
+     */
     public float fY;
 
 }

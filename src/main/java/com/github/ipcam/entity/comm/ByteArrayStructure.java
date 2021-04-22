@@ -10,6 +10,9 @@ import com.sun.jna.Structure;
  */
 public class ByteArrayStructure extends Structure {
 
+    /**
+     * byte array
+     */
     public byte[] byValue;
 
     public ByteArrayStructure(int iLen) {

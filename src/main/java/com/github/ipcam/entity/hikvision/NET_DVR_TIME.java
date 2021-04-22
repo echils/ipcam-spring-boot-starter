@@ -10,16 +10,34 @@ import com.sun.jna.Structure;
  */
 public class NET_DVR_TIME extends Structure {
 
+    /**
+     * Year
+     */
     public int dwYear;
 
+    /**
+     * Month
+     */
     public int dwMonth;
 
+    /**
+     * Day
+     */
     public int dwDay;
 
+    /**
+     * Hour
+     */
     public int dwHour;
 
+    /**
+     * Minute
+     */
     public int dwMinute;
 
+    /**
+     * Second
+     */
     public int dwSecond;
 
 }

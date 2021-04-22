@@ -10,10 +10,19 @@ import com.sun.jna.Structure;
  */
 public class NET_DVR_DDE_PARAM extends Structure {
 
+    /**
+     * 1- Off, 2- Normal mode, 3- Expert mode
+     */
     public byte byMode;
 
+    /**
+     * Normal mode level, value range: [1,100], valid in normal mode
+     */
     public byte byNormalLevel;
 
+    /**
+     * Expert mode level, value range: [1,100], effective in Expert mode
+     */
     public byte byExpertLevel;
 
     /**

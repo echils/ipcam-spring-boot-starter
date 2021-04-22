@@ -1,8 +1,8 @@
 package com.github.ipcam.support;
 
 
-import com.github.ipcam.entity.infos.NVRChannelInfo;
 import com.github.ipcam.entity.exception.CameraNotSupportException;
+import com.github.ipcam.entity.infos.NVRChannelInfo;
 
 import java.util.List;
 
@@ -19,8 +19,8 @@ public interface ICameraNVRSupport {
      *
      * @return {@link NVRChannelInfo}
      */
-   default List<NVRChannelInfo> getChannelInfo(){
-       throw new CameraNotSupportException();
-   }
+    default List<NVRChannelInfo> getChannelInfo() {
+        throw new CameraNotSupportException();
+    }
 
 }

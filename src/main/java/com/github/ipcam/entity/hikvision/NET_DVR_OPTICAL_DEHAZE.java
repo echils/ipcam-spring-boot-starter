@@ -10,6 +10,9 @@ import com.sun.jna.Structure;
  */
 public class NET_DVR_OPTICAL_DEHAZE extends Structure {
 
+    /**
+     * Enable: 0- optical fog penetration is not enabled, 1- optical fog penetration is enabled
+     */
     public byte byEnable;
 
     /**

@@ -30,6 +30,7 @@ public class XmEyeManager {
         return "Error code：[" + errorCode + "],Error msg: [" + ErrorMap.get(errorCode) + "]";
     }
 
+
     /**
      * handle the chanelNum to get the realChanelNum
      * <p>

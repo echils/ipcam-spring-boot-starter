@@ -9,7 +9,14 @@ package com.github.ipcam.entity.reference;
  */
 public enum StreamTypeEnum {
 
+    /**
+     * The main stream of camera
+     */
     MAIN_STREAM(0, 0),
+
+    /**
+     * The sub stream of camera
+     */
     SUB_STREAM(1, 1 << 31);
 
     private int key;
@@ -27,4 +34,5 @@ public enum StreamTypeEnum {
     public int value() {
         return value;
     }
+
 }

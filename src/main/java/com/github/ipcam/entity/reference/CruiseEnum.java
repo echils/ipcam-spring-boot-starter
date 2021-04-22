@@ -8,22 +8,44 @@ package com.github.ipcam.entity.reference;
  */
 public enum CruiseEnum {
 
-    FILL_PRE_SEQ(30, "Add the preset point to the cruise sequence"),
-    SET_SEQ_DWELL(31, "Set the cruising pause time"),
-    SET_SEQ_SPEED(32, "Cruising speed"),
-    CLE_PRE_SEQ(33, "Removes the preset point from the cruise sequence"),
-    RUN_SEQ(37, "start to cruise"),
-    STOP_SEQ(38, "stop to cruise");
+    /**
+     * Add the preset point to the cruise sequence
+     */
+    FILL_PRE_SEQ(30),
+
+    /**
+     * Set the cruising pause time
+     */
+    SET_SEQ_DWELL(31),
+
+    /**
+     * Cruising speed
+     */
+    SET_SEQ_SPEED(32),
+
+    /**
+     * Removes the preset point from the cruise sequence
+     */
+    CLE_PRE_SEQ(33),
+
+    /**
+     * Start to cruise
+     */
+    RUN_SEQ(37),
+
+    /**
+     * Stop to cruise
+     */
+    STOP_SEQ(38);
 
     private int key;
-    private String implication;
 
-    CruiseEnum(int key, String implication) {
+    CruiseEnum(int key) {
         this.key = key;
-        this.implication = implication;
     }
 
     public Integer key() {
         return key;
     }
+
 }

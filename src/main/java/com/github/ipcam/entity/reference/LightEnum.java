@@ -8,20 +8,30 @@ package com.github.ipcam.entity.reference;
  */
 public enum LightEnum {
 
-    ALL_OFF(0, "防过曝和强光抑制均关闭"),
-    PREVENT_OVEREXPOSURE_ON(1, "防过曝开启"),
-    STRONG_LIGHT_INHIBITION_ON(4, "强光抑制开启");
+    /**
+     * Overexposure prevention and strong light suppression are off
+     */
+    ALL_OFF(0),
+
+    /**
+     * Anti-overexposure opening
+     */
+    PREVENT_OVEREXPOSURE_ON(1),
+
+    /**
+     * Strong light suppression turns on
+     */
+    STRONG_LIGHT_INHIBITION_ON(4);
 
 
     private byte value;
-    private String desc;
+
+    LightEnum(int value) {
+        this.value = (byte) value;
+    }
 
     public byte getValue() {
         return value;
     }
 
-    LightEnum(int value, String desc) {
-        this.value = (byte) value;
-        this.desc = desc;
-    }
 }

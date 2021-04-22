@@ -10,8 +10,14 @@ import com.sun.jna.Structure;
  */
 public class NET_DVR_GAMMACORRECT extends Structure {
 
+    /**
+     * Gamma correction enabled, 0- Not enabled, 1- Enabled
+     */
     public byte byGammaCorrectionEnabled;
 
+    /**
+     * Gamma correction level:0-100
+     */
     public byte byGammaCorrectionLevel;
 
     /**

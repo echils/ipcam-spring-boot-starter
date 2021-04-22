@@ -10,6 +10,9 @@ import com.sun.jna.Structure;
  */
 public class LongStructure extends Structure {
 
+    /**
+     * long value
+     */
     public long value;
 
     public LongStructure(long value) {

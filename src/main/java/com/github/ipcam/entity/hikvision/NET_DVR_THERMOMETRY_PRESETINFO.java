@@ -16,6 +16,9 @@ public class NET_DVR_THERMOMETRY_PRESETINFO extends Structure {
      */
     public int dwSize;
 
+    /**
+     * Preset point number
+     */
     public short wPresetNo;
 
     /**

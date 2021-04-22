@@ -10,8 +10,14 @@ import com.sun.jna.Structure;
  */
 public class NET_DVR_ELECTRONICSTABILIZATION extends Structure {
 
+    /**
+     * Electronic anti-shake enablement: 0- not enabled, 1- enabled
+     */
     public byte byEnable;
 
+    /**
+     * Electronic anti-shaking level, value range: 0~100
+     */
     public byte byLevel;
 
     /**

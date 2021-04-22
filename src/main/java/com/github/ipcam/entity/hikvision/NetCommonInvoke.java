@@ -14,12 +14,12 @@ import java.text.NumberFormat;
 import java.util.*;
 
 /**
- * HikManager
+ * NetCommonInvoke
  *
  * @author echils
  * @since 2018/12/19 18:04
  */
-public class HikManager {
+public class NetCommonInvoke {
 
     private static NumberFormat numberFormat = NumberFormat.getNumberInstance();
 
@@ -300,7 +300,7 @@ public class HikManager {
     }
 
     /**
-     * 获取红外摄像头制定预置点下的信息
+     * Get the information under the setting point of the infrared camera
      */
     public static NET_DVR_THERMOMETRY_PRESETINFO getInfraredInfo(int userHandle, int presetNo) {
 
@@ -361,4 +361,5 @@ public class HikManager {
         numberFormat.setRoundingMode(RoundingMode.UP);
         return Double.valueOf(numberFormat.format(source));
     }
+
 }

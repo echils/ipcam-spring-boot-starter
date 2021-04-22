@@ -1,10 +1,10 @@
 package com.github.ipcam;
 
-import com.github.ipcam.entity.comm.ByteArrayStructure;
-import com.github.ipcam.entity.infos.CameraInfo;
 import com.github.ipcam.entity.NetworkCamera;
+import com.github.ipcam.entity.comm.ByteArrayStructure;
 import com.github.ipcam.entity.exception.CameraConnectionException;
 import com.github.ipcam.entity.exception.XmEyeException;
+import com.github.ipcam.entity.infos.CameraInfo;
 import com.github.ipcam.entity.reference.ResolutionEnum;
 import com.github.ipcam.entity.reference.StreamTypeEnum;
 import com.github.ipcam.entity.xmeye.CONF_MODIFY_PSW;

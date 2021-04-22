@@ -15,8 +15,14 @@ public class NET_DVR_THERMOMETRY_COND extends Structure {
      */
     public int dwSize;
 
+    /**
+     * Channel number
+     */
     public int dwChannel = 2;
 
+    /**
+     * Preset point number
+     */
     public short wPresetNo;
 
     /**

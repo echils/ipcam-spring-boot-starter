@@ -10,8 +10,14 @@ import com.sun.jna.Structure;
  */
 public class NET_DVR_DEFOGCFG extends Structure {
 
+    /**
+     * Fog penetration mode: 0- not enabled, 1- automatic mode, 2- normally on mode
+     */
     public byte byMode;
 
+    /**
+     * Fog penetration level, value range: 0~100
+     */
     public byte byLevel;
 
     /**

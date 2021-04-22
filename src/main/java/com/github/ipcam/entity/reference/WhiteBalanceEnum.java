@@ -8,33 +8,99 @@ package com.github.ipcam.entity.reference;
  */
 public enum WhiteBalanceEnum {
 
-    MWB(0, "手动白平衡"),
-    AWB1(1, "自动白平衡1"),
-    AWB2(2, "自动白平衡2"),
-    LWB(3, "锁定白平衡"),
-    OUTDOOR(4, "室外"),
-    INDOOR(5, "室内"),
-    FLUORESCENT(6, "日光灯"),
-    SODIUM(7, "钠灯"),
-    AUTO_TRACK(8, "自动跟踪"),
-    ONEPUSH(9, "一次白平衡"),
-    AUTO_OUTDOOR(10, "室外自动"),
-    AUTO_SODIUM(11, "钠灯自动"),
-    MERCURY(12, "水银灯模式"),
-    AUTOMATIC(13, "自动白平衡"),
-    INCANDESCENT(14, "白炽灯"),
-    WARM(15, "暖光灯"),
-    NATURAL(16, "自然光");
+    /**
+     * Manual white balance
+     */
+    MWB(0),
+
+    /**
+     * Automatic white balance 1
+     */
+    AWB1(1),
+
+    /**
+     * Automatic white balance 2
+     */
+    AWB2(2),
+
+    /**
+     * Locked white balance
+     */
+    LWB(3),
+
+    /**
+     * outdoor
+     */
+    OUTDOOR(4),
+
+    /**
+     * indoor
+     */
+    INDOOR(5),
+
+    /**
+     * Fluorescent lamp
+     */
+    FLUORESCENT(6),
+
+    /**
+     * Sodium lamp
+     */
+    SODIUM(7),
+
+    /**
+     * Automatic tracking
+     */
+    AUTO_TRACK(8),
+
+    /**
+     * One-time white balance
+     */
+    ONEPUSH(9),
+
+    /**
+     * Outdoor automatic
+     */
+    AUTO_OUTDOOR(10),
+
+    /**
+     * Sodium lamp automatic
+     */
+    AUTO_SODIUM(11),
+
+    /**
+     * Mercury lamp mode
+     */
+    MERCURY(12),
+
+    /**
+     * Automatic white balance
+     */
+    AUTOMATIC(13),
+
+    /**
+     * Incandescent lamp
+     */
+    INCANDESCENT(14),
+
+    /**
+     * Warm light
+     */
+    WARM(15),
+
+    /**
+     * Natural light
+     */
+    NATURAL(16);
 
     private byte key;
-    private String describe;
+
+    WhiteBalanceEnum(int key) {
+        this.key = (byte) key;
+    }
 
     public byte getKey() {
         return key;
     }
 
-    WhiteBalanceEnum(int key, String describe) {
-        this.key = (byte) key;
-        this.describe = describe;
-    }
 }

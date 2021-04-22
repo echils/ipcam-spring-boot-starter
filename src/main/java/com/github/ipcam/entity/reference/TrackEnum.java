@@ -8,20 +8,30 @@ package com.github.ipcam.entity.reference;
  */
 public enum TrackEnum {
 
-    STA_MEM_CRUISE(34, "Start recording track"),
-    STO_MEM_CRUISE(35, "Stop recording track"),
-    RUN_CRUISE(36, "Start tracking");
+    /**
+     * Start recording track
+     */
+    START_MEM_CRUISE(34),
+
+    /**
+     * Stop recording track
+     */
+    STOP_MEM_CRUISE(35),
+
+    /**
+     * Run tracking
+     */
+    RUN_CRUISE(36);
 
 
     private int key;
-    private String implication;
 
-    TrackEnum(int key, String implication) {
+    TrackEnum(int key) {
         this.key = key;
-        this.implication = implication;
     }
 
     public Integer key() {
         return key;
     }
+
 }

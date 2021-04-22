@@ -9,12 +9,12 @@ package com.github.ipcam.entity.reference;
 public enum CompressionEnum {
 
     /**
-     * 视频流类型:0-视频流,1-复合流
+     * Video stream type: 0-video stream, 1-composite stream
      */
     STREAM_TYPE,
 
     /**
-     * 分辨率:
+     * RESOLUTION:
      * 0-DCIF(528*384/528*320),1-CIF(352*288/352*240),2-QCIF(176*144/176*120),3-4CIF(704*576/704*480)或D1(720*576/720*486),
      * 4-2CIF(704*288/704*240),6-QVGA(320*240),7-QQVGA(160*120),12-384*288,13-576*576,16-VGA(640*480),17-UXGA(1600*1200),
      * 18-SVGA(800*600),19-HD720P(1280*720),20-XVGA(1280*960),21-HD900P(1600*900),22-1360*1024,23-1536*1536,24-1920*1920,
@@ -33,74 +33,74 @@ public enum CompressionEnum {
      * 121-768*480,122-320*512,123-512*320,124-4096*1800,125-1280*560,126-2400*3840,127-480*272,128-512*272,129-2592*2592,
      * 130-1792*2880,131-1600*2560,132-2720*1192,133-3MP(1920*1536/2048*1536),134-5MP(2560*1944),137-4096*1200,138-3840*1080,
      * 139-2720*800,140-512*232,141-704*200,142-512*152,143-2048*896,144-2048*600,145-1280*376,150-8208*3072,151-4096*1536,
-     * 152-6912*2800,153-3456*1400,0xff-Auto(使用当前码流分辨率)
+     * 152-6912*2800,153-3456*1400,0xff-Auto(Use the current stream resolution)
      */
     RESOLUTION,
 
     /**
-     * 码率类型:0-变码率,1-定码率
+     * Bit rate type :0- variable bit rate,1- fixed rate
      */
     BITRATE_TYPE,
 
     /**
-     * 图像质量: 0-最好,1-次好,2-较好,3-一般,4-较差,5-差,0xfe- 自动（和源一致）
+     * Image Quality: 0- Best,1- Second Good,2- Good,3- Fair,4- Poor,5- Poor, 0xFE - Automatic (Same as source)
      */
     PIC_QUALITY,
 
     /**
-     * 视频码率:
-     * 0-保留,1-16K(保留),2-32K,3-48k,4-64K,5-80K,6-96K,7-128K,8-160k,9-192K,10-224K,11-256K,12-320K,13-384K,
+     * Video code rate::
+     * 0-Keep,1-16K(Keep),2-32K,3-48k,4-64K,5-80K,6-96K,7-128K,8-160k,9-192K,10-224K,11-256K,12-320K,13-384K,
      * 14-448K,15-512K,16-640K,17-768K,18-896K,19-1024K,20-1280K,21-1536K,22-1792K,23-2048K,24-3072K,25-4096K,
-     * 26-8192K,27-16384K,0xfffffffe- 自动（和源一致）。
+     * 26-8192K,27-16384K,0xfffffffe- auto（And the source is consistent）
      */
     VIDEO_BITRATE,
 
     /**
-     * 视频帧率:
-     * 0-全部,1-1/16,2-1/8,3-1/4,4-1/2,5-1,6-2,7-4,8-6,9-8,10-10,11-12,12-16,13-20,14-15,15-18,16－22,
+     * Video frame rate:
+     * 0-all,1-1/16,2-1/8,3-1/4,4-1/2,5-1,6-2,7-4,8-6,9-8,10-10,11-12,12-16,13-20,14-15,15-18,16－22,
      * 17-25,18-30,19-35,20-40,21-45,22-50,23-55,24-60,25-3,26-5,27-7,28-9,29-100,30-120,31-24,32-48,
-     * 33-8.3,0xfffffffe-自动（和源一致）
+     * 33-8.3,0xfffffffe-auto（And the source is consistent）
      */
     VIDEO_FRAME_RATE,
 
     /**
-     * 视频编码类型:
-     * 0-私有264,1-标准h264,2-标准mpeg4,7-M-JPEG,8-MPEG2,9-SVAC,10-标准h265,0xfe- 自动（和源一致）,0xff-无效
+     * Video encoding type:
+     * 0-Private 264, 1-Standard H264, 2-Standard MPEG4,7-M-JPEG,8-MPEG2,9-SVAC, 10-Standard H265, 0xFE - Automatic (source congruent), 0xFF - Invalid
      */
     VIDEO_ENCODE_TYPE,
 
     /**
-     * 音频编码类型；
-     * 0-G722,1-G711_U,2-G711_A,5-MP2L2,6-G726,7-AAC,8-PCM,0xfe- 自动（和源一致）,0xff-无效
+     * Audio coding type;
+     * 0-G722,1-G711_U,2-G711_A,5-MP2L2,6-G726,7-AAC,8-PCM,0xfe-auto（And the source is consistent）,0xff-invalid
      */
     AUDIO_ENCODE_TYPE,
 
     /**
-     * 视频编码复杂度：
-     * 0- 低,1- 中,2- 高,0xfe- 自动（和源一致）,
+     * Video coding complexity:
+     * 0- Low,1- Medium,2- High, 0xFE - Automatic (same as source),
      */
     VIDEO_ENCODE_COMPLEXITY,
 
     /**
-     * SVC功能：
-     * 0- 不启用SVC功能,1- 启用SVC功能,2- 自动启用SVC功能。SVC: Scalable Video Coding,可分级视频编码
+     * SVC function:
+     * 0- SVC feature is not enabled,1- SVC feature is enabled,2- SVC feature is automatically enabled. SVC: Scalable Video Coding Scalable Video Coding
      */
     ENABLE_SVC,
 
     /**
-     * 音频码率:
-     * 0- 默认,1- 8Kbps,2- 16Kbps,3- 32Kbps,4- 64Kbps,5- 128Kbps,6- 192Kbps,7- 40Kbps,8- 48Kbps,9- 56Kbps,
+     * Audio code rate:
+     * 0- default,1- 8Kbps,2- 16Kbps,3- 32Kbps,4- 64Kbps,5- 128Kbps,6- 192Kbps,7- 40Kbps,8- 48Kbps,9- 56Kbps,
      * 10- 80Kbps,11- 96Kbps,12- 112Kbps,13- 144Kbps,14- 160Kbps
      */
     AUDIO_BIT_RATE,
 
     /**
-     * 码流平滑: 取值范围：1～100,1等级表示清晰(Clear),100表示平滑(Smooth)
+     * Code stream smoothness: value range: 1 ~ 100, level 1 means Clear,100 means Smooth
      */
     STEAM_SMOOTH,
 
     /**
-     * 音频采样率: 0- 默认,1- 16kHZ,2- 32kHZ,3- 48kHZ, 4- 44.1kHZ,5- 8kHZ
+     * Audio Sampling Rate: 0-Default, 1-16kHz, 2-32kHz, 3-48kHz, 4-44.1kHz, 5-8kHz
      */
     AUDIO_SAMPLING_RATE
 

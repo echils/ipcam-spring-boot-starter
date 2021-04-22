@@ -8,7 +8,14 @@ package com.github.ipcam.entity.reference;
  */
 public enum ResolutionEnum {
 
+    /**
+     * 1080P
+     */
     PIXEL1080P("1920#1080"),
+
+    /**
+     * 720P
+     */
     PIXEL720P("1280#720");
 
     public static final String RESOLUTION_SEPARATOR = "#";
@@ -22,4 +29,5 @@ public enum ResolutionEnum {
     public String getResolution() {
         return resolution;
     }
+
 }

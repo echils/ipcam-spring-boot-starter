@@ -15,6 +15,9 @@ public interface XNetSDK extends Library {
     XNetSDK xNetSDK = (XNetSDK) Native.loadLibrary("XNetSDK",
             XNetSDK.class);
 
+    /**
+     * Encrypted the password of the device
+     */
     boolean XSDK_EncryptPassword(String inputPswBuf, Pointer outputPswBuf, int PswSize);
 
 }

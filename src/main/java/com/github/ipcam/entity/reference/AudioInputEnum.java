@@ -9,17 +9,17 @@ package com.github.ipcam.entity.reference;
 public enum AudioInputEnum {
 
     /**
-     * 音频输入类型：0- mic in，1- line in
+     * Audio input type: 0-mic in, 1-line in
      */
     AUDIO_INPUT_TYPE,
 
     /**
-     * 音量，取值范围：[0,100]
+     * Volume, value range: [0,100]
      */
     AUDIO_INPUT_VOLUME,
 
     /**
-     * 是否开启声音过滤：0- 关，1- 开
+     * Whether to enable sound filtering: 0- off, 1- on
      */
     AUDIO_INPUT_NOISE_FILTER,
 
