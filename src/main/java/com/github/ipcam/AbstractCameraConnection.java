@@ -51,7 +51,6 @@ public abstract class AbstractCameraConnection implements ICameraConnection {
      */
     static final Map<String, OutputStream> videoOutputStreamManager = new ConcurrentHashMap<>();
 
-
     /**
      * userHandle of the network camera
      */

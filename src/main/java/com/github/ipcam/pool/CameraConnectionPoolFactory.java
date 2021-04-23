@@ -29,15 +29,14 @@ public class CameraConnectionPoolFactory extends BaseKeyedPooledObjectFactory<St
 
     private static final Logger logger = LoggerFactory.getLogger(CameraConnectionPoolFactory.class);
 
+    private static final Map<String, NetworkCamera> networkCameraPool = new LinkedHashMap<>();
+
     private ICameraSupplier cameraSupplier;
 
     private ICameraConnectionFactory cameraConnectionFactory;
 
-    private static final Map<String, NetworkCamera> networkCameraPool = new LinkedHashMap<>();
-
     @Autowired
     private CameraConnectionPoolProperties connectionPoolProperties;
-
 
     public CameraConnectionPoolFactory(ICameraSupplier supplier) {
         if (supplier == null) {
@@ -47,11 +46,9 @@ public class CameraConnectionPoolFactory extends BaseKeyedPooledObjectFactory<St
         this.cameraConnectionFactory = new DefaultCameraConnectionFactory();
     }
 
-
     public ICameraSupplier getCameraSupplier() {
         return cameraSupplier;
     }
-
 
     /**
      * Get a camera connection from pool
@@ -64,7 +61,7 @@ public class CameraConnectionPoolFactory extends BaseKeyedPooledObjectFactory<St
     public ICameraConnection create(String key) throws Exception {
         logger.info("Start to create connection of network camera with key:{}", key);
         NetworkCamera networkCamera = networkCameraPool.computeIfAbsent(key, k -> cameraSupplier.apply(k));
-        if (networkCamera == null || networkCamera.getDriverType() == null || networkCamera.getDriverType().equals("")) {
+        if (networkCamera == null || networkCamera.getDriverType() == null) {
             logger.error("network camera is null where key:{}", key);
             throw new CameraConnectionException("network camera is null");
         }
