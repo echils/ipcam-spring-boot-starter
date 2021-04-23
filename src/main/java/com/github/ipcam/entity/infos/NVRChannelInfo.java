@@ -12,48 +12,37 @@ import lombok.Data;
 public class NVRChannelInfo {
 
     /**
-     * The code of the channel
+     * The channel code of the nvr
      */
     private String channelNo;
 
     /**
-     * The name of the channel
+     * The channel name of the nvr
      */
     private String channelName;
 
     /**
-     * The ip of the channel
+     * The ip of the dvr
      */
     private String ipv4;
 
     /**
-     * The username of the channel
+     * The username of the dvr
      */
     private String username;
 
     /**
-     * The device channel code of the channel
+     * The channel code of the dvr
      */
     private String deviceChannelNo;
 
     /**
-     * The manager port of the channel
+     * The manager port of the dvr
      */
     private int managerPort;
 
     /**
-     * The stream type of the channel
-     */
-    private String streamType;
-
-    /**
-     * The proxy protocol of the channel
+     * The proxy protocol of the dvr
      */
     private String proxyProtocol;
-
-    /**
-     * The address format type of the channel
-     */
-    private String addressFormatType;
-
 }

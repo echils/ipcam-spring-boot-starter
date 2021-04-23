@@ -644,27 +644,6 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
 
 
     @Override
-    public PTZScope getPresetScope(String channel) {
-        NET_DVR_PTZSCOPE scope = new NET_DVR_PTZSCOPE();
-        scope.write();
-        Pointer pointer = scope.getPointer();
-        if (!hcNetSDK.NET_DVR_GetDVRConfig(userHandle.intValue(), NET_DVR_GET_PTZSCOPE, handleChannel(channel),
-                pointer, DEFAULT_BUFFER, new IntByReference(scope.size()))) {
-            throw new HikException(getErrorMsg());
-        }
-        scope.read();
-        PTZScope ptzScope = new PTZScope();
-        ptzScope.setPanMin(scope.panPosMin);
-        ptzScope.setPanMax(scope.panPosMax);
-        ptzScope.setTiltMin(scope.tiltPosMin);
-        ptzScope.setPanMax(scope.tiltPosMax);
-        ptzScope.setZoomMin(scope.zoomPosMin);
-        ptzScope.setZoomMax(scope.zoomPosMax);
-        return ptzScope;
-    }
-
-
-    @Override
     public PTZ getCurrentPosition(String channel) {
         PTZ_POSITION_STRUCTURE position = new PTZ_POSITION_STRUCTURE();
         position.write();

@@ -10,14 +10,12 @@ import com.github.ipcam.entity.reference.StreamTypeEnum;
 import com.github.ipcam.entity.xmeye.CONF_MODIFY_PSW;
 import com.github.ipcam.entity.xmeye.H264_DVR_CLIENTINFO;
 import com.github.ipcam.entity.xmeye.H264_DVR_DEVICEINFO;
-import com.github.ipcam.entity.xmeye.NetSDK;
 import com.github.ipcam.support.CameraSupportedDriver;
-import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +27,6 @@ import static com.github.ipcam.entity.xmeye.NetSDK.netSDK;
 import static com.github.ipcam.entity.xmeye.XNetSDK.xNetSDK;
 import static com.github.ipcam.entity.xmeye.XmEyeManager.getErrorMsg;
 import static com.github.ipcam.entity.xmeye.XmEyeManager.handleChannel;
-import static com.github.ipcam.utils.FileUtils.createParentDirectory;
 import static com.github.ipcam.utils.FileUtils.getFileSuffix;
 import static com.github.ipcam.utils.GraphicsUtils.createNewImage;
 
@@ -224,72 +221,6 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
         }
     }
 
-    @Override
-    public String videoStreamOutput(String channel, StreamTypeEnum streamType, String path) {
-        OutputStream outputStream;
-        try {
-            createParentDirectory(path);
-            outputStream = new FileOutputStream(new File(path));
-        } catch (FileNotFoundException e) {
-            logger.error("Xmeye video stream output failed:{}", networkCamera.getIp());
-            throw new CameraConnectionException(e);
-        }
-        return videoStreamOutput(channel, streamType, outputStream);
-    }
-
-
-    @Override
-    public String videoStreamOutput(String channel, StreamTypeEnum streamType, OutputStream outputStream) {
-        //device config
-        H264_DVR_CLIENTINFO clientInfo = new H264_DVR_CLIENTINFO();
-        clientInfo.nMode = TCPSOCKET;
-        clientInfo.nStream = streamType.key();
-        clientInfo.nChannel = handleChannel(channel);
-
-        //start play
-        long realPlayHandle = netSDK.H264_DVR_RealPlay(userHandle, clientInfo);
-        if (realPlayHandle == XMEYE_FAILED) {
-            throw new XmEyeException(getErrorMsg());
-        }
-        String dataOutputHandle = UUID.randomUUID().toString().replaceAll("-", "");
-        videoOutputSateCache.put(dataOutputHandle, false);
-        videoOutputHandleCache.put(dataOutputHandle, realPlayHandle);
-
-        //record by callback
-        videoOutputStreamManager.put(dataOutputHandle, outputStream);
-        RealDataCallBack realDataCallBack = new RealDataCallBack(userHandle, channel, outputStream, streamType.key(), dataOutputHandle);
-        if (!netSDK.H264_DVR_SetRealDataCallBack(realPlayHandle, realDataCallBack, USER)) {
-            throw new XmEyeException(getErrorMsg());
-        }
-        return dataOutputHandle;
-    }
-
-
-    @Override
-    public void stopVideoStreamOutput(String dataOutputHandle) {
-        try {
-            if (videoOutputHandleCache.containsKey(dataOutputHandle)) {
-                if (!netSDK.H264_DVR_StopRealPlay(videoOutputHandleCache.get(dataOutputHandle), null)) {
-                    throw new XmEyeException(getErrorMsg());
-                }
-            }
-        } finally {
-            videoOutputHandleCache.remove(dataOutputHandle);
-            if (videoOutputSateCache.containsKey(dataOutputHandle)) {
-                videoOutputSateCache.put(dataOutputHandle, true);
-            }
-            if (videoOutputStreamManager.containsKey(dataOutputHandle)) {
-                if (videoOutputStreamManager.get(dataOutputHandle) != null) {
-                    try {
-                        videoOutputStreamManager.get(dataOutputHandle).close();
-                    } catch (IOException e) {
-                        throw new CameraConnectionException(e);
-                    }
-                }
-            }
-        }
-    }
-
 
     @Override
     public void changePassword(String channel, String newPassword) {
@@ -349,55 +280,6 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
             result[i] = strBytes[i];
         }
         return result;
-    }
-
-    private static class RealDataCallBack implements NetSDK.fRealDataCallBack {
-
-        private byte[] byteArray;
-        private OutputStream outputStream;
-        private int stream;
-        private long userId;
-        private int channel;
-        private String dataOutputHandle;
-
-        {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    if (videoOutputSateCache.containsKey(dataOutputHandle)) {
-                        while (!videoOutputSateCache.get(dataOutputHandle)) {
-                            try {
-                                Thread.sleep(1000);
-                                netSDK.H264_DVR_MakeKeyFrame(userId, channel, stream);
-                            } catch (InterruptedException e) {
-                                throw new CameraConnectionException(e);
-                            }
-                        }
-                    }
-                }
-            }).start();
-        }
-
-        RealDataCallBack(long userHandle, String channel, OutputStream outputStream, int streamType, String dataOutputHandle) {
-            this.stream = streamType;
-            this.userId = userHandle;
-            this.dataOutputHandle = dataOutputHandle;
-            this.channel = handleChannel(channel);
-            this.outputStream = outputStream;
-        }
-
-        public void invoke(long lRealHandle, int dwDataType, Pointer pBuffer, long lbufsize, long dwUser) {
-            if (lbufsize > 0) {
-                try {
-                    byteArray = pBuffer.getByteArray(0, Math.toIntExact(lbufsize));
-                    if (!videoOutputSateCache.get(dataOutputHandle) && outputStream != null) {
-                        outputStream.write(byteArray);
-                    }
-                } catch (Exception e) {
-                    throw new CameraConnectionException(e);
-                }
-            }
-        }
     }
 
 }

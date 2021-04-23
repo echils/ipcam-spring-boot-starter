@@ -98,8 +98,6 @@ public class NetCommonInvoke {
             nvrChannel.setUsername(String.valueOf(sourceInputPortDescriptor.get("userName")));
             nvrChannel.setProxyProtocol(String.valueOf(sourceInputPortDescriptor.get("proxyProtocol")));
             nvrChannel.setDeviceChannelNo(String.valueOf(sourceInputPortDescriptor.get("srcInputPort")));
-            nvrChannel.setStreamType(String.valueOf(sourceInputPortDescriptor.get("streamType")));
-            nvrChannel.setAddressFormatType(String.valueOf(sourceInputPortDescriptor.get("addressingFormatType")));
         } catch (NumberFormatException e) {
             throw new CameraConnectionException(e);
         }

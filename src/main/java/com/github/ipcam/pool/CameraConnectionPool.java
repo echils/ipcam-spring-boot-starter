@@ -147,7 +147,9 @@ public class CameraConnectionPool extends GenericKeyedObjectPool<String, ICamera
      */
     @Override
     public void returnObject(String key, ICameraConnection cameraConnection) {
-        super.returnObject(key, cameraConnection);
+        if (cameraConnection != null) {
+            super.returnObject(key, cameraConnection);
+        }
     }
 
 }

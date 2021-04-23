@@ -1,7 +1,6 @@
 package com.github.ipcam.support;
 
 import com.github.ipcam.entity.PTZ;
-import com.github.ipcam.entity.PTZScope;
 import com.github.ipcam.entity.exception.CameraNotSupportException;
 import com.github.ipcam.entity.infos.PresetPointInfo;
 import com.github.ipcam.entity.reference.CruiseEnum;
@@ -139,17 +138,6 @@ public interface ICameraPTZSupport {
      * @return the name of the preset point
      */
     default String getPresetName(int index) {
-        throw new CameraNotSupportException();
-    }
-
-
-    /**
-     * Get the support scope of the preset point value
-     *
-     * @param channel camera ip channel
-     * @return {@link PTZScope}
-     */
-    default PTZScope getPresetScope(String channel) {
         throw new CameraNotSupportException();
     }
 

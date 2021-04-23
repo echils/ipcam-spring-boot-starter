@@ -37,14 +37,4 @@ public class NetworkCamera {
      */
     private CameraSupportedDriver driverType;
 
-    /**
-     * Does the camera support infrared function
-     */
-    private boolean thermal;
-
-    /**
-     * Does the camera is nvr
-     */
-    private boolean nvr;
-
 }
