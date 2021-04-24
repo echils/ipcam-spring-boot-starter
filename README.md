@@ -9,10 +9,10 @@ This README.md describes how to quickly configure and use the launcher and provi
 </p>
 
 ## Development Environment  
-JDK     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.8.0_202  
+JDK     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.8.0_202  
 Maven   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.5.4  
 Spring Boot &nbsp;&nbsp;&nbsp;&nbsp;2.3.4.RELEASE  
-SDK &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Library](sdk)
+SDK &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Library](sdk)
 
 
 ## Quick Start Example  
@@ -85,10 +85,8 @@ public class Test {
     private static final String IDENTIFICATION = "Test";
     
     public void invoke(){
-    
        ICameraConnection connection = null;
        try {
-       
            connection = cameraConnectionPool.borrowObject(IDENTIFICATION);
            List<String> channles = connection.getChannels();
            for (String channel : channels) {
@@ -101,7 +99,6 @@ public class Test {
                cameraConnectionPool.returnObject(identification, connection);
            }
        } 
-       
     }
     
 }
