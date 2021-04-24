@@ -2,7 +2,7 @@ package com.github.ipcam.entity;
 
 import lombok.Data;
 
-import static com.github.ipcam.entity.comm.StructureContext.INFRARED_POINT_NUM;
+import static com.github.ipcam.entity.comm.STRUCTURE_CONTEXT.INFRARED_POINT_NUM;
 
 /**
  * Temperature

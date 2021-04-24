@@ -1,6 +1,6 @@
 package com.github.ipcam.entity.hikvision;
 
-import com.github.ipcam.entity.comm.StructureContext;
+import com.github.ipcam.entity.comm.STRUCTURE_CONTEXT;
 import com.sun.jna.Structure;
 
 /**
@@ -19,12 +19,12 @@ public class NET_DVR_IPDEVINFO extends Structure {
     /**
      * The username of the device
      */
-    public byte[] sUserName = new byte[StructureContext.NAME_LEN];
+    public byte[] sUserName = new byte[STRUCTURE_CONTEXT.NAME_LEN];
 
     /**
      * The password of the device
      */
-    public byte[] sPassword = new byte[StructureContext.PASSWORD_LENGTH];
+    public byte[] sPassword = new byte[STRUCTURE_CONTEXT.PASSWORD_LENGTH];
 
     /**
      * The ip of the device

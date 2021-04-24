@@ -1,6 +1,6 @@
 package com.github.ipcam.entity.hikvision;
 
-import com.github.ipcam.entity.comm.StructureContext;
+import com.github.ipcam.entity.comm.STRUCTURE_CONTEXT;
 import com.sun.jna.Structure;
 
 
@@ -30,7 +30,7 @@ public class NET_DVR_THERMOMETRY_UPLOAD extends Structure {
     /**
      * Rule name
      */
-    public byte[] szRuleName = new byte[StructureContext.NAME_LEN];
+    public byte[] szRuleName = new byte[STRUCTURE_CONTEXT.NAME_LEN];
 
     /**
      * Rules of the ID number

@@ -214,7 +214,7 @@ public interface HCNetSDK extends Library {
      * Start the remote configuration.
      */
     int NET_DVR_StartRemoteConfig(int userHandle, int command, Pointer buffer, int inBufferLen,
-                                  FremoteConfigCallback stateCallback, Pointer userData);
+                                  FRemoteConfigCallback stateCallback, Pointer userData);
 
     /**
      * Stop the remote configuration.
@@ -259,7 +259,7 @@ public interface HCNetSDK extends Library {
     /**
      * Remote config callback
      */
-    interface FremoteConfigCallback extends StdCallLibrary.StdCallCallback {
+    interface FRemoteConfigCallback extends StdCallLibrary.StdCallCallback {
         void invoke(int type, Pointer buffer, int bufLen, Pointer userData);
     }
 

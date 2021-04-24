@@ -3,19 +3,20 @@ package com.github.ipcam.entity.comm;
 import com.sun.jna.Structure;
 
 /**
- * ByteArrayStructure
+ * BYTE_ARRAY_STRUCTURE
  *
  * @author echils
  * @since 2020-03-19 13:42
  */
-public class ByteArrayStructure extends Structure {
+public class BYTE_ARRAY_STRUCTURE extends Structure {
 
     /**
      * byte array
      */
     public byte[] byValue;
 
-    public ByteArrayStructure(int iLen) {
+    public BYTE_ARRAY_STRUCTURE(int iLen) {
         byValue = new byte[iLen];
     }
+
 }

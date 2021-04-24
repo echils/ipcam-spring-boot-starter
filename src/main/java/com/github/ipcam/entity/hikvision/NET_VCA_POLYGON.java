@@ -1,6 +1,6 @@
 package com.github.ipcam.entity.hikvision;
 
-import com.github.ipcam.entity.comm.StructureContext;
+import com.github.ipcam.entity.comm.STRUCTURE_CONTEXT;
 import com.sun.jna.Structure;
 
 
@@ -21,6 +21,6 @@ public class NET_VCA_POLYGON extends Structure {
     /**
      * The polygon boundary point, the maximum value is 10
      */
-    public NET_VCA_POINT[] struPos = new NET_VCA_POINT[StructureContext.VCA_MAX_POLYGON_POINT_NUM];
+    public NET_VCA_POINT[] struPos = new NET_VCA_POINT[STRUCTURE_CONTEXT.VCA_MAX_POLYGON_POINT_NUM];
 
 }

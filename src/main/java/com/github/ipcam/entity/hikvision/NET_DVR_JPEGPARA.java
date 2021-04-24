@@ -33,4 +33,5 @@ public class NET_DVR_JPEGPARA extends Structure {
         this.wPicSize = (short) wPicSize;
         this.wPicQuality = (short) wPicQuality;
     }
+
 }

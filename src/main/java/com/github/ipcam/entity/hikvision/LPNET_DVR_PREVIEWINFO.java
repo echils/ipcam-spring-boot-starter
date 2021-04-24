@@ -1,7 +1,7 @@
 package com.github.ipcam.entity.hikvision;
 
 
-import com.github.ipcam.entity.comm.StructureContext;
+import com.github.ipcam.entity.comm.STRUCTURE_CONTEXT;
 import com.github.ipcam.entity.jnax.W32API;
 import com.sun.jna.Structure;
 
@@ -62,7 +62,7 @@ public class LPNET_DVR_PREVIEWINFO extends Structure {
     /**
      * Stream ID, which is a combination of letters, numbers, and "_". Enable when LChannel is 0xFFFFFFFF
      */
-    public byte[] byStreamID = new byte[StructureContext.STREAM_ID_LEN];
+    public byte[] byStreamID = new byte[STRUCTURE_CONTEXT.STREAM_ID_LEN];
 
     /**
      * Application layer fetching protocol: 0- private protocol, 1- RTSP protocol. The fetching protocol supported by

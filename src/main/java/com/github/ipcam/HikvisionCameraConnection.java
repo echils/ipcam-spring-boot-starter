@@ -1,7 +1,7 @@
 package com.github.ipcam;
 
 import com.github.ipcam.entity.*;
-import com.github.ipcam.entity.comm.ByteArrayStructure;
+import com.github.ipcam.entity.comm.BYTE_ARRAY_STRUCTURE;
 import com.github.ipcam.entity.exception.CameraConnectionException;
 import com.github.ipcam.entity.exception.HikException;
 import com.github.ipcam.entity.hikvision.*;
@@ -32,9 +32,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static com.github.ipcam.entity.comm.StructureContext.*;
+import static com.github.ipcam.entity.comm.STRUCTURE_CONTEXT.*;
 import static com.github.ipcam.entity.hikvision.HCNetSDK.hcNetSDK;
-import static com.github.ipcam.entity.hikvision.NetCommonInvoke.*;
+import static com.github.ipcam.entity.hikvision.NET_COMMON_INVOKE.*;
 import static com.github.ipcam.utils.FileUtils.createParentDirectory;
 import static java.util.Calendar.HOUR_OF_DAY;
 
@@ -469,7 +469,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
     @Override
     public List<NVRChannelInfo> getChannelInfo() {
         String url = "GET /ISAPI/ContentMgmt/InputProxy/channels";
-        ByteArrayStructure array = new ByteArrayStructure(url.length());
+        BYTE_ARRAY_STRUCTURE array = new BYTE_ARRAY_STRUCTURE(url.length());
         System.arraycopy(url.getBytes(), 0, array.byValue, 0, url.length());
         array.write();
 
@@ -482,10 +482,10 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
 
         NET_DVR_XML_CONFIG_OUTPUT output = new NET_DVR_XML_CONFIG_OUTPUT();
         output.dwSize = output.size();
-        output.lpOutBuffer = new ByteArrayStructure(ISAPI_DATA_LEN).getPointer();
-        output.dwOutBufferSize = new ByteArrayStructure(ISAPI_DATA_LEN).size();
-        output.lpStatusBuffer = new ByteArrayStructure(ISAPI_STATUS_LEN).getPointer();
-        output.dwStatusSize = new ByteArrayStructure(ISAPI_STATUS_LEN).size();
+        output.lpOutBuffer = new BYTE_ARRAY_STRUCTURE(ISAPI_DATA_LEN).getPointer();
+        output.dwOutBufferSize = new BYTE_ARRAY_STRUCTURE(ISAPI_DATA_LEN).size();
+        output.lpStatusBuffer = new BYTE_ARRAY_STRUCTURE(ISAPI_STATUS_LEN).getPointer();
+        output.dwStatusSize = new BYTE_ARRAY_STRUCTURE(ISAPI_STATUS_LEN).size();
         output.write();
         if (!hcNetSDK.NET_DVR_STDXMLConfig(userHandle.intValue(), input, output)) {
             throw new HikException(getErrorMsg());
@@ -714,7 +714,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
 
         String url = "GET /ISAPI/PTZCtrl/channels/" + actualChannel + "/presets";
         NET_DVR_XML_CONFIG_INPUT input = new NET_DVR_XML_CONFIG_INPUT();
-        ByteArrayStructure array = new ByteArrayStructure(url.length());
+        BYTE_ARRAY_STRUCTURE array = new BYTE_ARRAY_STRUCTURE(url.length());
         System.arraycopy(url.getBytes(), 0, array.byValue, 0, url.length());
         array.write();
 
@@ -726,10 +726,10 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
 
         NET_DVR_XML_CONFIG_OUTPUT output = new NET_DVR_XML_CONFIG_OUTPUT();
         output.dwSize = output.size();
-        output.dwOutBufferSize = new ByteArrayStructure(ISAPI_DATA_LEN).size();
-        output.lpOutBuffer = new ByteArrayStructure(ISAPI_DATA_LEN).getPointer();
-        output.lpStatusBuffer = new ByteArrayStructure(ISAPI_STATUS_LEN).getPointer();
-        output.dwStatusSize = new ByteArrayStructure(ISAPI_STATUS_LEN).size();
+        output.dwOutBufferSize = new BYTE_ARRAY_STRUCTURE(ISAPI_DATA_LEN).size();
+        output.lpOutBuffer = new BYTE_ARRAY_STRUCTURE(ISAPI_DATA_LEN).getPointer();
+        output.lpStatusBuffer = new BYTE_ARRAY_STRUCTURE(ISAPI_STATUS_LEN).getPointer();
+        output.dwStatusSize = new BYTE_ARRAY_STRUCTURE(ISAPI_STATUS_LEN).size();
         output.write();
         if (!hcNetSDK.NET_DVR_STDXMLConfig(Math.toIntExact(userHandle), input, output)) {
             throw new HikException(getErrorMsg());
@@ -933,7 +933,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
 
         String url = "PUT /ISAPI/Image/channels/" + actualChannel + "/ZoomLimit";
-        ByteArrayStructure array = new ByteArrayStructure(url.length());
+        BYTE_ARRAY_STRUCTURE array = new BYTE_ARRAY_STRUCTURE(url.length());
         System.arraycopy(url.getBytes(), 0, array.byValue, 0, url.length());
         array.write();
 
@@ -941,7 +941,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
                 "<ZoomLimit version=\"2.0\" xmlns=\"http://www.hikvision.com/ver20/XMLSchema\">\n" +
                 "<ZoomLimitRatio>" + zoomValue + "</ZoomLimitRatio>\n" +
                 "</ZoomLimit>";
-        ByteArrayStructure requestArray = new ByteArrayStructure(request.length());
+        BYTE_ARRAY_STRUCTURE requestArray = new BYTE_ARRAY_STRUCTURE(request.length());
         System.arraycopy(url.getBytes(), 0, array.byValue, 0, url.length());
         requestArray.write();
         NET_DVR_XML_CONFIG_INPUT input = new NET_DVR_XML_CONFIG_INPUT();
@@ -981,7 +981,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
         String url = "PUT /ISAPI/Image/channels/" + actualChannel + "/lensInitialization";
-        ByteArrayStructure array = new ByteArrayStructure(url.length());
+        BYTE_ARRAY_STRUCTURE array = new BYTE_ARRAY_STRUCTURE(url.length());
         System.arraycopy(url.getBytes(), 0, array.byValue, 0, url.length());
         array.write();
 
@@ -989,7 +989,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
                 "<LensInitialization version=\"2.0\" xmlns=\"http://www.hikvision.com/ver20/XMLSchema\">\n" +
                 "<enabled>" + open + "</enabled>\n" +
                 "</LensInitialization>";
-        ByteArrayStructure requestArray = new ByteArrayStructure(request.length());
+        BYTE_ARRAY_STRUCTURE requestArray = new BYTE_ARRAY_STRUCTURE(request.length());
         System.arraycopy(url.getBytes(), 0, array.byValue, 0, url.length());
         requestArray.write();
         NET_DVR_XML_CONFIG_INPUT input = new NET_DVR_XML_CONFIG_INPUT();
@@ -1016,7 +1016,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             throw new HikException(getErrorMsg());
         }
         String url = "PUT /ISAPI/PTZCtrl/channels/" + actualChannel + "/maxelevation";
-        ByteArrayStructure array = new ByteArrayStructure(url.length());
+        BYTE_ARRAY_STRUCTURE array = new BYTE_ARRAY_STRUCTURE(url.length());
         System.arraycopy(url.getBytes(), 0, array.byValue, 0, url.length());
         array.write();
 
@@ -1024,7 +1024,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
                 "<MaxElevation version=\"2.0\" xmlns=\"http://www.hikvision.com/ver20/XMLSchema\">" +
                         "<mElevation>" + elevationValue + "</mElevation>" +
                         "</MaxElevation>";
-        ByteArrayStructure requestArray = new ByteArrayStructure(request.length());
+        BYTE_ARRAY_STRUCTURE requestArray = new BYTE_ARRAY_STRUCTURE(request.length());
         System.arraycopy(url.getBytes(), 0, array.byValue, 0, url.length());
         requestArray.write();
         NET_DVR_XML_CONFIG_INPUT input = new NET_DVR_XML_CONFIG_INPUT();
@@ -1676,7 +1676,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
     }
 
 
-    private static class RemoteConfigCallback implements HCNetSDK.FremoteConfigCallback {
+    private static class RemoteConfigCallback implements HCNetSDK.FRemoteConfigCallback {
 
         private Map<String, Temperature> temperatureMap = new HashMap<>();
 

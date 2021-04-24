@@ -4,7 +4,7 @@ import com.sun.jna.Structure;
 
 
 /**
- * ByteArrayStructure
+ * BYTE_ARRAY_STRUCTURE
  *
  * @author echils
  * @since 2020-03-19 13:42

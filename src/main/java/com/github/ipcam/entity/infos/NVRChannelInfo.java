@@ -45,4 +45,5 @@ public class NVRChannelInfo {
      * The proxy protocol of the dvr
      */
     private String proxyProtocol;
+
 }

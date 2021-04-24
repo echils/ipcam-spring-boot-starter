@@ -2,7 +2,7 @@ package com.github.ipcam.entity.hikvision;
 
 import com.sun.jna.Structure;
 
-import static com.github.ipcam.entity.comm.StructureContext.*;
+import static com.github.ipcam.entity.comm.STRUCTURE_CONTEXT.*;
 
 /**
  * NET_DVR_DEVICECFG_V40

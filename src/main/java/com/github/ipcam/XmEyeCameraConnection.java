@@ -1,7 +1,7 @@
 package com.github.ipcam;
 
 import com.github.ipcam.entity.NetworkCamera;
-import com.github.ipcam.entity.comm.ByteArrayStructure;
+import com.github.ipcam.entity.comm.BYTE_ARRAY_STRUCTURE;
 import com.github.ipcam.entity.exception.CameraConnectionException;
 import com.github.ipcam.entity.exception.XmEyeException;
 import com.github.ipcam.entity.infos.CameraInfo;
@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.github.ipcam.entity.comm.StructureContext.*;
+import static com.github.ipcam.entity.comm.STRUCTURE_CONTEXT.*;
 import static com.github.ipcam.entity.xmeye.NetSDK.netSDK;
 import static com.github.ipcam.entity.xmeye.XNetSDK.xNetSDK;
 import static com.github.ipcam.entity.xmeye.XmEyeManager.getErrorMsg;
@@ -225,22 +225,22 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
     @Override
     public void changePassword(String channel, String newPassword) {
         try {
-            ByteArrayStructure byteArrayStructure = new ByteArrayStructure(NET_MAX_MAC_LEN);
-            byteArrayStructure.write();
-            if (!xNetSDK.XSDK_EncryptPassword(newPassword, byteArrayStructure.getPointer(), newPassword.length())) {
+            BYTE_ARRAY_STRUCTURE BYTEARRAYSTRUCTURE = new BYTE_ARRAY_STRUCTURE(NET_MAX_MAC_LEN);
+            BYTEARRAYSTRUCTURE.write();
+            if (!xNetSDK.XSDK_EncryptPassword(newPassword, BYTEARRAYSTRUCTURE.getPointer(), newPassword.length())) {
                 throw new XmEyeException(getErrorMsg());
             }
-            byteArrayStructure.read();
-            newPassword = new String(byteArrayStructure.byValue).trim();
+            BYTEARRAYSTRUCTURE.read();
+            newPassword = new String(BYTEARRAYSTRUCTURE.byValue).trim();
 
-            byteArrayStructure = new ByteArrayStructure(NET_MAX_MAC_LEN);
-            byteArrayStructure.write();
+            BYTEARRAYSTRUCTURE = new BYTE_ARRAY_STRUCTURE(NET_MAX_MAC_LEN);
+            BYTEARRAYSTRUCTURE.write();
             if (!xNetSDK.XSDK_EncryptPassword(networkCamera.getPassword(),
-                    byteArrayStructure.getPointer(), networkCamera.getPassword().length())) {
+                    BYTEARRAYSTRUCTURE.getPointer(), networkCamera.getPassword().length())) {
                 throw new XmEyeException(getErrorMsg());
             }
-            byteArrayStructure.read();
-            String oldPassword = new String(byteArrayStructure.byValue).trim();
+            BYTEARRAYSTRUCTURE.read();
+            String oldPassword = new String(BYTEARRAYSTRUCTURE.byValue).trim();
 
             CONF_MODIFY_PSW psw = new CONF_MODIFY_PSW();
             psw.sUserName = getBytes(networkCamera.getUsername(), NET_MAX_MAC_LEN);

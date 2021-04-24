@@ -3,12 +3,12 @@ package com.github.ipcam.entity.comm;
 import com.github.ipcam.entity.hikvision.NET_DVR_DEVICEINFO_V30;
 
 /**
- * StructureContext
+ * STRUCTURE_CONTEXT
  *
  * @author echils
  * @since 2020-03-19 13:36
  */
-public class StructureContext {
+public class STRUCTURE_CONTEXT {
 
 //    *********************** HIKVISION ***********************
 
@@ -32,7 +32,6 @@ public class StructureContext {
     public static final int MAX_IP_CHANNEL = 32;
     public static final int NET_DVR_SET_PTZPOS = 292;
     public static final int NET_DVR_GET_PTZPOS = 293;
-    public static final int NET_DVR_GET_PTZSCOPE = 294;
     public static final int NET_DVR_GET_IPPARACFG = 1048;
     public static final int NET_DVR_FILE_SUCCESS = 1000;
     public static final int NET_DVR_FILE_NOFIND = 1001;

@@ -2,8 +2,8 @@ package com.github.ipcam.entity.hikvision;
 
 
 import com.github.ipcam.entity.Temperature;
-import com.github.ipcam.entity.comm.LongStructure;
-import com.github.ipcam.entity.comm.StructureContext;
+import com.github.ipcam.entity.comm.LONG_STRUCTURE;
+import com.github.ipcam.entity.comm.STRUCTURE_CONTEXT;
 import com.github.ipcam.entity.exception.CameraConnectionException;
 import com.github.ipcam.entity.exception.HikException;
 import com.github.ipcam.entity.infos.NVRChannelInfo;
@@ -14,14 +14,13 @@ import java.text.NumberFormat;
 import java.util.*;
 
 /**
- * NetCommonInvoke
+ * NET_COMMON_INVOKE
  *
  * @author echils
  * @since 2018/12/19 18:04
  */
-public class NetCommonInvoke {
+public class NET_COMMON_INVOKE {
 
-    private static NumberFormat numberFormat = NumberFormat.getNumberInstance();
 
     /**
      * Find video files from camera
@@ -39,13 +38,13 @@ public class NetCommonInvoke {
         } else {
             while (true) {
                 status = HCNetSDK.hcNetSDK.NET_DVR_FindNextFile(findHandle, net_dvr_find_data);
-                if (status == StructureContext.NET_DVR_FILE_SUCCESS) {
+                if (status == STRUCTURE_CONTEXT.NET_DVR_FILE_SUCCESS) {
                     break;
                 } else {
-                    if (status == StructureContext.NET_DVR_ISFINDING) {
+                    if (status == STRUCTURE_CONTEXT.NET_DVR_ISFINDING) {
                         continue;
                     } else {
-                        if (status == StructureContext.NET_DVR_FILE_NOFIND) {
+                        if (status == STRUCTURE_CONTEXT.NET_DVR_FILE_NOFIND) {
                             break;
                         } else {
                             boolean flag = HCNetSDK.hcNetSDK.NET_DVR_FindClose_V30(findHandle);
@@ -127,7 +126,7 @@ public class NetCommonInvoke {
      */
     public static String getErrorMsg() {
         int i = HCNetSDK.hcNetSDK.NET_DVR_GetLastError();
-        return "Error code：[" + i + "],Error msg: [" + HCNetSDK.hcNetSDK.NET_DVR_GetErrorMsg(new LongStructure(i).getPointer()) + "]";
+        return "Error code：[" + i + "],Error msg: [" + HCNetSDK.hcNetSDK.NET_DVR_GetErrorMsg(new LONG_STRUCTURE(i).getPointer()) + "]";
     }
 
 
@@ -236,7 +235,8 @@ public class NetCommonInvoke {
         NET_DVR_CAMERAPARAMCFG_EX param = new NET_DVR_CAMERAPARAMCFG_EX();
         param.write();
         int size = param.size();
-        boolean getDVRConfig = HCNetSDK.hcNetSDK.NET_DVR_GetDVRConfig(userHandle, StructureContext.NET_DVR_CAMERAPARAMCFG_EX_GET, handleChannel(channelNum),
+        boolean getDVRConfig = HCNetSDK.hcNetSDK.NET_DVR_GetDVRConfig(userHandle,
+                STRUCTURE_CONTEXT.NET_DVR_CAMERAPARAMCFG_EX_GET, handleChannel(channelNum),
                 param.getPointer(), size, new IntByReference(param.size()));
         param.read();
         if (!getDVRConfig) {
@@ -254,7 +254,8 @@ public class NetCommonInvoke {
         NET_DVR_AEMODECFG param = new NET_DVR_AEMODECFG();
         param.write();
         int size = param.size();
-        boolean getDVRConfig = HCNetSDK.hcNetSDK.NET_DVR_GetDVRConfig(userHandle, StructureContext.NET_DVR_AEMODECFG_GET, handleChannel(channelNum),
+        boolean getDVRConfig = HCNetSDK.hcNetSDK.NET_DVR_GetDVRConfig(userHandle,
+                STRUCTURE_CONTEXT.NET_DVR_AEMODECFG_GET, handleChannel(channelNum),
                 param.getPointer(), size, new IntByReference(param.size()));
         param.read();
         if (!getDVRConfig) {
@@ -271,7 +272,8 @@ public class NetCommonInvoke {
 
         NET_DVR_COMPRESSIONCFG_V30 compression = new NET_DVR_COMPRESSIONCFG_V30();
         compression.write();
-        boolean get = HCNetSDK.hcNetSDK.NET_DVR_GetDVRConfig(userHandle, StructureContext.NET_DVR_COMPRESSIONCFG_V30_GET, handleChannel(channelNum),
+        boolean get = HCNetSDK.hcNetSDK.NET_DVR_GetDVRConfig(userHandle,
+                STRUCTURE_CONTEXT.NET_DVR_COMPRESSIONCFG_V30_GET, handleChannel(channelNum),
                 compression.getPointer(), compression.size(), new IntByReference());
         compression.read();
         if (!get) {
@@ -288,7 +290,8 @@ public class NetCommonInvoke {
 
         NET_DVR_AUDIO_INPUT_PARAM param = new NET_DVR_AUDIO_INPUT_PARAM();
         param.write();
-        boolean get = HCNetSDK.hcNetSDK.NET_DVR_GetDVRConfig(userHandle, StructureContext.NET_DVR_AUDIO_INPUT_PARAM_GET, handleChannel(channelNum),
+        boolean get = HCNetSDK.hcNetSDK.NET_DVR_GetDVRConfig(userHandle,
+                STRUCTURE_CONTEXT.NET_DVR_AUDIO_INPUT_PARAM_GET, handleChannel(channelNum),
                 param.getPointer(), param.size(), new IntByReference());
         param.read();
         if (!get) {
@@ -322,7 +325,8 @@ public class NetCommonInvoke {
         stdConfig.lpOutBuffer = info.getPointer();
 
         stdConfig.write();
-        boolean config = HCNetSDK.hcNetSDK.NET_DVR_GetSTDConfig(userHandle, StructureContext.NET_DVR_GET_THERMOMETRY_PRESETINFO, stdConfig.getPointer());
+        boolean config = HCNetSDK.hcNetSDK.NET_DVR_GetSTDConfig(userHandle,
+                STRUCTURE_CONTEXT.NET_DVR_GET_THERMOMETRY_PRESETINFO, stdConfig.getPointer());
         stdConfig.read();
         info.read();
 
@@ -355,6 +359,7 @@ public class NetCommonInvoke {
      * number format
      */
     public static Double numFormat(Float source, int num) {
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
         numberFormat.setMaximumFractionDigits(num);
         numberFormat.setRoundingMode(RoundingMode.UP);
         return Double.valueOf(numberFormat.format(source));

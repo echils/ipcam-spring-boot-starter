@@ -2,7 +2,7 @@ package com.github.ipcam.entity.hikvision;
 
 import com.sun.jna.Structure;
 
-import static com.github.ipcam.entity.comm.StructureContext.*;
+import static com.github.ipcam.entity.comm.STRUCTURE_CONTEXT.*;
 
 public class NET_DVR_USER_INFO_V30 extends Structure {
 
@@ -23,7 +23,8 @@ public class NET_DVR_USER_INFO_V30 extends Structure {
      * Array 2- Local Playback
      * Array 3- Set parameters locally
      * Array 4- Locally view status, log
-     * Array 5- Local Advanced Operations (Upgrade, Disk Management (Formatting, Setting Disk Properties, Setting Disk Group, Array Enlargement, RAID Firmware Upgrade), Reboot, Shutdown)
+     * Array 5- Local Advanced Operations (Upgrade, Disk Management (Formatting, Setting Disk Properties,
+     * Setting Disk Group, Array Enlargement, RAID Firmware Upgrade), Reboot, Shutdown)
      * Array 6 - View parameters locally
      * Array 7 - Local management emulation and IP Camera
      * Array 8 - Local Backup
@@ -38,7 +39,8 @@ public class NET_DVR_USER_INFO_V30 extends Structure {
      * Array 2- Remote Playback
      * Array 3- Remote setting parameters
      * Array 4- Remote view status, log
-     * Array 5- Remote Advanced Operations (Upgrade, Disk Management (Formatting, Setting Disk Properties, Setting Disk Group, Array Enlargement, RAID Firmware Upgrade), JPEG Sketch, Front Panel Lock & Unlock, Reboot, Shutdown)
+     * Array 5- Remote Advanced Operations (Upgrade, Disk Management (Formatting, Setting Disk Properties,
+     * Setting Disk Group, Array Enlargement, RAID Firmware Upgrade), JPEG Sketch, Front Panel Lock & Unlock, Reboot, Shutdown)
      * Array 6- Remote Initiate Voice Intercom
      * Array 7- Remote Preview
      * Array 8- Remote request alarm upload, alarm output
@@ -103,8 +105,10 @@ public class NET_DVR_USER_INFO_V30 extends Structure {
     /**
      * Priority: 0xFF - None, 0- Low, 1- Medium, 2- High
      * None (indicates that priority setting is not supported)
-     * Low (Default permissions: including local and remote playback, local and remote view log and status, local and remote shutdown/restart)
-     * (including local and remote control pan-head, local and remote manual recording, local and remote playback, voice intercom and remote preview, local backup, local/remote shutdown/restart)
+     * Low (Default permissions: including local and remote playback,
+     * local and remote view log and status, local and remote shutdown/restart)
+     * (including local and remote control pan-head, local and remote manual recording, local and remote playback,
+     * voice intercom and remote preview, local backup, local/remote shutdown/restart)
      * Ko (Administrator)
      */
     public byte byPriority;

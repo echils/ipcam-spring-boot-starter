@@ -1,6 +1,6 @@
 package com.github.ipcam.entity.hikvision;
 
-import com.github.ipcam.entity.comm.StructureContext;
+import com.github.ipcam.entity.comm.STRUCTURE_CONTEXT;
 import com.sun.jna.Structure;
 
 /**
@@ -14,7 +14,7 @@ public class NET_DVR_DEVICEINFO_V30 extends Structure {
     /**
      * The serial number
      */
-    public byte[] sSerialNumber = new byte[StructureContext.SERIAL_LENGTH];
+    public byte[] sSerialNumber = new byte[STRUCTURE_CONTEXT.SERIAL_LENGTH];
 
     /**
      * Number of analog alarm inputs

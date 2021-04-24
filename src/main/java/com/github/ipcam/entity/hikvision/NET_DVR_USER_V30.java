@@ -2,7 +2,7 @@ package com.github.ipcam.entity.hikvision;
 
 import com.sun.jna.Structure;
 
-import static com.github.ipcam.entity.comm.StructureContext.MAX_USERNUM_V30;
+import static com.github.ipcam.entity.comm.STRUCTURE_CONTEXT.MAX_USERNUM_V30;
 
 public class NET_DVR_USER_V30 extends Structure {
 
