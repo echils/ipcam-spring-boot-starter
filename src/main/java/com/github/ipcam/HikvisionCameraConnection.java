@@ -1,6 +1,9 @@
 package com.github.ipcam;
 
-import com.github.ipcam.entity.*;
+import com.github.ipcam.entity.NetworkCamera;
+import com.github.ipcam.entity.PTZ;
+import com.github.ipcam.entity.ScreenEffect;
+import com.github.ipcam.entity.Temperature;
 import com.github.ipcam.entity.comm.BYTE_ARRAY_STRUCTURE;
 import com.github.ipcam.entity.exception.CameraConnectionException;
 import com.github.ipcam.entity.exception.HikException;
@@ -402,12 +405,12 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
 
     @Override
     public String videoStreamOutput(String channel, StreamTypeEnum streamType, String path) {
-        OutputStream outputStream = null;
+        OutputStream outputStream;
         try {
             createParentDirectory(path);
             outputStream = new FileOutputStream(new File(path));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            throw new CameraConnectionException(e);
         }
         return videoStreamOutput(channel, streamType, outputStream);
     }
@@ -457,8 +460,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
                 if (videoOutputStreamManager.get(dataOutputHandle) != null) {
                     try {
                         videoOutputStreamManager.get(dataOutputHandle).close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (IOException ignored) {
                     }
                 }
             }
@@ -586,7 +588,8 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
 
     @Override
     public void cruiseExpand(String channel, CruiseEnum cruiseEnum, int cruiseRoute, int cruisePoint, int value) {
-        if (!hcNetSDK.NET_DVR_PTZCruise_Other(userHandle.intValue(), handleChannel(channel), cruiseEnum.key(), cruiseRoute, cruisePoint, value)) {
+        if (!hcNetSDK.NET_DVR_PTZCruise_Other(userHandle.intValue(), handleChannel(channel),
+                cruiseEnum.key(), cruiseRoute, cruisePoint, value)) {
             throw new HikException(getErrorMsg());
         }
     }
@@ -848,8 +851,9 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             infraredInfo.struPresetInfo[index].struRegion = polygon;
             infraredInfo.struPresetInfo[index].byEnabled = (byte) ACTION;
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            throw new CameraConnectionException(e);
         }
+
         stdConfig.dwInSize = infraredInfo.size();
         infraredInfo.write();
         stdConfig.lpInBuffer = infraredInfo.getPointer();
@@ -1560,8 +1564,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
                             if (buffer != null && buffer.getCharArray(0, dwBufSize) != null) {
                                 try {
                                     Thread.sleep(3000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
+                                } catch (InterruptedException ignored) {
                                 }
 
                                 if (audioCameraOutputHandleCache.get(uniqueness) != null) {
@@ -1594,13 +1597,11 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
                 try {
                     device.write(data);
                     device.flush();
-                } catch (Exception ex) {
+                } catch (Exception ignored) {
                     try {
                         device.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (IOException ignore) {
                     }
-                    ex.printStackTrace();
                 }
             }
         }
@@ -1629,8 +1630,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
                                 } else {
                                     hcNetSDK.NET_DVR_MakeKeyFrameSub(userId, handleChannel(channel));
                                 }
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                            } catch (InterruptedException ignored) {
                             }
                         }
                     }
@@ -1651,26 +1651,13 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             byte[] byteArray;
             boolean stopVideo = videoOutputSateCache.get(dataOutputHandle);
             try {
-                switch (dwDataType) {
-                    case NET_DVR_SYSHEAD:
-                        if (dwBufSize > 0) {
-                            byteArray = pBuffer.getPointer().getByteArray(0, Math.toIntExact(dwBufSize));
-                            if (outputStream != null && !stopVideo) {
-                                outputStream.write(byteArray);
-                            }
-                        }
-                        break;
-                    case NET_DVR_STREAMDATA:
-                        if (!stopVideo && outputStream != null) {
-                            if (dwBufSize > 0) {
-                                byteArray = pBuffer.getPointer().getByteArray(0, Math.toIntExact(dwBufSize));
-                                outputStream.write(byteArray);
-                            }
-                        }
-                        break;
+                if (dwDataType == NET_DVR_SYSHEAD || dwDataType == NET_DVR_STREAMDATA) {
+                    if (dwBufSize > 0 && !stopVideo && outputStream != null) {
+                        byteArray = pBuffer.getPointer().getByteArray(0, Math.toIntExact(dwBufSize));
+                        outputStream.write(byteArray);
+                    }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception ignored) {
             }
         }
     }
@@ -1686,20 +1673,17 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
 
         @Override
         public void invoke(int dwType, Pointer lpBuffer, int dwBufLen, Pointer pUserData) {
+            if (dwType == NET_SDK_CALLBACK_TYPE_DATA) {
+                byte[] byteArray = lpBuffer.getByteArray(0, dwBufLen);
+                NET_DVR_THERMOMETRY_UPLOAD thermometry = new NET_DVR_THERMOMETRY_UPLOAD();
+                thermometry.write();
+                thermometry.getPointer().write(0, byteArray, 0, thermometry.size());
+                thermometry.read();
 
-            switch (dwType) {
-                case NET_SDK_CALLBACK_TYPE_DATA:
-                    byte[] byteArray = lpBuffer.getByteArray(0, dwBufLen);
-                    NET_DVR_THERMOMETRY_UPLOAD thermometry = new NET_DVR_THERMOMETRY_UPLOAD();
-                    thermometry.write();
-                    thermometry.getPointer().write(0, byteArray, 0, thermometry.size());
-                    thermometry.read();
-
-                    String ruleId = String.valueOf(thermometry.byRuleID);
-                    if (!temperatureMap.containsKey(ruleId)) {
-                        temperatureMap.put(ruleId, convert(thermometry));
-                    }
-                    break;
+                String ruleId = String.valueOf(thermometry.byRuleID);
+                if (!temperatureMap.containsKey(ruleId)) {
+                    temperatureMap.put(ruleId, convert(thermometry));
+                }
             }
         }
 
