@@ -39,7 +39,7 @@ public class NET_DVR_XML_CONFIG_INPUT extends Structure {
     /**
      * Receive timeout time in ms. If 0 is entered, the default timeout 5s will be used
      */
-    public int dwRecvTimeOut;
+    public int dwRecvTimeOut = 0;
 
     /**
      * Whether to force encryption (when enabled, pass-through XML packets encrypt the transmission,

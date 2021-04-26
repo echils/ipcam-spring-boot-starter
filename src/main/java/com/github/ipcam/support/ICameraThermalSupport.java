@@ -16,7 +16,10 @@ public interface ICameraThermalSupport {
 
 
     /**
-     * Measure all temperature from the preset point
+     * Measure all infrared points temperature of the preset point and
+     * you must jump to the specified preset point before temperature measurement.
+     * If you want to get the details of the infrared point,
+     * you can get it from the method {@link ICameraThermalSupport#getInfraredPoint(int, int)}
      *
      * @return {@link Temperature}
      */
@@ -26,7 +29,10 @@ public interface ICameraThermalSupport {
 
 
     /**
-     * Measure the temperature of the one infrared point from the preset point
+     * Measure the one infrared point temperature of the preset point and
+     * you must jump to the specified preset point before temperature measurement
+     * If you want to get the details of the infrared point,
+     * you can get it from the method {@link ICameraThermalSupport#getInfraredPoint(int, int)}
      *
      * @param infraredNo infrared point index of preset point
      * @return {@link Temperature}
@@ -47,7 +53,7 @@ public interface ICameraThermalSupport {
 
 
     /**
-     * Get infrared point info from the preset point
+     * Get infrared point detail info from the preset point
      *
      * @param presetNo   preset point index of the camera
      * @param infraredNo infrared point index of preset point

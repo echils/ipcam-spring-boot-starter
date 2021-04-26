@@ -16,6 +16,7 @@ import com.github.ipcam.support.CameraSupportedDriver;
 import com.github.ipcam.support.ICameraNVRSupport;
 import com.github.ipcam.support.ICameraPTZSupport;
 import com.github.ipcam.support.ICameraThermalSupport;
+import com.github.ipcam.utils.RetryTemplate;
 import com.github.ipcam.utils.XmlToJsonUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -489,8 +490,20 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         output.lpStatusBuffer = new BYTE_ARRAY_STRUCTURE(ISAPI_STATUS_LEN).getPointer();
         output.dwStatusSize = new BYTE_ARRAY_STRUCTURE(ISAPI_STATUS_LEN).size();
         output.write();
-        if (!hcNetSDK.NET_DVR_STDXMLConfig(userHandle.intValue(), input, output)) {
-            throw new HikException(getErrorMsg());
+        try {
+            if (!hcNetSDK.NET_DVR_STDXMLConfig(userHandle.intValue(), input, output)) {
+                throw new HikException(getErrorMsg());
+            }
+        } catch (HikException e) {
+            logger.error("Camera :{} get channel info will start to retry", networkCamera.getIp());
+            if (!new RetryTemplate() {
+                @Override
+                public void execute() {
+                    if (!hcNetSDK.NET_DVR_STDXMLConfig(userHandle.intValue(), input, output)) {
+                        throw new HikException(getErrorMsg());
+                    }
+                }
+            }.retry()) { throw new HikException(getErrorMsg()); }
         }
         output.read();
         JsonObject jsonObject = XmlToJsonUtils.toJson(
@@ -498,15 +511,17 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         if (jsonObject != null) {
             Object inputProxyChannel = jsonObject.get("InputProxyChannel");
             if (inputProxyChannel != null) {
-                if (inputProxyChannel instanceof List) {
+                Gson gson = new Gson();
+                if (inputProxyChannel instanceof JsonArray) {
                     List<NVRChannelInfo> nvrChannelInfoList = new ArrayList<>();
-                    List<Object> channelInfos = (List<Object>) inputProxyChannel;
-                    for (Object channelInfo : channelInfos) {
+                    List list = gson.fromJson(inputProxyChannel.toString(), List.class);
+                    for (Object channelInfo : list) {
                         nvrChannelInfoList.add(convert(channelInfo));
                     }
                     return nvrChannelInfoList;
+                } else {
+                    return Collections.singletonList(convert(gson.fromJson(inputProxyChannel.toString(), Object.class)));
                 }
-                return Collections.singletonList(convert(inputProxyChannel));
             }
         }
         return Collections.emptyList();
@@ -639,7 +654,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         }
         name.read();
         try {
-            return new String(name.name[index - 1].byName, "GBK");
+            return new String(name.name[index - 1].byName, "GBK").trim();
         } catch (UnsupportedEncodingException e) {
             throw new CameraConnectionException(e);
         }
@@ -734,11 +749,22 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         output.lpStatusBuffer = new BYTE_ARRAY_STRUCTURE(ISAPI_STATUS_LEN).getPointer();
         output.dwStatusSize = new BYTE_ARRAY_STRUCTURE(ISAPI_STATUS_LEN).size();
         output.write();
-        if (!hcNetSDK.NET_DVR_STDXMLConfig(Math.toIntExact(userHandle), input, output)) {
-            throw new HikException(getErrorMsg());
+        try {
+            if (!hcNetSDK.NET_DVR_STDXMLConfig(Math.toIntExact(userHandle), input, output)) {
+                throw new HikException(getErrorMsg());
+            }
+        } catch (HikException e) {
+            logger.error("Camera :{} get activated preset points will start to retry", networkCamera.getIp());
+            if (!new RetryTemplate() {
+                @Override
+                public void execute() {
+                    if (!hcNetSDK.NET_DVR_STDXMLConfig(Math.toIntExact(userHandle), input, output)) {
+                        throw new HikException(getErrorMsg());
+                    }
+                }
+            }.retry()) { throw new HikException(getErrorMsg()); }
         }
         output.read();
-
         JsonObject jsonObject = XmlToJsonUtils.toJson(new String(output.lpOutBuffer
                 .getByteArray(0, output.dwReturnedXMLSize)).trim());
         if (jsonObject != null) {
@@ -757,7 +783,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
                 return presetPointInfos;
             }
         }
-        return null;
+        return Collections.emptyList();
     }
 
 
@@ -878,6 +904,9 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
             for (int i = 0; i < INFRARED_POINT_NUM; i++) {
                 temperature.getRegions()[i] = new Temperature.Region(numFormat(points[i].fX, 3), numFormat(points[i].fY, 3));
             }
+            Temperature measure = this.measure(infraredNo);
+            temperature.setMaxTemperature(measure.getMaxTemperature());
+            temperature.setMinTemperature(measure.getMinTemperature());
             return temperature;
         }
         return null;
