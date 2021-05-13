@@ -4,7 +4,7 @@ This README.md describes how to quickly configure and use the launcher and provi
 
 <p align="center">
   <a>
-   <img alt="Framework" src="IPCAM.PNG">
+   <img alt="Framework" src="ECHILS.PNG">
   </a>
 </p>
 
