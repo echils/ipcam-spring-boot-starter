@@ -4,7 +4,6 @@ package com.github.ipcam.entity.reference;
  * DayNightEnum
  *
  * @author echils
- * @since 2020-03-19 13:36
  */
 public enum DayNightEnum {
 

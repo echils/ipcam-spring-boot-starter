@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
  * CameraConnectionPool
  *
  * @author echils
- * @since 2020-03-24 15:06
  */
 public class CameraConnectionPool extends GenericKeyedObjectPool<String, ICameraConnection> {
 

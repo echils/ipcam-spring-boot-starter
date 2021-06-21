@@ -8,7 +8,6 @@ import static com.github.ipcam.entity.comm.STRUCTURE_CONTEXT.INFRARED_POINT_NUM;
  * Temperature
  *
  * @author echils
- * @since 2019-4-8 20:33
  */
 @Data
 public class Temperature {

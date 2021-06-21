@@ -10,7 +10,6 @@ import java.util.Calendar;
  * ICameraConfigSupport
  *
  * @author echils
- * @since 2021-04-18 16:56:41
  */
 public interface ICameraConfigSupport {
 

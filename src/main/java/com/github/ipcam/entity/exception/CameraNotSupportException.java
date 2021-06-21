@@ -5,7 +5,6 @@ package com.github.ipcam.entity.exception;
  * CameraNotSupportException
  *
  * @author echils
- * @since 2021-04-11 15:07:00
  */
 public class CameraNotSupportException extends CameraConnectionException {
 

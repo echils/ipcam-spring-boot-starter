@@ -12,7 +12,6 @@ import com.sun.jna.win32.StdCallLibrary;
  * NetSDK
  *
  * @author echils
- * @since 2020-03-19 13:42
  */
 public interface NetSDK extends Library {
 

@@ -6,7 +6,6 @@ import lombok.Data;
  * The channel info of the NVR
  *
  * @author echils
- * @since 2020-07-13 10:26
  */
 @Data
 public class NVRChannelInfo {

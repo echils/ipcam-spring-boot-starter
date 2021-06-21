@@ -22,7 +22,6 @@ import java.util.Map;
  * CameraConnectionPoolFactory
  *
  * @author echils
- * @since 2020-03-24 14:27
  */
 public class CameraConnectionPoolFactory extends BaseKeyedPooledObjectFactory<String, ICameraConnection> {
 

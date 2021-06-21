@@ -11,7 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * AbstractCameraConnection
  *
  * @author echils
- * @since 2021-04-12 21:54:14
  */
 public abstract class AbstractCameraConnection implements ICameraConnection {
 

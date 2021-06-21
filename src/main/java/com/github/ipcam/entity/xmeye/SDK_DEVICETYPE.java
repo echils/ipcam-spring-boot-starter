@@ -7,7 +7,6 @@ import com.sun.jna.Structure;
  * SDK_DEVICETYPE
  *
  * @author echils
- * @since 2018-11/-9 10:58
  */
 public class SDK_DEVICETYPE extends Structure {
 

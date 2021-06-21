@@ -15,7 +15,6 @@ import java.util.List;
  * ICameraPTZSupport
  *
  * @author echils
- * @since 2020-03-27 16:38
  */
 public interface ICameraPTZSupport {
 

@@ -4,7 +4,6 @@ package com.github.ipcam.entity.jnax;
  * W32Errors
  *
  * @author echils
- * @since 2021-04-11 15:07:00
  */
 public interface W32Errors {
 

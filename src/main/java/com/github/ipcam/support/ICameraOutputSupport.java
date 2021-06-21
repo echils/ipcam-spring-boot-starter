@@ -11,7 +11,6 @@ import java.util.Date;
  * ICameraOutputSupport
  *
  * @author echils
- * @since 2020-03-27 16:36
  */
 public interface ICameraOutputSupport {
 

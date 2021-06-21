@@ -4,7 +4,6 @@ package com.github.ipcam.entity.reference;
  * FocusMode
  *
  * @author echils
- * @since 2021-04-18 18:54:23
  */
 public enum FocusMode {
 

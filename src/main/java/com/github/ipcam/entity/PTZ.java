@@ -6,7 +6,6 @@ import lombok.Data;
  * PTZ
  *
  * @author echils
- * @since 2020-03-19 13:42
  */
 @Data
 public class PTZ {

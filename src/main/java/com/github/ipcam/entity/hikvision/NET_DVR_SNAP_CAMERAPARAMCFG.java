@@ -6,7 +6,6 @@ import com.sun.jna.Structure;
  * NET_DVR_SNAP_CAMERAPARAMCFG
  *
  * @author echils
- * @since 2020-03-19 13:42
  */
 public class NET_DVR_SNAP_CAMERAPARAMCFG extends Structure {
 

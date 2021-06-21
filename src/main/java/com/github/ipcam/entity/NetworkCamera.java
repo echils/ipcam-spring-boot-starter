@@ -7,7 +7,6 @@ import lombok.Data;
  * NetworkCamera
  *
  * @author echils
- * @since 2020-03-19 18:09
  */
 @Data
 public class NetworkCamera {

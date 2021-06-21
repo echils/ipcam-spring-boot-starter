@@ -7,7 +7,6 @@ import java.util.Map;
  * XmEyeException
  *
  * @author echils
- * @since 2021-04-11 15:07:00
  */
 public class XmEyeException extends RuntimeException {
 

@@ -4,7 +4,6 @@ package com.github.ipcam.entity.exception;
  * HikException
  *
  * @author echils
- * @since 2021-04-11 15:07:00
  */
 public class HikException extends RuntimeException {
 

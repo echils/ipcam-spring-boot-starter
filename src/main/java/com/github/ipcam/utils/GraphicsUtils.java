@@ -16,7 +16,6 @@ import static com.github.ipcam.utils.FileUtils.createParentDirectory;
  * GraphicsUtils
  *
  * @author echils
- * @since 2021-04-11 15:09:15
  */
 public class GraphicsUtils {
 

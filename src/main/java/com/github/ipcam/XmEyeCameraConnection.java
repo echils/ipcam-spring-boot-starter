@@ -34,7 +34,6 @@ import static com.github.ipcam.utils.GraphicsUtils.createNewImage;
  * XmEyeCameraConnection
  *
  * @author echils
- * @since 2021-04-12 22:10:05
  */
 public class XmEyeCameraConnection extends AbstractCameraConnection {
 

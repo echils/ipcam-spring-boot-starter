@@ -6,7 +6,6 @@ import com.sun.jna.Structure;
  * PTZ_POSITION_STRUCTURE
  *
  * @author echils
- * @since 2020-03-19 13:42
  */
 public class PTZ_POSITION_STRUCTURE extends Structure {
 

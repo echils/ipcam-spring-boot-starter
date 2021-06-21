@@ -8,7 +8,6 @@ import static com.github.ipcam.entity.comm.STRUCTURE_CONTEXT.*;
  * NET_DVR_DEVICECFG_V40
  *
  * @author echils
- * @since 2020-05-08 14:21
  */
 public class NET_DVR_DEVICECFG_V40 extends Structure {
 

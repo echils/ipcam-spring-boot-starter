@@ -6,7 +6,6 @@ import com.sun.jna.Structure;
  * SDK_SYSTEM_TIME
  *
  * @author echils
- * @since 2018-11-29 10:56
  */
 public class SDK_SYSTEM_TIME extends Structure {
 

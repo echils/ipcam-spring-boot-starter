@@ -20,7 +20,6 @@ import java.util.List;
  * XmlToJsonUtils
  *
  * @author echils
- * @since 2021-04-11 15:19:12
  */
 public class XmlToJsonUtils {
 

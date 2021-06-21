@@ -7,7 +7,6 @@ import com.sun.jna.Structure;
  * NET_DVR_XML_CONFIG_INPUT
  *
  * @author echils
- * @since 2020-04-16 10:51
  */
 public class NET_DVR_XML_CONFIG_INPUT extends Structure {
 

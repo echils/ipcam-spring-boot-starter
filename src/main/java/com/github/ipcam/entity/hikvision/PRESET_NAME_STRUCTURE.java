@@ -6,7 +6,6 @@ import com.sun.jna.Structure;
  * PRESET_NAME_STRUCTURE
  *
  * @author echils
- * @since 2020-03-19 13:42
  */
 public class PRESET_NAME_STRUCTURE extends Structure {
 

@@ -9,7 +9,6 @@ import com.sun.jna.Structure;
  * LPNET_DVR_PREVIEWINFO
  *
  * @author echils
- * @since 2020-03-19 13:42
  */
 public class LPNET_DVR_PREVIEWINFO extends Structure {
 

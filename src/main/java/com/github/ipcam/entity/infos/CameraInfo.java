@@ -7,7 +7,6 @@ import lombok.Data;
  * CameraInfo
  *
  * @author echils
- * @since 2021-04-18 17:37:59
  */
 @Data
 public class CameraInfo {

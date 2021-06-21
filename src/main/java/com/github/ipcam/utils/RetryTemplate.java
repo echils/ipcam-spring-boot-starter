@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
  * RetryUtils
  *
  * @author echils
- * @since 2021-04-11 15:07:00
  */
 public abstract class RetryTemplate {
 

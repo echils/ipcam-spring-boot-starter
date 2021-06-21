@@ -9,7 +9,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * CameraConnectionPoolProperties
  *
  * @author echils
- * @since 2020-04-01 15:03
  */
 @Data
 @ConfigurationProperties("network.camera.pool")

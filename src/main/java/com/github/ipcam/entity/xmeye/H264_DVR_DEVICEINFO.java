@@ -7,7 +7,6 @@ import com.sun.jna.Structure;
  * H264_DVR_DEVICEINFO
  *
  * @author echils
- * @since 2018-11-29 10:42
  */
 public class H264_DVR_DEVICEINFO extends Structure {
 

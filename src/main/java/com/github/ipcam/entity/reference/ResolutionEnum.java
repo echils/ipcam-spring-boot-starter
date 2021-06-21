@@ -4,7 +4,6 @@ package com.github.ipcam.entity.reference;
  * ResolutionEnum
  *
  * @author echils
- * @since 2020-03-19 13:42
  */
 public enum ResolutionEnum {
 

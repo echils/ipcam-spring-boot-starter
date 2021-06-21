@@ -12,7 +12,6 @@ import static com.github.ipcam.support.CameraSupportedDriver.XMEYE;
  * DefaultCameraConnectionFactory
  *
  * @author echils
- * @since 2020-03-23 16:46
  */
 public class DefaultCameraConnectionFactory implements ICameraConnectionFactory {
 

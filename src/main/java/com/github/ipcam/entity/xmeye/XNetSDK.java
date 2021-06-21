@@ -8,7 +8,6 @@ import com.sun.jna.Pointer;
  * XNetSDK
  *
  * @author echils
- * @since 2020-06-01 11:07
  */
 public interface XNetSDK extends Library {
 

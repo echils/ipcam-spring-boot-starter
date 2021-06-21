@@ -4,7 +4,6 @@ package com.github.ipcam.entity.reference;
  * ScreenEffectEnum
  *
  * @author echils
- * @since 2018/12/21 9:23
  */
 public enum ScreenEffectEnum {
 

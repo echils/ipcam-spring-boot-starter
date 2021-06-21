@@ -6,7 +6,6 @@ import com.github.ipcam.entity.hikvision.NET_DVR_DEVICEINFO_V30;
  * STRUCTURE_CONTEXT
  *
  * @author echils
- * @since 2020-03-19 13:36
  */
 public class STRUCTURE_CONTEXT {
 

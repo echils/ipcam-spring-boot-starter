@@ -6,7 +6,6 @@ import com.sun.jna.Structure;
  * NET_SDK_REGION_THERMOMETRY
  *
  * @author echils
- * @since 2020-03-19 13:42
  */
 public class NET_SDK_REGION_THERMOMETRY extends Structure {
 

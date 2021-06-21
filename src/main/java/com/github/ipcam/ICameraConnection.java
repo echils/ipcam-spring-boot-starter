@@ -7,7 +7,6 @@ import com.github.ipcam.support.*;
  * ICameraConnection
  *
  * @author echils
- * @since 2020-03-27 16:11
  */
 public interface ICameraConnection extends ICameraCloseable, ICameraBasicSupport, ICameraConfigSupport,
         ICameraNVRSupport, ICameraOutputSupport, ICameraPTZSupport, ICameraThermalSupport {

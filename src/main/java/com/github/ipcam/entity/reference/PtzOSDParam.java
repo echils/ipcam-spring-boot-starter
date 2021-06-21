@@ -4,7 +4,6 @@ package com.github.ipcam.entity.reference;
  * PtzOSDParam
  *
  * @author echils
- * @since 2020-05-15 15:18
  */
 public enum PtzOSDParam {
 

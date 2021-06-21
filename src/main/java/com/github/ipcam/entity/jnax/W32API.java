@@ -13,7 +13,6 @@ import java.util.Map;
  * W32API
  *
  * @author echils
- * @since 2021-04-11 15:07:00
  */
 public interface W32API extends StdCallLibrary, W32Errors {
 

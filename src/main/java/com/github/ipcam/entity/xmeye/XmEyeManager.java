@@ -10,7 +10,6 @@ import static com.github.ipcam.entity.xmeye.NetSDK.netSDK;
  * XmEyeManager
  *
  * @author echils
- * @since 2020-03-25 13:41
  */
 public class XmEyeManager {
 

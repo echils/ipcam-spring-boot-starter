@@ -7,7 +7,6 @@ import com.github.ipcam.entity.NetworkCamera;
  * ICameraConnectionFactory
  *
  * @author echils
- * @since 2020-03-19 18:09
  */
 public interface ICameraConnectionFactory {
 

@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Scope;
  * CameraAutoConfiguration
  *
  * @author echils
- * @since 2020-03-30 11:45
  */
 @Configuration
 @ConditionalOnBean(ICameraSupplier.class)

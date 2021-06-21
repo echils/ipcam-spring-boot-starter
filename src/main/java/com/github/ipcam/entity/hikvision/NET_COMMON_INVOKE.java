@@ -17,7 +17,6 @@ import java.util.*;
  * NET_COMMON_INVOKE
  *
  * @author echils
- * @since 2018/12/19 18:04
  */
 public class NET_COMMON_INVOKE {
 

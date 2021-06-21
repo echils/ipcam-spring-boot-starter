@@ -46,7 +46,6 @@ import static java.util.Calendar.HOUR_OF_DAY;
  * HikvisionCameraConnection
  *
  * @author echils
- * @since 2021-04-12 22:09:49
  */
 public class HikvisionCameraConnection extends AbstractCameraConnection implements ICameraPTZSupport,
         ICameraThermalSupport, ICameraNVRSupport {

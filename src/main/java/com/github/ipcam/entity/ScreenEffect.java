@@ -6,7 +6,6 @@ import lombok.Data;
  * ScreenEffect
  *
  * @author echils
- * @since 2020-03-19 13:36
  */
 @Data
 public class ScreenEffect {

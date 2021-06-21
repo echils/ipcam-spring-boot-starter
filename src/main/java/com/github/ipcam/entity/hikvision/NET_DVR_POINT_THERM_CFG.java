@@ -7,7 +7,6 @@ import com.sun.jna.Structure;
  * BYTE_ARRAY_STRUCTURE
  *
  * @author echils
- * @since 2020-03-19 13:42
  */
 public class NET_DVR_POINT_THERM_CFG extends Structure {
 

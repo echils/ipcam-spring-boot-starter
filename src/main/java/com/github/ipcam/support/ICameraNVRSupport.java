@@ -10,7 +10,6 @@ import java.util.List;
  * ICameraNVRSupport
  *
  * @author echils
- * @since 2020-07-13 11:13
  */
 public interface ICameraNVRSupport {
 

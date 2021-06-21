@@ -6,7 +6,6 @@ import com.sun.jna.Structure;
  * BYTE_ARRAY_STRUCTURE
  *
  * @author echils
- * @since 2020-03-19 13:42
  */
 public class BYTE_ARRAY_STRUCTURE extends Structure {
 

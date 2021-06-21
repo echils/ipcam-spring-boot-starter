@@ -9,7 +9,6 @@ import java.util.List;
  * ICameraBasicSupport
  *
  * @author echils
- * @since 2020-03-27 16:26
  */
 public interface ICameraBasicSupport extends ICameraSupportDriver {
 

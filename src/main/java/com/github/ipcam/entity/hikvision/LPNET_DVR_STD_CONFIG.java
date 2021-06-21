@@ -7,7 +7,6 @@ import com.sun.jna.Structure;
  * LPNET_DVR_STD_CONFIG
  *
  * @author echils
- * @since 2020-03-19 13:42
  */
 public class LPNET_DVR_STD_CONFIG extends Structure {
 

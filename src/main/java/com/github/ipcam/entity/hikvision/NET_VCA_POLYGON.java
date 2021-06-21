@@ -8,7 +8,6 @@ import com.sun.jna.Structure;
  * NET_VCA_POLYGON
  *
  * @author echils
- * @since 2020-03-19 13:42
  */
 public class NET_VCA_POLYGON extends Structure {
 

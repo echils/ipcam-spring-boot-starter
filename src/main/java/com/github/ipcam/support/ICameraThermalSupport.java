@@ -10,7 +10,6 @@ import java.util.List;
  * ICameraThermalSupport
  *
  * @author echils
- * @since 2020-03-19 11:35
  */
 public interface ICameraThermalSupport {
 
