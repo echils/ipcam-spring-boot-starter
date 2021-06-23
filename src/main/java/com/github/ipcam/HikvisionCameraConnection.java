@@ -807,7 +807,6 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
      * Get the temperature from network camera
      *
      * @param ruleId infrared point id
-     * @return
      */
     public List<Temperature> getTargetTemperature(int ruleId) {
         //Real-time temperature detection config

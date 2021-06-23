@@ -36,7 +36,6 @@ public class GraphicsUtils {
      * @param newWidth   The width of the new picture
      * @param newHeight  The height of the new picture
      * @param targetPath The output path of the new picture
-     * @return
      */
     public static boolean createNewImage(File sourceFile, int newWidth, int newHeight, String targetPath) {
         if (sourceFile == null) {
