@@ -1,4 +1,4 @@
-package com.github.ipcam.support;
+package com.github.ipcam.feature;
 
 
 import com.github.ipcam.entity.Temperature;
@@ -7,18 +7,18 @@ import com.github.ipcam.entity.exception.CameraNotSupportException;
 import java.util.List;
 
 /**
- * ICameraThermalSupport
+ * ICameraThermalFeature
  *
  * @author echils
  */
-public interface ICameraThermalSupport {
+public interface ICameraThermalFeature {
 
 
     /**
      * Measure all infrared points temperature of the preset point and
      * you must jump to the specified preset point before temperature measurement.
      * If you want to get the details of the infrared point,
-     * you can get it from the method {@link ICameraThermalSupport#getInfraredPoint(int, int)}
+     * you can get it from the method {@link ICameraThermalFeature#getInfraredPoint(int, int)}
      *
      * @return {@link Temperature}
      */
@@ -31,7 +31,7 @@ public interface ICameraThermalSupport {
      * Measure the one infrared point temperature of the preset point and
      * you must jump to the specified preset point before temperature measurement
      * If you want to get the details of the infrared point,
-     * you can get it from the method {@link ICameraThermalSupport#getInfraredPoint(int, int)}
+     * you can get it from the method {@link ICameraThermalFeature#getInfraredPoint(int, int)}
      *
      * @param infraredNo infrared point index of preset point
      * @return {@link Temperature}

@@ -1,4 +1,4 @@
-package com.github.ipcam.support;
+package com.github.ipcam.feature;
 
 
 import com.github.ipcam.entity.infos.CameraInfo;
@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author echils
  */
-public interface ICameraBasicSupport extends ICameraSupportDriver {
+public interface ICameraBasicFeature extends ICameraDriverFeature {
 
 
     /**

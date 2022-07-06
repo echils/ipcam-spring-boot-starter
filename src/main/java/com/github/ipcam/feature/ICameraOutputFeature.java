@@ -1,4 +1,4 @@
-package com.github.ipcam.support;
+package com.github.ipcam.feature;
 
 
 import com.github.ipcam.entity.exception.CameraNotSupportException;
@@ -8,11 +8,11 @@ import java.io.OutputStream;
 import java.util.Date;
 
 /**
- * ICameraOutputSupport
+ * ICameraOutputFeature
  *
  * @author echils
  */
-public interface ICameraOutputSupport {
+public interface ICameraOutputFeature {
 
 
     /**

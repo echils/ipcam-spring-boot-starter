@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * CameraConnectionPoolFactory
@@ -28,7 +29,7 @@ public class CameraConnectionPoolFactory extends BaseKeyedPooledObjectFactory<St
 
     private static final Logger logger = LoggerFactory.getLogger(CameraConnectionPoolFactory.class);
 
-    private static final Map<String, NetworkCamera> networkCameraPool = new LinkedHashMap<>();
+    private static final Map<String, NetworkCamera> networkCameraPool = new ConcurrentHashMap<>();
 
     private ICameraSupplier cameraSupplier;
 
@@ -93,6 +94,7 @@ public class CameraConnectionPoolFactory extends BaseKeyedPooledObjectFactory<St
     @Override
     public void destroyObject(String key, PooledObject<ICameraConnection> pooledObject) throws Exception {
         super.destroyObject(key, pooledObject);
+        networkCameraPool.remove(key);
         cameraConnectionFactory.destroy(pooledObject.getObject());
     }
 

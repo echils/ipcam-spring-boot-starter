@@ -1,9 +1,6 @@
 package com.github.ipcam;
 
-import com.github.ipcam.entity.NetworkCamera;
-import com.github.ipcam.entity.PTZ;
-import com.github.ipcam.entity.ScreenEffect;
-import com.github.ipcam.entity.Temperature;
+import com.github.ipcam.entity.*;
 import com.github.ipcam.entity.comm.BYTE_ARRAY_STRUCTURE;
 import com.github.ipcam.entity.exception.CameraConnectionException;
 import com.github.ipcam.entity.exception.HikException;
@@ -12,10 +9,6 @@ import com.github.ipcam.entity.infos.CameraInfo;
 import com.github.ipcam.entity.infos.NVRChannelInfo;
 import com.github.ipcam.entity.infos.PresetPointInfo;
 import com.github.ipcam.entity.reference.*;
-import com.github.ipcam.support.CameraSupportedDriver;
-import com.github.ipcam.support.ICameraNVRSupport;
-import com.github.ipcam.support.ICameraPTZSupport;
-import com.github.ipcam.support.ICameraThermalSupport;
 import com.github.ipcam.utils.RetryTemplate;
 import com.github.ipcam.utils.XmlToJsonUtils;
 import com.google.gson.Gson;
@@ -47,8 +40,7 @@ import static java.util.Calendar.HOUR_OF_DAY;
  *
  * @author echils
  */
-public class HikvisionCameraConnection extends AbstractCameraConnection implements ICameraPTZSupport,
-        ICameraThermalSupport, ICameraNVRSupport {
+public class HikvisionCameraConnection extends AbstractCameraConnection {
 
 
     private static final Logger logger = LoggerFactory.getLogger(HikvisionCameraConnection.class);
@@ -286,7 +278,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
         cameraInfo.setName(new String(deviceConfig.sDVRName).trim());
         cameraInfo.setModelNo(new String(deviceConfig.byDevTypeName).trim());
         cameraInfo.setSerialNo(new String(deviceConfig.sSerialNumber).trim());
-        cameraInfo.setManufacturer(CameraSupportedDriver.HIKVISION);
+        cameraInfo.setManufacturer(CameraDriver.HIKVISION);
         return cameraInfo;
     }
 
@@ -502,7 +494,9 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
                         throw new HikException(getErrorMsg());
                     }
                 }
-            }.retry()) { throw new HikException(getErrorMsg()); }
+            }.retry()) {
+                throw new HikException(getErrorMsg());
+            }
         }
         output.read();
         JsonObject jsonObject = XmlToJsonUtils.toJson(
@@ -761,7 +755,9 @@ public class HikvisionCameraConnection extends AbstractCameraConnection implemen
                         throw new HikException(getErrorMsg());
                     }
                 }
-            }.retry()) { throw new HikException(getErrorMsg()); }
+            }.retry()) {
+                throw new HikException(getErrorMsg());
+            }
         }
         output.read();
         JsonObject jsonObject = XmlToJsonUtils.toJson(new String(output.lpOutBuffer

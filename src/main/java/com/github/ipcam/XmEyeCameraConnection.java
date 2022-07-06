@@ -10,7 +10,7 @@ import com.github.ipcam.entity.reference.StreamTypeEnum;
 import com.github.ipcam.entity.xmeye.CONF_MODIFY_PSW;
 import com.github.ipcam.entity.xmeye.H264_DVR_CLIENTINFO;
 import com.github.ipcam.entity.xmeye.H264_DVR_DEVICEINFO;
-import com.github.ipcam.support.CameraSupportedDriver;
+import com.github.ipcam.entity.CameraDriver;
 import com.sun.jna.ptr.IntByReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -265,7 +265,7 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
         cameraInfo.setPassword(networkCamera.getPassword());
         cameraInfo.setModelNo(new String(deviceInfo.sHardWare).trim());
         cameraInfo.setSerialNo(new String(deviceInfo.sSerialNumber).trim());
-        cameraInfo.setManufacturer(CameraSupportedDriver.XMEYE);
+        cameraInfo.setManufacturer(CameraDriver.XMEYE);
         return cameraInfo;
     }
 

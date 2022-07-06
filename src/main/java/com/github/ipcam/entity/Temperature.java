@@ -2,6 +2,8 @@ package com.github.ipcam.entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 import static com.github.ipcam.entity.comm.STRUCTURE_CONTEXT.INFRARED_POINT_NUM;
 
 /**
@@ -10,7 +12,7 @@ import static com.github.ipcam.entity.comm.STRUCTURE_CONTEXT.INFRARED_POINT_NUM;
  * @author echils
  */
 @Data
-public class Temperature {
+public class Temperature implements Serializable {
 
     /**
      * Monitored area code
@@ -44,7 +46,7 @@ public class Temperature {
 
 
     @Data
-    public static class Region {
+    public static class Region implements Serializable {
 
         /**
          * The X value of the point

@@ -1,4 +1,4 @@
-package com.github.ipcam.support;
+package com.github.ipcam.feature;
 
 import com.github.ipcam.entity.PTZ;
 import com.github.ipcam.entity.exception.CameraNotSupportException;
@@ -12,11 +12,11 @@ import java.util.List;
 
 
 /**
- * ICameraPTZSupport
+ * ICameraPTZFeature
  *
  * @author echils
  */
-public interface ICameraPTZSupport {
+public interface ICameraPTZFeature {
 
 
     /**
@@ -158,7 +158,6 @@ public interface ICameraPTZSupport {
      * @param channel     camera ip channel
      * @param presetIndex the presetIndex to be reached
      * @param ptz         the position to be reached
-     * @throws InterruptedException
      */
     default void gotoPresetPoint(String channel, int presetIndex, PTZ ptz) throws InterruptedException {
         throw new CameraNotSupportException();

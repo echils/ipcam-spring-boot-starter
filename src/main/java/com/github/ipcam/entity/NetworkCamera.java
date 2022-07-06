@@ -1,6 +1,5 @@
 package com.github.ipcam.entity;
 
-import com.github.ipcam.support.CameraSupportedDriver;
 import lombok.Data;
 
 /**
@@ -34,6 +33,6 @@ public class NetworkCamera {
     /**
      * The driver of the camera
      */
-    private CameraSupportedDriver driverType;
+    private CameraDriver driverType;
 
 }

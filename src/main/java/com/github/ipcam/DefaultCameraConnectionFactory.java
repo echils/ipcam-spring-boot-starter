@@ -2,10 +2,8 @@ package com.github.ipcam;
 
 import com.github.ipcam.entity.NetworkCamera;
 import com.github.ipcam.entity.exception.CameraConnectionException;
-import com.github.ipcam.support.CameraSupportedDriver;
 
-import static com.github.ipcam.support.CameraSupportedDriver.HIKVISION;
-import static com.github.ipcam.support.CameraSupportedDriver.XMEYE;
+import java.util.ServiceLoader;
 
 
 /**
@@ -18,25 +16,16 @@ public class DefaultCameraConnectionFactory implements ICameraConnectionFactory 
 
     @Override
     public ICameraConnection create(NetworkCamera camera) {
-        ICameraConnection cameraConnection;
-        CameraSupportedDriver driverType = camera.getDriverType();
-        if (HIKVISION == driverType) {
-            cameraConnection = new HikvisionCameraConnection(camera);
-        } else if (XMEYE == driverType) {
-            cameraConnection = new XmEyeCameraConnection(camera);
-        } else {
-            throw new CameraConnectionException("Unsupported driver");
+        for (AbstractCameraConnection connection : ServiceLoader.load(AbstractCameraConnection.class)) {
+            if (connection.support() == camera.getDriverType()) return connection;
         }
-        cameraConnection.connect();
-        return cameraConnection;
+        throw new CameraConnectionException("Unsupported driver");
     }
 
 
     @Override
     public void destroy(ICameraConnection connection) {
-        if (connection != null && !connection.isClosed()) {
-            connection.close();
-        }
+        if (connection != null && !connection.isClosed()) connection.close();
     }
 
 }

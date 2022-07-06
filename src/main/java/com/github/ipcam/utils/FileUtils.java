@@ -28,9 +28,7 @@ public class FileUtils {
      */
     public static void createParentDirectory(File file) {
         File directory = file.getParentFile();
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
+        if (!directory.exists()) directory.mkdirs();
     }
 
 

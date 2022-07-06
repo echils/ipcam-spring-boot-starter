@@ -1,15 +1,15 @@
 package com.github.ipcam;
 
 
-import com.github.ipcam.support.*;
+import com.github.ipcam.feature.*;
 
 /**
  * ICameraConnection
  *
  * @author echils
  */
-public interface ICameraConnection extends ICameraCloseable, ICameraBasicSupport, ICameraConfigSupport,
-        ICameraNVRSupport, ICameraOutputSupport, ICameraPTZSupport, ICameraThermalSupport {
+public interface ICameraConnection extends ICameraCloseable, ICameraBasicFeature, ICameraConfigFeature,
+        ICameraNVRFeature, ICameraOutputFeature, ICameraPTZFeature, ICameraThermalFeature {
 
     /**
      * connect to network camera

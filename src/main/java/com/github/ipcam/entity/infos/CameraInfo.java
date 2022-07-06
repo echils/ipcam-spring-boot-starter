@@ -1,6 +1,6 @@
 package com.github.ipcam.entity.infos;
 
-import com.github.ipcam.support.CameraSupportedDriver;
+import com.github.ipcam.entity.CameraDriver;
 import lombok.Data;
 
 /**
@@ -44,6 +44,6 @@ public class CameraInfo {
     /**
      * The manufacturer of the camera
      */
-    private CameraSupportedDriver manufacturer;
+    private CameraDriver manufacturer;
 
 }

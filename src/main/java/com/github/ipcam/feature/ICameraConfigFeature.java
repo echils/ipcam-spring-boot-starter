@@ -1,4 +1,4 @@
-package com.github.ipcam.support;
+package com.github.ipcam.feature;
 
 import com.github.ipcam.entity.ScreenEffect;
 import com.github.ipcam.entity.exception.CameraNotSupportException;
@@ -7,11 +7,11 @@ import com.github.ipcam.entity.reference.*;
 import java.util.Calendar;
 
 /**
- * ICameraConfigSupport
+ * ICameraConfigFeature
  *
  * @author echils
  */
-public interface ICameraConfigSupport {
+public interface ICameraConfigFeature {
 
 
     /**

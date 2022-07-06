@@ -1,7 +1,7 @@
 package com.github.ipcam;
 
 import com.github.ipcam.entity.NetworkCamera;
-import com.github.ipcam.support.CameraSupportedDriver;
+import com.github.ipcam.entity.CameraDriver;
 
 import java.io.OutputStream;
 import java.util.Map;
@@ -91,7 +91,7 @@ public abstract class AbstractCameraConnection implements ICameraConnection {
     }
 
     @Override
-    public CameraSupportedDriver support() {
+    public CameraDriver support() {
         return networkCamera.getDriverType();
     }
 
