@@ -1,17 +1,17 @@
-package com.github.ipcam;
+package com.github.ipcam.feature;
 
 import com.github.ipcam.entity.exception.CameraConnectionException;
 
 /**
- * ICameraCloseable
+ * ICameraAutoCloseFeature
  *
  * @author echils
  */
-public interface ICameraCloseable extends AutoCloseable {
+public interface ICameraAutoCloseFeature extends AutoCloseable {
 
 
     /**
-     * network camera general close connection
+     * Network camera general close connection
      *
      * @throws CameraConnectionException see {@link CameraConnectionException}
      */
