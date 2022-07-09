@@ -16,8 +16,12 @@ public class DefaultCameraConnectionFactory implements ICameraConnectionFactory 
 
     @Override
     public ICameraConnection create(NetworkCamera camera) {
-        for (AbstractCameraConnection connection : ServiceLoader.load(AbstractCameraConnection.class)) {
-            if (connection.support() == camera.getDriverType()) return connection;
+        for (AbstractCameraConnection connection :
+                ServiceLoader.load(AbstractCameraConnection.class)) {
+            if (connection.support() == camera.getDriverType()) {
+                connection.connect(camera);
+                return connection;
+            }
         }
         throw new CameraConnectionException("Unsupported driver");
     }

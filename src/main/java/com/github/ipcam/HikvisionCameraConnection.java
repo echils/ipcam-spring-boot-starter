@@ -20,6 +20,7 @@ import com.sun.jna.ptr.ByteByReference;
 import com.sun.jna.ptr.IntByReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
@@ -45,25 +46,24 @@ public class HikvisionCameraConnection extends AbstractCameraConnection {
 
     private static final Logger logger = LoggerFactory.getLogger(HikvisionCameraConnection.class);
 
-
-    public HikvisionCameraConnection(NetworkCamera networkCamera) {
-        super(networkCamera);
-    }
-
-
     @Override
-    public void connect() {
+    public void connect(NetworkCamera camera) {
         logger.info("Connecting to the hikvision camera...");
         if (this.isConnected()) {
             logger.error("Already connected to hikvision camera with：{}", networkCamera);
             throw new CameraConnectionException("Already connected to hikvision camera");
         }
-        this.userHandle = this.login(networkCamera.getIp(), networkCamera.getPort(),
-                networkCamera.getUsername(), networkCamera.getPassword());
+        if (camera == null || camera.isIllegal()) {
+            logger.error("The hikvision camera is illegal：{}", camera);
+            throw new CameraConnectionException("The hikvision camera is illegal");
+        }
+        this.userHandle = this.login(camera.getIp(), camera.getPort(),
+                camera.getUsername(), camera.getPassword());
         logger.info("Connect to the hikvision camera success");
         if (userHandle < 0) {
             throw new CameraConnectionException("Connect to hikvision camera failed");
         }
+        this.networkCamera = camera;
     }
 
 
@@ -262,11 +262,13 @@ public class HikvisionCameraConnection extends AbstractCameraConnection {
 
 
     @Override
-    public CameraInfo getBasicInfo(String channel) {
+    public CameraInfo getBasicInfo() {
         NET_DVR_DEVICECFG_V40 deviceConfig = new NET_DVR_DEVICECFG_V40();
         deviceConfig.dwSize = deviceConfig.size();
         deviceConfig.write();
-        if (!hcNetSDK.NET_DVR_GetDVRConfig(userHandle.intValue(), NET_DVR_GET_DEVICECFG_V40, handleChannel(channel),
+        List<String> channels = this.getChannels();
+        if (CollectionUtils.isEmpty(channels)) throw new CameraConnectionException("Camera channel is blank");
+        if (!hcNetSDK.NET_DVR_GetDVRConfig(userHandle.intValue(), NET_DVR_GET_DEVICECFG_V40, handleChannel(channels.get(0)),
                 deviceConfig.getPointer(), ISAPI_DATA_LEN, new IntByReference(deviceConfig.size()))) {
             throw new HikException(getErrorMsg());
         }
@@ -278,7 +280,6 @@ public class HikvisionCameraConnection extends AbstractCameraConnection {
         cameraInfo.setName(new String(deviceConfig.sDVRName).trim());
         cameraInfo.setModelNo(new String(deviceConfig.byDevTypeName).trim());
         cameraInfo.setSerialNo(new String(deviceConfig.sSerialNumber).trim());
-        cameraInfo.setManufacturer(CameraDriver.HIKVISION);
         return cameraInfo;
     }
 
@@ -1570,6 +1571,11 @@ public class HikvisionCameraConnection extends AbstractCameraConnection {
     }
 
 
+    @Override
+    public CameraDriver support() {
+        return CameraDriver.HIKVISION;
+    }
+
     private static class VoiceDataCallBack implements HCNetSDK.VoiceDataCallBack {
 
         private OutputStream device;
@@ -1711,5 +1717,6 @@ public class HikvisionCameraConnection extends AbstractCameraConnection {
         }
 
     }
+
 
 }

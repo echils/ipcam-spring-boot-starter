@@ -7,6 +7,6 @@ package com.github.ipcam.entity;
  */
 public enum CameraDriver {
 
-    HIKVISION, XMEYE
+    HIKVISION, XMEYE, ONVIF
 
 }

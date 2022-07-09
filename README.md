@@ -88,7 +88,7 @@ public class Test {
        ICameraConnection connection = null;
        try {
            connection = cameraConnectionPool.borrowObject(IDENTIFICATION);
-           List<String> channles = connection.getChannels();
+           List<String> channels = connection.getChannels();
            for (String channel : channels) {
                System.out.println(channel);
            }
@@ -96,10 +96,13 @@ public class Test {
            throw new CameraRuntimeException();
        } finally {
            if (connection != null && connection.isConnected()) {
-               cameraConnectionPool.returnObject(identification, connection);
+               cameraConnectionPool.returnObject(IDENTIFICATION, connection);
            }
        } 
     }
     
 }
 ````
+
+## More Usage Samples
+Demo:&nbsp;&nbsp;[ipcam-quickstart-sample](ipcam-quickstart-sample) 

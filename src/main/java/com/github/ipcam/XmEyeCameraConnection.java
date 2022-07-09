@@ -1,5 +1,6 @@
 package com.github.ipcam;
 
+import com.github.ipcam.entity.CameraDriver;
 import com.github.ipcam.entity.NetworkCamera;
 import com.github.ipcam.entity.comm.BYTE_ARRAY_STRUCTURE;
 import com.github.ipcam.entity.exception.CameraConnectionException;
@@ -10,7 +11,6 @@ import com.github.ipcam.entity.reference.StreamTypeEnum;
 import com.github.ipcam.entity.xmeye.CONF_MODIFY_PSW;
 import com.github.ipcam.entity.xmeye.H264_DVR_CLIENTINFO;
 import com.github.ipcam.entity.xmeye.H264_DVR_DEVICEINFO;
-import com.github.ipcam.entity.CameraDriver;
 import com.sun.jna.ptr.IntByReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,24 +42,24 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
 
     private H264_DVR_DEVICEINFO deviceInfo = new H264_DVR_DEVICEINFO();
 
-    public XmEyeCameraConnection(NetworkCamera networkCamera) {
-        super(networkCamera);
-    }
-
-
     @Override
-    public void connect() {
+    public void connect(NetworkCamera camera) {
         logger.info("Connecting to the xmeye camera...");
         if (this.isConnected()) {
             logger.error("Already connected to xmeye camera with：{}", networkCamera);
             throw new CameraConnectionException("Already connected to xmeye camera");
         }
-        this.userHandle = this.login(networkCamera.getIp(), networkCamera.getPort(),
-                networkCamera.getUsername(), networkCamera.getPassword());
+        if (camera == null || camera.isIllegal()) {
+            logger.error("The xmeye camera is illegal：{}", camera);
+            throw new CameraConnectionException("The xmeye camera is illegal");
+        }
+        this.userHandle = this.login(camera.getIp(), camera.getPort(),
+                camera.getUsername(), camera.getPassword());
         logger.info("Connect to the xmeye camera success");
         if (userHandle < 0) {
             throw new CameraConnectionException("Connect to xmeye camera failed");
         }
+        this.networkCamera = camera;
     }
 
 
@@ -257,7 +257,7 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
 
 
     @Override
-    public CameraInfo getBasicInfo(String channel) {
+    public CameraInfo getBasicInfo() {
         CameraInfo cameraInfo = new CameraInfo();
         cameraInfo.setIp(networkCamera.getIp());
         cameraInfo.setName(networkCamera.getIp());
@@ -265,9 +265,15 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
         cameraInfo.setPassword(networkCamera.getPassword());
         cameraInfo.setModelNo(new String(deviceInfo.sHardWare).trim());
         cameraInfo.setSerialNo(new String(deviceInfo.sSerialNumber).trim());
-        cameraInfo.setManufacturer(CameraDriver.XMEYE);
         return cameraInfo;
     }
+
+
+    @Override
+    public CameraDriver support() {
+        return CameraDriver.XMEYE;
+    }
+
 
     private byte[] getBytes(String str, int arrLen) {
         byte[] result = new byte[arrLen];

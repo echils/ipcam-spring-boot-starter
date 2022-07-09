@@ -1,6 +1,5 @@
 package com.github.ipcam.entity.infos;
 
-import com.github.ipcam.entity.CameraDriver;
 import lombok.Data;
 
 /**
@@ -40,10 +39,5 @@ public class CameraInfo {
      * The password of the camera
      */
     private String password;
-
-    /**
-     * The manufacturer of the camera
-     */
-    private CameraDriver manufacturer;
 
 }

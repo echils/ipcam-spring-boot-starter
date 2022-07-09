@@ -1,7 +1,6 @@
 package com.github.ipcam;
 
 import com.github.ipcam.entity.NetworkCamera;
-import com.github.ipcam.entity.CameraDriver;
 
 import java.io.OutputStream;
 import java.util.Map;
@@ -66,13 +65,9 @@ public abstract class AbstractCameraConnection implements ICameraConnection {
     private boolean health = true;
 
 
-    AbstractCameraConnection(NetworkCamera networkCamera) {
-        this.networkCamera = networkCamera;
-    }
-
     @Override
     public boolean isConnected() {
-        return userHandle != null && userHandle >= 0;
+        return networkCamera != null && userHandle != null && userHandle >= 0;
     }
 
     @Override
@@ -88,11 +83,6 @@ public abstract class AbstractCameraConnection implements ICameraConnection {
     @Override
     public void makeWeak() {
         this.health = false;
-    }
-
-    @Override
-    public CameraDriver support() {
-        return networkCamera.getDriverType();
     }
 
 }

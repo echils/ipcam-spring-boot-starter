@@ -1,6 +1,9 @@
 package com.github.ipcam.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 /**
  * NetworkCamera
@@ -8,6 +11,8 @@ import lombok.Data;
  * @author echils
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class NetworkCamera {
 
     /**
@@ -18,7 +23,7 @@ public class NetworkCamera {
     /**
      * The port of the camera
      */
-    private int port;
+    private Integer port;
 
     /**
      * The username of the camera
@@ -34,5 +39,10 @@ public class NetworkCamera {
      * The driver of the camera
      */
     private CameraDriver driverType;
+
+
+    public boolean isIllegal() {
+        return StringUtils.isEmpty(ip) || port == null || driverType == null;
+    }
 
 }

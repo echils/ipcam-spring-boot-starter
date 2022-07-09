@@ -15,6 +15,17 @@ public interface ICameraConfigFeature {
 
 
     /**
+     * Change the password of the camera
+     *
+     * @param channel     the channel of camera
+     * @param newPassword the new password of camera
+     */
+    default void changePassword(String channel, String newPassword) {
+        throw new CameraNotSupportException();
+    }
+
+
+    /**
      * Reboot the camera
      */
     default void reboot() {
