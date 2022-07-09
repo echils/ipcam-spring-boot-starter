@@ -1,11 +1,11 @@
 package com.github.ipcam.entity.reference;
 
 /**
- * ExposureParam
+ * ExposureParamEnum
  *
  * @author echils
  */
-public enum ExposureParam {
+public enum ExposureParamEnum {
 
     /**
      * Exposure level (exposure mode is automatic, aperture priority,

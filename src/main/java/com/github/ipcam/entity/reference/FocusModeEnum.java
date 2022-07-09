@@ -1,11 +1,11 @@
 package com.github.ipcam.entity.reference;
 
 /**
- * FocusMode
+ * FocusModeEnum
  *
  * @author echils
  */
-public enum FocusMode {
+public enum FocusModeEnum {
 
     /**
      * Automatic
@@ -25,7 +25,7 @@ public enum FocusMode {
 
     private byte key;
 
-    FocusMode(int key) {
+    FocusModeEnum(int key) {
         this.key = (byte) key;
     }
 

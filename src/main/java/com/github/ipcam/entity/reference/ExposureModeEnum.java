@@ -1,11 +1,11 @@
 package com.github.ipcam.entity.reference;
 
 /**
- * ExposureMode
+ * ExposureModeEnum
  *
  * @author echils
  */
-public enum ExposureMode {
+public enum ExposureModeEnum {
 
     /**
      * Manual exposure
@@ -35,7 +35,7 @@ public enum ExposureMode {
 
     private byte key;
 
-    ExposureMode(int key) {
+    ExposureModeEnum(int key) {
         this.key = (byte) key;
     }
 

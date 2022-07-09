@@ -312,10 +312,10 @@ public interface ICameraConfigFeature {
     /**
      * Config exposure mode of the camera
      *
-     * @param channel      the camera ip channel
-     * @param exposureMode {@link ExposureMode}
+     * @param channel          the camera ip channel
+     * @param exposureModeEnum {@link ExposureModeEnum}
      */
-    default void setExposureMode(String channel, ExposureMode exposureMode) {
+    default void setExposureMode(String channel, ExposureModeEnum exposureModeEnum) {
         throw new CameraNotSupportException();
     }
 
@@ -323,11 +323,11 @@ public interface ICameraConfigFeature {
     /**
      * Config exposure param of the camera
      *
-     * @param channel       the camera ip channel
-     * @param exposureParam {@link ExposureParam}
-     * @param value         the support value of the camera
+     * @param channel           the camera ip channel
+     * @param exposureParamEnum {@link ExposureParamEnum}
+     * @param value             the support value of the camera
      */
-    default void setExposureParam(String channel, ExposureParam exposureParam, int value) {
+    default void setExposureParam(String channel, ExposureParamEnum exposureParamEnum, int value) {
         throw new CameraNotSupportException();
     }
 
@@ -335,10 +335,10 @@ public interface ICameraConfigFeature {
     /**
      * Config focus mode of the camera
      *
-     * @param channel   the camera ip channel
-     * @param focusMode {@link FocusMode}
+     * @param channel       the camera ip channel
+     * @param focusModeEnum {@link FocusModeEnum}
      */
-    default void setFocusMode(String channel, FocusMode focusMode) {
+    default void setFocusMode(String channel, FocusModeEnum focusModeEnum) {
         throw new CameraNotSupportException();
     }
 
@@ -403,11 +403,11 @@ public interface ICameraConfigFeature {
     /**
      * Config osd mode of the camera ptz
      *
-     * @param channel     the camera ip channel
-     * @param ptzOSDParam {@link PtzOSDParam}
-     * @param value       the support value of the camera
+     * @param channel         the camera ip channel
+     * @param ptzOSDParamEnum {@link PtzOSDParamEnum}
+     * @param value           the support value of the camera
      */
-    default void setPTZOSDConfigMode(String channel, PtzOSDParam ptzOSDParam, int value) {
+    default void setPTZOSDConfigMode(String channel, PtzOSDParamEnum ptzOSDParamEnum, int value) {
         throw new CameraNotSupportException();
     }
 

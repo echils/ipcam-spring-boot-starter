@@ -1348,9 +1348,9 @@ public class HikvisionCameraConnection extends AbstractCameraConnection {
 
 
     @Override
-    public void setExposureMode(String channel, ExposureMode exposureMode) {
+    public void setExposureMode(String channel, ExposureModeEnum exposureModeEnum) {
         NET_DVR_AEMODECFG param = getExposureConfig(userHandle.intValue(), channel);
-        param.byExposureModeSet = exposureMode.getKey();
+        param.byExposureModeSet = exposureModeEnum.getKey();
 
         if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_AEMODECFG_SET, handleChannel(channel),
                 param, param.size())) {
@@ -1360,9 +1360,9 @@ public class HikvisionCameraConnection extends AbstractCameraConnection {
 
 
     @Override
-    public void setExposureParam(String channel, ExposureParam exposureParam, int value) {
+    public void setExposureParam(String channel, ExposureParamEnum exposureParamEnum, int value) {
         NET_DVR_AEMODECFG param = getExposureConfig(userHandle.intValue(), channel);
-        switch (exposureParam) {
+        switch (exposureParamEnum) {
             case EXPOSURE_LEVEL:
                 param.byExposureLevel = (byte) value;
                 break;
@@ -1387,14 +1387,14 @@ public class HikvisionCameraConnection extends AbstractCameraConnection {
 
 
     @Override
-    public void setFocusMode(String channel, FocusMode focusMode) {
+    public void setFocusMode(String channel, FocusModeEnum focusModeEnum) {
         NET_DVR_FOCUSMODE_CFG mode = new NET_DVR_FOCUSMODE_CFG();
         if (!hcNetSDK.NET_DVR_GetDVRConfig(userHandle.intValue(), NET_DVR_FOCUSMODE_CFG_GET, handleChannel(channel),
                 mode.getPointer(), mode.size(), new IntByReference())) {
             throw new HikException(getErrorMsg());
         }
         mode.read();
-        mode.byFocusMode = focusMode.getKey();
+        mode.byFocusMode = focusModeEnum.getKey();
         mode.write();
         if (!hcNetSDK.NET_DVR_SetDVRConfig(userHandle.intValue(), NET_DVR_FOCUSMODE_CFG_SET, handleChannel(channel),
                 mode, mode.size())) {
@@ -1545,14 +1545,14 @@ public class HikvisionCameraConnection extends AbstractCameraConnection {
 
 
     @Override
-    public void setPTZOSDConfigMode(String channel, PtzOSDParam ptzOSDParam, int value) {
+    public void setPTZOSDConfigMode(String channel, PtzOSDParamEnum ptzOSDParamEnum, int value) {
         NET_DVR_PTZ_OSDCFG osd = new NET_DVR_PTZ_OSDCFG();
         if (!hcNetSDK.NET_DVR_GetDVRConfig(userHandle.intValue(), NET_DVR_GET_PTZOSDCFG, handleChannel(channel),
                 osd.getPointer(), ISAPI_DATA_LEN, new IntByReference(osd.size()))) {
             throw new HikException(getErrorMsg());
         }
         osd.read();
-        switch (ptzOSDParam) {
+        switch (ptzOSDParamEnum) {
             case PT_STATUS:
                 osd.byPtStatus = (byte) value;
                 break;
