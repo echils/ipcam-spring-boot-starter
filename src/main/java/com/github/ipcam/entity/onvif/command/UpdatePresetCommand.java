@@ -9,13 +9,19 @@ import com.github.ipcam.entity.onvif.xml.XmlPullParser;
 import java.io.StringReader;
 
 /**
- * SetPresetCommand
+ * UpdatePresetCommand
  *
  * @author echils
  */
-public class SetPresetCommand implements OnvifCommand<PresetPointInfo> {
+public class UpdatePresetCommand implements OnvifCommand<PresetPointInfo> {
 
     private static final String KEY_PRESET_TOKEN = "PresetToken";
+
+    private int index;
+
+    public UpdatePresetCommand(int presetNo) {
+        this.index = presetNo;
+    }
 
     @Override
     public String uri() {
@@ -26,6 +32,7 @@ public class SetPresetCommand implements OnvifCommand<PresetPointInfo> {
     public String content(OnvifMediaProfile mediaProfile) {
         return "<SetPreset xmlns=\"http://www.onvif.org/ver20/ptz/wsdl\">" +
                 "<ProfileToken>" + mediaProfile.getToken() + "</ProfileToken>" +
+                "<PresetToken>" + index + "</PresetToken>" +
                 "</SetPreset>";
     }
 

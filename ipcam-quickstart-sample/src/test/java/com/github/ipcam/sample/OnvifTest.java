@@ -3,9 +3,7 @@ package com.github.ipcam.sample;
 import com.github.ipcam.entity.CameraDriver;
 import com.github.ipcam.entity.NetworkCamera;
 import com.github.ipcam.entity.onvif.OnvifExecutor;
-import com.github.ipcam.entity.onvif.command.DeviceInfoCommand;
-import com.github.ipcam.entity.onvif.command.GetCurrentPositionCommand;
-import com.github.ipcam.entity.onvif.command.GetPresetsCommand;
+import com.github.ipcam.entity.onvif.command.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -30,6 +28,9 @@ public class OnvifTest {
         System.out.println(onvifExecutor.execute(new GetPresetsCommand()));
         System.out.println(onvifExecutor.execute(new GetCurrentPositionCommand()));
 //        System.out.println(onvifExecutor.execute(new SetPresetCommand()));
+        System.out.println(onvifExecutor.execute(new UpdatePresetCommand(52)));
+        System.out.println(onvifExecutor.execute(new RemovePresetCommand(52)));
+        System.out.println(onvifExecutor.execute(new GotoPresetCommand(50)));
     }
 
 }
