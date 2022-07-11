@@ -1,5 +1,7 @@
 package com.github.ipcam.entity.onvif;
 
+import com.github.ipcam.entity.onvif.modes.OnvifMediaProfile;
+
 /**
  * OnvifCommand
  *
@@ -16,8 +18,10 @@ public interface OnvifCommand<T> {
 
     /**
      * The content of request xml
+     *
+     * @param mediaProfile {@link com.github.ipcam.entity.onvif.command.GetMediaProfilesCommand}
      */
-    String content();
+    String content(OnvifMediaProfile mediaProfile);
 
 
     /**

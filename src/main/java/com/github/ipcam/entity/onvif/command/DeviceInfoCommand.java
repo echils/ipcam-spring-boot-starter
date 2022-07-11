@@ -1,17 +1,19 @@
 package com.github.ipcam.entity.onvif.command;
 
+import com.github.ipcam.entity.onvif.OnvifCommand;
 import com.github.ipcam.entity.onvif.modes.OnvifDeviceInfo;
-import org.xmlpull.v1.XmlPullParser;
+import com.github.ipcam.entity.onvif.modes.OnvifMediaProfile;
+import com.github.ipcam.entity.onvif.xml.DefaultXmlPullParser;
+import com.github.ipcam.entity.onvif.xml.XmlPullParser;
 
 import java.io.StringReader;
 
 /**
- * OnvifDeviceInfoCommand
+ * DeviceInfoCommand
  *
  * @author echils
  */
-public class OnvifDeviceInfoCommand extends AbstractOnvifCommand<OnvifDeviceInfo> {
-
+public class DeviceInfoCommand implements OnvifCommand<OnvifDeviceInfo> {
 
     private static final String KEY_MANUFACTURER = "Manufacturer";
     private static final String KEY_MODEL = "Model";
@@ -25,14 +27,14 @@ public class OnvifDeviceInfoCommand extends AbstractOnvifCommand<OnvifDeviceInfo
     }
 
     @Override
-    public String content() {
+    public String content(OnvifMediaProfile mediaProfile) {
         return "<GetDeviceInformation xmlns=\"http://www.onvif.org/ver10/device/wsdl\">" + "</GetDeviceInformation>";
     }
 
     @Override
     public OnvifDeviceInfo parse(String response) throws Exception {
         OnvifDeviceInfo deviceInfo = new OnvifDeviceInfo();
-        XmlPullParser xmlParser = getXmlParser();
+        XmlPullParser xmlParser = new DefaultXmlPullParser();
         xmlParser.setInput(new StringReader(response));
         int eventType = xmlParser.getEventType();
         while (eventType != XmlPullParser.END_DOCUMENT) {

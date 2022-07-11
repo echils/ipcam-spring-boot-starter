@@ -1,16 +1,16 @@
 package com.github.ipcam.entity.onvif;
 
-import com.burgstaller.okhttp.AuthenticationCacheInterceptor;
-import com.burgstaller.okhttp.CachingAuthenticatorDecorator;
-import com.burgstaller.okhttp.digest.CachingAuthenticator;
-import com.burgstaller.okhttp.digest.Credentials;
-import com.burgstaller.okhttp.digest.DigestAuthenticator;
 import com.github.ipcam.entity.NetworkCamera;
 import com.github.ipcam.entity.exception.CameraConnectionException;
+import com.github.ipcam.entity.onvif.command.GetMediaProfilesCommand;
+import com.github.ipcam.entity.onvif.digest.*;
+import com.github.ipcam.entity.onvif.modes.OnvifMediaProfile;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -79,13 +79,16 @@ public class OnvifExecutor {
     private static final String SOAP_ENVELOPE_TAIL = "</soap:Body></soap:Envelope>";
 
 
+    private List<OnvifMediaProfile> mediaProfiles;
+
+
     public OnvifExecutor(NetworkCamera camera) {
         if (camera == null || camera.isIllegal()) {
-            log.error("The hikvision camera is illegal：{}", camera);
+            log.error("The camera is illegal：{}", camera);
             throw new CameraConnectionException("The camera is illegal");
         }
-        Credentials credentials =
-                new Credentials(camera.getUsername(), camera.getPassword());
+        CredentialInfo credentials =
+                new CredentialInfo(camera.getUsername(), camera.getPassword());
         DigestAuthenticator authenticator = new DigestAuthenticator(credentials);
         Map<String, CachingAuthenticator> authCache = new ConcurrentHashMap<>();
         this.httpClient = new OkHttpClient.Builder()
@@ -112,14 +115,32 @@ public class OnvifExecutor {
             log.warn("The onvif request command is null");
             return null;
         }
-        RequestBody requestBody = RequestBody
-                .create(xmlBuild(command.content()), this.mediaType);
 
-        Request request = new Request.Builder().url(HTTP + this.networkCamera.getIp() + ":" +
-                this.networkCamera.getPort() + command.uri())
-                .addHeader(CONTENT_TYPE, CONTENT_TYPE_VALUE)
-                .post(requestBody).build();
         try {
+            if (CollectionUtils.isEmpty(mediaProfiles)) {
+                GetMediaProfilesCommand mediaProfilesCommand = new GetMediaProfilesCommand();
+                RequestBody mediaBody = RequestBody
+                        .create(xmlBuild(mediaProfilesCommand.content(null)), this.mediaType);
+                Request mediaRequest = new Request.Builder().url(HTTP + this.networkCamera.getIp() + ":" +
+                        this.networkCamera.getPort() + command.uri())
+                        .addHeader(CONTENT_TYPE, CONTENT_TYPE_VALUE)
+                        .post(mediaBody).build();
+                Response mediaResponse = httpClient.newCall(mediaRequest).execute();
+                ResponseBody mediaResponseBody = mediaResponse.body();
+                if (mediaResponse.code() != 200 || mediaResponseBody == null) {
+                    return OnvifResultData.failed("Get the camera media profile failed," + mediaResponse.message());
+                }
+                mediaProfiles = mediaProfilesCommand.parse(mediaResponseBody.string());
+            }
+
+            RequestBody requestBody = RequestBody
+                    .create(xmlBuild(command.content(mediaProfiles.get(0))), this.mediaType);
+
+            Request request = new Request.Builder().url(HTTP + this.networkCamera.getIp() + ":" +
+                    this.networkCamera.getPort() + command.uri())
+                    .addHeader(CONTENT_TYPE, CONTENT_TYPE_VALUE)
+                    .post(requestBody).build();
+
             Response response = httpClient.newCall(request).execute();
             ResponseBody responseBody = response.body();
             if (response.code() == 200 && responseBody != null) {

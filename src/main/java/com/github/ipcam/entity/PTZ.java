@@ -1,6 +1,7 @@
 package com.github.ipcam.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * PTZ
@@ -8,25 +9,32 @@ import lombok.Data;
  * @author echils
  */
 @Data
+@NoArgsConstructor
 public class PTZ {
 
     /**
      * The Horizontal value
      */
-    private int pan;
+    private double pan;
 
     /**
      * The vertical value
      */
-    private int tilt;
+    private double tilt;
 
     /**
      * The depth value
      */
-    private int zoom;
+    private double zoom;
 
 
     public PTZ(int pan, int tilt, int zoom) {
+        this.pan = pan;
+        this.tilt = tilt;
+        this.zoom = zoom;
+    }
+
+    public PTZ(double pan, double tilt, double zoom) {
         this.pan = pan;
         this.tilt = tilt;
         this.zoom = zoom;
@@ -37,9 +45,7 @@ public class PTZ {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PTZ cameraPTZ = (PTZ) o;
-        return Math.abs(pan - cameraPTZ.pan) < 10 &&
-                Math.abs(tilt - cameraPTZ.tilt) < 10 &&
-                Math.abs(zoom - cameraPTZ.zoom) < 10;
+        return pan == cameraPTZ.pan && tilt == cameraPTZ.tilt && zoom == cameraPTZ.zoom;
     }
 
 }

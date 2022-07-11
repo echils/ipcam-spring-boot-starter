@@ -21,8 +21,8 @@ public class PresetPointInfo {
     private String presetName;
 
     /**
-     * Has it been used
+     * Has it been used,onvif driver maybe is null
      */
-    private boolean enabled;
+    private Boolean enabled;
 
 }
