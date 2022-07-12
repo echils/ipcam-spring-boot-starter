@@ -18,7 +18,7 @@ public class GotoPresetCommand implements OnvifCommand<Void> {
 
     @Override
     public String uri() {
-        return "/onvif/ptz_service";
+        return "/onvif/PTZ";
     }
 
     @Override

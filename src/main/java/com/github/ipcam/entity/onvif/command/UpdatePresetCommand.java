@@ -25,7 +25,7 @@ public class UpdatePresetCommand implements OnvifCommand<PresetPointInfo> {
 
     @Override
     public String uri() {
-        return "/onvif/ptz_service";
+        return "/onvif/PTZ";
     }
 
     @Override

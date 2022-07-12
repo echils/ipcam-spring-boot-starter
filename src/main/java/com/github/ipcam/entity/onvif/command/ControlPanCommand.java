@@ -4,29 +4,29 @@ import com.github.ipcam.entity.onvif.OnvifCommand;
 import com.github.ipcam.entity.onvif.modes.OnvifMediaProfile;
 
 /**
- * RemovePresetCommand
+ * ControlPanCommand
  *
  * @author echils
  */
-public class RemovePresetCommand implements OnvifCommand<Void> {
+public class ControlPanCommand implements OnvifCommand<Void> {
 
     private int index;
 
-    public RemovePresetCommand(int presetNo) {
+    public ControlPanCommand(int presetNo) {
         this.index = presetNo;
     }
 
     @Override
     public String uri() {
-        return "/onvif/PTZ";
+        return "/onvif/Provisioning";
     }
 
     @Override
     public String content(OnvifMediaProfile mediaProfile) {
-        return "<RemovePreset xmlns=\"http://www.onvif.org/ver20/ptz/wsdl\">" +
-                "<ProfileToken>" + mediaProfile.getToken() + "</ProfileToken>" +
-                "<PresetToken>" + index + "</PresetToken>" +
-                "</RemovePreset>";
+        return "<PanMove xmlns=\"http://www.onvif.org/ver10/provisioning/wsdl\">" +
+                "<VideoSource>" + "VideoSource_1" + "</VideoSource>" +
+                "<Direction>" + "Left" + "</Direction>" +
+                "</PanMove>";
     }
 
     @Override

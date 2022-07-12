@@ -22,7 +22,7 @@ public class GetMediaProfilesCommand implements OnvifCommand<List<OnvifMediaProf
 
     @Override
     public String uri() {
-        return "/onvif/ptz_service";
+        return "/onvif/PTZ";
     }
 
     @Override
@@ -50,6 +50,5 @@ public class GetMediaProfilesCommand implements OnvifCommand<List<OnvifMediaProf
         }
         return mediaProfiles;
     }
-
 
 }

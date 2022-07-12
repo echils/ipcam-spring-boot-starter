@@ -16,7 +16,6 @@ import java.io.StringReader;
  */
 public class GetCurrentPositionCommand implements OnvifCommand<PTZ> {
 
-    //    pan=-1.0, tilt=0.142857, zoom=0.0
     private static final String KEY_PRESET = "Preset";
     private static final String ATTR_TOKEN = "token";
     private static final String ATTR_NAME = "Name";
@@ -26,7 +25,7 @@ public class GetCurrentPositionCommand implements OnvifCommand<PTZ> {
 
     @Override
     public String uri() {
-        return "/onvif/ptz_service";
+        return "/onvif/PTZ";
     }
 
     @Override

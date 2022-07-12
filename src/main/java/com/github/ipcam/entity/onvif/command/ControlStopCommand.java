@@ -4,17 +4,11 @@ import com.github.ipcam.entity.onvif.OnvifCommand;
 import com.github.ipcam.entity.onvif.modes.OnvifMediaProfile;
 
 /**
- * RemovePresetCommand
+ * ControlStopCommand
  *
  * @author echils
  */
-public class RemovePresetCommand implements OnvifCommand<Void> {
-
-    private int index;
-
-    public RemovePresetCommand(int presetNo) {
-        this.index = presetNo;
-    }
+public class ControlStopCommand implements OnvifCommand<Void> {
 
     @Override
     public String uri() {
@@ -23,10 +17,11 @@ public class RemovePresetCommand implements OnvifCommand<Void> {
 
     @Override
     public String content(OnvifMediaProfile mediaProfile) {
-        return "<RemovePreset xmlns=\"http://www.onvif.org/ver20/ptz/wsdl\">" +
+        return "<Stop xmlns=\"http://www.onvif.org/ver20/ptz/wsdl\">" +
                 "<ProfileToken>" + mediaProfile.getToken() + "</ProfileToken>" +
-                "<PresetToken>" + index + "</PresetToken>" +
-                "</RemovePreset>";
+                "<PanTilt>true</PanTilt>" +
+                "<Zoom>true</Zoom>" +
+                "</Stop>";
     }
 
     @Override
