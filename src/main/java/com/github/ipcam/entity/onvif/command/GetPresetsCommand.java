@@ -24,13 +24,19 @@ public class GetPresetsCommand implements OnvifCommand<List<PresetPointInfo>> {
     private static final String KEY_POSITION_PANTILT = "PanTilt";
     private static final String KEY_POSITION_ZOOM = "Zoom";
 
+    private OnvifMediaProfile mediaProfile;
+
+    public GetPresetsCommand(OnvifMediaProfile mediaProfile) {
+        this.mediaProfile = mediaProfile;
+    }
+
     @Override
     public String uri() {
         return "/onvif/PTZ";
     }
 
     @Override
-    public String content(OnvifMediaProfile mediaProfile) {
+    public String content() {
         return "<GetPresets xmlns=\"http://www.onvif.org/ver20/ptz/wsdl\">" +
                 "<ProfileToken>" + mediaProfile.getToken() + "</ProfileToken>" +
                 "</GetPresets>";
@@ -56,7 +62,7 @@ public class GetPresetsCommand implements OnvifCommand<List<PresetPointInfo>> {
                 }
                 xmlParser.nextTag();
                 if (xmlParser.getName().equals(KEY_POSITION)) {
-                    //Not all cameras can successfully obtain the PTZ value
+                    //Attention: Not all cameras can successfully obtain the PTZ value
 //                    PTZ ptz = new PTZ();
                     xmlParser.nextTag();
                     if (xmlParser.getName().equals(KEY_POSITION_PANTILT)) {

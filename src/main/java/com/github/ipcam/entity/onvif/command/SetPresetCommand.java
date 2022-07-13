@@ -17,13 +17,19 @@ public class SetPresetCommand implements OnvifCommand<PresetPointInfo> {
 
     private static final String KEY_PRESET_TOKEN = "PresetToken";
 
+    private OnvifMediaProfile mediaProfile;
+
+    public SetPresetCommand(OnvifMediaProfile mediaProfile) {
+        this.mediaProfile = mediaProfile;
+    }
+
     @Override
     public String uri() {
         return "/onvif/PTZ";
     }
 
     @Override
-    public String content(OnvifMediaProfile mediaProfile) {
+    public String content() {
         return "<SetPreset xmlns=\"http://www.onvif.org/ver20/ptz/wsdl\">" +
                 "<ProfileToken>" + mediaProfile.getToken() + "</ProfileToken>" +
                 "</SetPreset>";

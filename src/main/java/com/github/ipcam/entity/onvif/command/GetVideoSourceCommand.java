@@ -1,7 +1,6 @@
 package com.github.ipcam.entity.onvif.command;
 
 import com.github.ipcam.entity.onvif.OnvifCommand;
-import com.github.ipcam.entity.onvif.modes.OnvifMediaProfile;
 import com.github.ipcam.entity.onvif.modes.OnvifVideoSource;
 import com.github.ipcam.entity.onvif.xml.DefaultXmlPullParser;
 import com.github.ipcam.entity.onvif.xml.XmlPullParser;
@@ -9,7 +8,7 @@ import com.github.ipcam.entity.onvif.xml.XmlPullParser;
 import java.io.StringReader;
 
 /**
- * GetMediaProfilesCommand
+ * GetVideoSourceCommand
  *
  * @author echils
  */
@@ -23,7 +22,7 @@ public class GetVideoSourceCommand implements OnvifCommand<OnvifVideoSource> {
     }
 
     @Override
-    public String content(OnvifMediaProfile mediaProfile) {
+    public String content() {
         return "<GetVideoSources xmlns=\"http://www.onvif.org/ver10/deviceIO/wsdl\"/>";
     }
 

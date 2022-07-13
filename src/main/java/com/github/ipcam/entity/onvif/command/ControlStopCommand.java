@@ -10,13 +10,19 @@ import com.github.ipcam.entity.onvif.modes.OnvifMediaProfile;
  */
 public class ControlStopCommand implements OnvifCommand<Void> {
 
+    private OnvifMediaProfile mediaProfile;
+
+    public ControlStopCommand(OnvifMediaProfile mediaProfile) {
+        this.mediaProfile = mediaProfile;
+    }
+
     @Override
     public String uri() {
         return "/onvif/PTZ";
     }
 
     @Override
-    public String content(OnvifMediaProfile mediaProfile) {
+    public String content() {
         return "<Stop xmlns=\"http://www.onvif.org/ver20/ptz/wsdl\">" +
                 "<ProfileToken>" + mediaProfile.getToken() + "</ProfileToken>" +
                 "<PanTilt>true</PanTilt>" +

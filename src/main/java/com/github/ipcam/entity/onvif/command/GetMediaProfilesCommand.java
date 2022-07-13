@@ -22,11 +22,11 @@ public class GetMediaProfilesCommand implements OnvifCommand<List<OnvifMediaProf
 
     @Override
     public String uri() {
-        return "/onvif/PTZ";
+        return "/onvif/Media";
     }
 
     @Override
-    public String content(OnvifMediaProfile mediaProfile) {
+    public String content() {
         return "<GetProfiles xmlns=\"http://www.onvif.org/ver10/media/wsdl\"/>";
     }
 

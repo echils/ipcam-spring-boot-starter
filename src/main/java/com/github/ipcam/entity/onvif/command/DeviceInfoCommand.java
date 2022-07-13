@@ -2,7 +2,6 @@ package com.github.ipcam.entity.onvif.command;
 
 import com.github.ipcam.entity.onvif.OnvifCommand;
 import com.github.ipcam.entity.onvif.modes.OnvifDeviceInfo;
-import com.github.ipcam.entity.onvif.modes.OnvifMediaProfile;
 import com.github.ipcam.entity.onvif.xml.DefaultXmlPullParser;
 import com.github.ipcam.entity.onvif.xml.XmlPullParser;
 
@@ -27,7 +26,7 @@ public class DeviceInfoCommand implements OnvifCommand<OnvifDeviceInfo> {
     }
 
     @Override
-    public String content(OnvifMediaProfile mediaProfile) {
+    public String content() {
         return "<GetDeviceInformation xmlns=\"http://www.onvif.org/ver10/device/wsdl\">" + "</GetDeviceInformation>";
     }
 

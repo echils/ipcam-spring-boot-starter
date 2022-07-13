@@ -24,13 +24,19 @@ public class CaptureCommand implements OnvifCommand<File> {
 
     private static final String KEY_URI = "Uri";
 
+    private OnvifMediaProfile mediaProfile;
+
+    public CaptureCommand(OnvifMediaProfile mediaProfile) {
+        this.mediaProfile = mediaProfile;
+    }
+
     @Override
     public String uri() {
         return "/onvif/Media";
     }
 
     @Override
-    public String content(OnvifMediaProfile mediaProfile) {
+    public String content() {
         return "<GetSnapshotUri xmlns=\"http://www.onvif.org/ver10/media/wsdl\">" +
                 "<ProfileToken>" + mediaProfile.getToken() + "</ProfileToken>" +
                 "</GetSnapshotUri>";

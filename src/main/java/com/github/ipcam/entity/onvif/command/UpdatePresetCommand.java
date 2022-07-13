@@ -19,8 +19,11 @@ public class UpdatePresetCommand implements OnvifCommand<PresetPointInfo> {
 
     private int index;
 
-    public UpdatePresetCommand(int presetNo) {
-        this.index = presetNo;
+    private OnvifMediaProfile mediaProfile;
+
+    public UpdatePresetCommand(OnvifMediaProfile mediaProfile, int index) {
+        this.index = index;
+        this.mediaProfile = mediaProfile;
     }
 
     @Override
@@ -29,7 +32,7 @@ public class UpdatePresetCommand implements OnvifCommand<PresetPointInfo> {
     }
 
     @Override
-    public String content(OnvifMediaProfile mediaProfile) {
+    public String content() {
         return "<SetPreset xmlns=\"http://www.onvif.org/ver20/ptz/wsdl\">" +
                 "<ProfileToken>" + mediaProfile.getToken() + "</ProfileToken>" +
                 "<PresetToken>" + index + "</PresetToken>" +

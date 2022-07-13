@@ -12,8 +12,11 @@ public class GotoPresetCommand implements OnvifCommand<Void> {
 
     private int index;
 
-    public GotoPresetCommand(int presetNo) {
-        this.index = presetNo;
+    private OnvifMediaProfile mediaProfile;
+
+    public GotoPresetCommand(OnvifMediaProfile mediaProfile, int index) {
+        this.index = index;
+        this.mediaProfile = mediaProfile;
     }
 
     @Override
@@ -22,7 +25,7 @@ public class GotoPresetCommand implements OnvifCommand<Void> {
     }
 
     @Override
-    public String content(OnvifMediaProfile mediaProfile) {
+    public String content() {
         return "<GotoPreset xmlns=\"http://www.onvif.org/ver20/ptz/wsdl\">" +
                 "<ProfileToken>" + mediaProfile.getToken() + "</ProfileToken>" +
                 "<PresetToken>" + index + "</PresetToken>" +

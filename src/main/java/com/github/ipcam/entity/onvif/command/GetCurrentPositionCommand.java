@@ -10,7 +10,7 @@ import org.springframework.util.StringUtils;
 import java.io.StringReader;
 
 /**
- * DeviceInfoCommand
+ * GetCurrentPositionCommand
  *
  * @author echils
  */
@@ -23,13 +23,19 @@ public class GetCurrentPositionCommand implements OnvifCommand<PTZ> {
     private static final String KEY_POSITION_PANTILT = "PanTilt";
     private static final String KEY_POSITION_ZOOM = "Zoom";
 
+    private OnvifMediaProfile mediaProfile;
+
+    public GetCurrentPositionCommand(OnvifMediaProfile mediaProfile) {
+        this.mediaProfile = mediaProfile;
+    }
+
     @Override
     public String uri() {
         return "/onvif/PTZ";
     }
 
     @Override
-    public String content(OnvifMediaProfile mediaProfile) {
+    public String content() {
         return "<GetStatus xmlns=\"http://www.onvif.org/ver20/ptz/wsdl\">" +
                 "<ProfileToken>" + mediaProfile.getToken() + "</ProfileToken>" +
                 "</GetStatus>";

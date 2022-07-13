@@ -12,8 +12,11 @@ public class RemovePresetCommand implements OnvifCommand<Void> {
 
     private int index;
 
-    public RemovePresetCommand(int presetNo) {
-        this.index = presetNo;
+    private OnvifMediaProfile mediaProfile;
+
+    public RemovePresetCommand(OnvifMediaProfile mediaProfile, int index) {
+        this.index = index;
+        this.mediaProfile = mediaProfile;
     }
 
     @Override
@@ -22,7 +25,7 @@ public class RemovePresetCommand implements OnvifCommand<Void> {
     }
 
     @Override
-    public String content(OnvifMediaProfile mediaProfile) {
+    public String content() {
         return "<RemovePreset xmlns=\"http://www.onvif.org/ver20/ptz/wsdl\">" +
                 "<ProfileToken>" + mediaProfile.getToken() + "</ProfileToken>" +
                 "<PresetToken>" + index + "</PresetToken>" +
