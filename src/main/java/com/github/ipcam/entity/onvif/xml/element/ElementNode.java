@@ -1,4 +1,4 @@
-package com.github.ipcam.entity.onvif.xml.kdom;
+package com.github.ipcam.entity.onvif.xml.element;
 
 
 import com.github.ipcam.entity.onvif.xml.XmlPullParser;
@@ -9,12 +9,12 @@ import java.io.IOException;
 import java.util.Vector;
 
 /**
- * Element
+ * ElementNode
  *
  * @author echils
  * @see "https://mvnrepository.com/artifact/xmlpull/xmlpull"
  */
-public class Element extends Node {
+public class ElementNode extends Node {
 
     protected String namespace;
     protected String name;
@@ -22,7 +22,7 @@ public class Element extends Node {
     protected Node parent;
     protected Vector prefixes;
 
-    public Element() {
+    public ElementNode() {
     }
 
     /**
@@ -49,7 +49,7 @@ public class Element extends Node {
      * calls super.createElement.
      */
 
-    public Element createElement(
+    public ElementNode createElement(
             String namespace,
             String name) {
 
@@ -101,11 +101,11 @@ public class Element extends Node {
 
     public Node getRoot() {
 
-        Element current = this;
+        ElementNode current = this;
 
         while (current.parent != null) {
-            if (!(current.parent instanceof Element)) return current.parent;
-            current = (Element) current.parent;
+            if (!(current.parent instanceof ElementNode)) return current.parent;
+            current = (ElementNode) current.parent;
         }
 
         return current;
@@ -139,7 +139,7 @@ public class Element extends Node {
                     (prefix != null && prefix.equals(getNamespacePrefix(i))))
                 return getNamespaceUri(i);
         }
-        return parent instanceof Element ? ((Element) parent).getNamespaceUri(prefix) : null;
+        return parent instanceof ElementNode ? ((ElementNode) parent).getNamespaceUri(prefix) : null;
     }
 
 

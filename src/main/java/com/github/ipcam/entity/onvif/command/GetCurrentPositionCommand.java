@@ -16,9 +16,6 @@ import java.io.StringReader;
  */
 public class GetCurrentPositionCommand implements OnvifCommand<PTZ> {
 
-    private static final String KEY_PRESET = "Preset";
-    private static final String ATTR_TOKEN = "token";
-    private static final String ATTR_NAME = "Name";
     private static final String KEY_POSITION = "PTZPosition";
     private static final String KEY_POSITION_PANTILT = "PanTilt";
     private static final String KEY_POSITION_ZOOM = "Zoom";

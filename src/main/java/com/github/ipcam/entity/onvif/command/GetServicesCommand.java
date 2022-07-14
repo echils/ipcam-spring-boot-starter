@@ -28,7 +28,7 @@ public class GetServicesCommand implements OnvifCommand<List<OnvifService>> {
     @Override
     public String content() {
         return "<GetServices xmlns=\"http://www.onvif.org/ver10/device/wsdl\">" +
-                "<IncludeCapability>false</IncludeCapability>" +
+                "<IncludeCapability>true</IncludeCapability>" +
                 "</GetServices>";
     }
 

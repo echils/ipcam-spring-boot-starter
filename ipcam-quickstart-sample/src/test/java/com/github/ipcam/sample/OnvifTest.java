@@ -21,10 +21,10 @@ import java.util.List;
 public class OnvifTest {
 
     @Test
-    public void test() throws InterruptedException {
+    public void test() throws Exception {
         NetworkCamera networkCamera = new NetworkCamera("192.168.20.151", 80,
                 "admin", "abcd1234", CameraDriver.ONVIF);
-//        NetworkCamera networkCamera = new NetworkCamera("192.168.20.70", 80,
+//        NetworkCamera networkCamera = new NetworkCamera("192.168.20.175", 80,
 //                "admin", "JunAseit2018!", CameraDriver.ONVIF);
         OnvifExecutor onvifExecutor = new OnvifExecutor(networkCamera);
 //        System.out.println(onvifExecutor.execute(new DeviceInfoCommand()));
@@ -44,6 +44,7 @@ public class OnvifTest {
             Thread.sleep(3000);
             System.out.println(onvifExecutor.execute(new ControlStopCommand(mediaProfile)));
         }
+
     }
 
 }

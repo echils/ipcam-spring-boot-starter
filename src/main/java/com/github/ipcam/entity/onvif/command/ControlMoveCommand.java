@@ -27,7 +27,6 @@ public class ControlMoveCommand implements OnvifCommand<Void> {
     public String uri() {
         return "/onvif/PTZ";
     }
-    //   upleft downright
     @Override
     public String content() {
         String data = null;

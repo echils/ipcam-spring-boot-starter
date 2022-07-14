@@ -1,4 +1,4 @@
-package com.github.ipcam.entity.onvif.xml.kdom;
+package com.github.ipcam.entity.onvif.xml.element;
 
 
 import com.github.ipcam.entity.onvif.xml.XmlPullParser;
@@ -44,10 +44,10 @@ public class Node {
         }
 
         if (type == ELEMENT) {
-            if (!(child instanceof Element))
+            if (!(child instanceof ElementNode))
                 throw new RuntimeException("Element obj expected)");
 
-            ((Element) child).setParent(this);
+            ((ElementNode) child).setParent(this);
         } else if (!(child instanceof String))
             throw new RuntimeException("String expected");
 
@@ -73,9 +73,9 @@ public class Node {
      * but future versions may throw an exception.
      */
 
-    public Element createElement(String namespace, String name) {
+    public ElementNode createElement(String namespace, String name) {
 
-        Element e = new Element();
+        ElementNode e = new ElementNode();
         e.namespace = namespace == null ? "" : namespace;
         e.name = name;
         return e;
@@ -104,9 +104,9 @@ public class Node {
      * given index is a text node, null is returned
      */
 
-    public Element getElement(int index) {
+    public ElementNode getElement(int index) {
         Object child = getChild(index);
-        return (child instanceof Element) ? (Element) child : null;
+        return (child instanceof ElementNode) ? (ElementNode) child : null;
     }
 
     /**
@@ -115,7 +115,7 @@ public class Node {
      * found, an exception is thrown.
      */
 
-    public Element getElement(String namespace, String name) {
+    public ElementNode getElement(String namespace, String name) {
 
         int i = indexOf(namespace, name, 0);
         int j = indexOf(namespace, name, i + 1);
@@ -207,7 +207,7 @@ public class Node {
 
         for (int i = startIndex; i < len; i++) {
 
-            Element child = getElement(i);
+            ElementNode child = getElement(i);
 
             if (child != null
                     && name.equals(child.getName())
@@ -241,7 +241,7 @@ public class Node {
             switch (type) {
 
                 case XmlPullParser.START_TAG: {
-                    Element child =
+                    ElementNode child =
                             createElement(
                                     parser.getNamespace(),
                                     parser.getName());
@@ -340,7 +340,7 @@ public class Node {
             Object child = children.elementAt(i);
             switch (type) {
                 case ELEMENT:
-                    ((Element) child).write(writer);
+                    ((ElementNode) child).write(writer);
                     break;
 
                 case TEXT:
