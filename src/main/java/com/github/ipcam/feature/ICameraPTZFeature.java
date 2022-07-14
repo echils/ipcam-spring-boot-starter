@@ -48,11 +48,13 @@ public interface ICameraPTZFeature {
     /**
      * Network camera preset operation
      *
-     * @param channel    camera ip channel
-     * @param presetEnum camera preset command
-     * @param index      camera preset index
+     * @param channel       camera ip channel
+     * @param presetCommand camera preset command
+     * @param index         camera preset index,when the driver is @{@link com.github.ipcam.entity.CameraDriver#ONVIF}
+     *                      and presetCommand is {@link PresetEnum#SET_PRESET},this param is meaningless.
+     * @return The preset point number of the operation
      */
-    default void preset(String channel, PresetEnum presetEnum, int index) {
+    default int preset(String channel, PresetEnum presetCommand, int index) {
         throw new CameraNotSupportException();
     }
 

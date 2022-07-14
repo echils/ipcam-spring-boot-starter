@@ -8,13 +8,13 @@ import java.util.Map;
  *
  * @author echils
  */
-public class XmEyeException extends RuntimeException {
+public class XmEyeException extends CameraDriverException {
 
 
-    public static Map<Integer,String> ErrorMap;
+    public static Map<Integer, String> ErrorMap;
 
     static {
-        ErrorMap = new HashMap<Integer,String>() {{
+        ErrorMap = new HashMap<Integer, String>() {{
             put(0, "没有错误");
             put(1, "返回成功");
             put(-1, "图片转码失败");

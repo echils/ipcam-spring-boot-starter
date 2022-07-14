@@ -17,7 +17,7 @@ public class DefaultCameraSupplier implements ICameraSupplier {
     public NetworkCamera apply(String identification) {
 
         //return a fixed camera for sample,in business usage scenarios you can dynamically fetch from the database
-        return new NetworkCamera("192.168.20.152", 8000,
+        return new NetworkCamera("192.168.20.151", 8000,
                 "admin", "abcd1234", CameraDriver.HIKVISION);
     }
 

@@ -15,6 +15,8 @@ import java.net.URLConnection;
 import java.util.Base64;
 import java.util.UUID;
 
+import static com.github.ipcam.utils.FileUtils.createParentDirectory;
+
 /**
  * CaptureCommand
  *
@@ -26,8 +28,17 @@ public class CaptureCommand implements OnvifCommand<File> {
 
     private OnvifMediaProfile mediaProfile;
 
+    private String targetPath;
+
+    public CaptureCommand(OnvifMediaProfile mediaProfile,
+                          String path) {
+        this.mediaProfile = mediaProfile;
+        this.targetPath = path;
+    }
+
     public CaptureCommand(OnvifMediaProfile mediaProfile) {
         this.mediaProfile = mediaProfile;
+        this.targetPath = snapshotPath();
     }
 
     @Override
@@ -62,7 +73,8 @@ public class CaptureCommand implements OnvifCommand<File> {
         URLConnection urlConnection = new URL(url).openConnection();
         String encoding = Base64.getEncoder().encodeToString(("admin" + ":" + "JunAseit2018!").getBytes());
         urlConnection.setRequestProperty("Authorization", "Basic " + encoding);
-        File file = new File(snapshotPath());
+        createParentDirectory(targetPath);
+        File file = new File(targetPath);
         StreamUtils.copy(urlConnection.getInputStream(), new FileOutputStream(file));
         return file;
     }

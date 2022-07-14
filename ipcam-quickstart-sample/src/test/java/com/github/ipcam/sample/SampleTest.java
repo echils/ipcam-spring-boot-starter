@@ -19,6 +19,7 @@ public class SampleTest {
     @Test
     public void test() {
         System.out.println(cameraService.getCameraBasicInfo());
+        System.out.println(cameraService.getChannels());
     }
 
 }

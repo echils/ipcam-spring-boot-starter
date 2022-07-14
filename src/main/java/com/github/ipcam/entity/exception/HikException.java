@@ -5,7 +5,7 @@ package com.github.ipcam.entity.exception;
  *
  * @author echils
  */
-public class HikException extends RuntimeException {
+public class HikException extends CameraDriverException {
 
     public HikException() {
     }

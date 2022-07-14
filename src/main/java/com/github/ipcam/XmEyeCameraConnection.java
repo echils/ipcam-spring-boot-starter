@@ -55,10 +55,10 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
         }
         this.userHandle = this.login(camera.getIp(), camera.getPort(),
                 camera.getUsername(), camera.getPassword());
-        logger.info("Connect to the xmeye camera success");
         if (userHandle < 0) {
             throw new CameraConnectionException("Connect to xmeye camera failed");
         }
+        logger.info("Connect to the xmeye camera success");
         this.networkCamera = camera;
     }
 
@@ -80,12 +80,12 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
 
                 this.logout();
                 userHandle = (long) FAILED;
-                logger.info("Disconnect from the xmeye camera success");
             } catch (Exception e) {
                 logger.error("Disconnect from the xmeye camera failed:{}", networkCamera.getIp());
                 throw new CameraConnectionException(e);
             }
         }
+        logger.info("Disconnected from the xmeye camera {}", networkCamera.getIp());
     }
 
 

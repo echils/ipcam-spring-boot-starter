@@ -59,10 +59,10 @@ public class HikvisionCameraConnection extends AbstractCameraConnection {
         }
         this.userHandle = this.login(camera.getIp(), camera.getPort(),
                 camera.getUsername(), camera.getPassword());
-        logger.info("Connect to the hikvision camera success");
         if (userHandle < 0) {
             throw new CameraConnectionException("Connect to hikvision camera failed");
         }
+        logger.info("Connect to the hikvision camera success");
         this.networkCamera = camera;
     }
 
@@ -84,12 +84,12 @@ public class HikvisionCameraConnection extends AbstractCameraConnection {
 
                 this.logout();
                 userHandle = (long) FAILED;
-                logger.info("Disconnect from the hikvision camera success");
             } catch (Exception e) {
                 logger.error("Disconnect from the hikvision camera failed:{}", networkCamera.getIp());
                 throw new CameraConnectionException(e);
             }
         }
+        logger.info("Disconnected from the hikvision camera {}", networkCamera.getIp());
     }
 
 
@@ -541,11 +541,12 @@ public class HikvisionCameraConnection extends AbstractCameraConnection {
 
 
     @Override
-    public void preset(String channel, PresetEnum presetEnum, int index) {
+    public int preset(String channel, PresetEnum presetCommand, int index) {
         if (!hcNetSDK.NET_DVR_PTZPreset(Math.toIntExact(
-                this.preview(channel, StreamTypeEnum.SUB_STREAM)), presetEnum.key(), index)) {
+                this.preview(channel, StreamTypeEnum.SUB_STREAM)), presetCommand.key(), index)) {
             throw new HikException(getErrorMsg());
         }
+        return index;
     }
 
 

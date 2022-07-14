@@ -6,6 +6,8 @@ import com.github.ipcam.pool.CameraConnectionPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * DefaultCameraService
  *
@@ -19,6 +21,7 @@ public class DefaultCameraService {
 
     private static final String IDENTIFICATION = "Test";
 
+
     public CameraInfo getCameraBasicInfo() {
         ICameraConnection connection = null;
         try {
@@ -30,5 +33,19 @@ public class DefaultCameraService {
             }
         }
     }
+
+
+    public List<String> getChannels() {
+        ICameraConnection connection = null;
+        try {
+            connection = cameraConnectionPool.borrowObject(IDENTIFICATION);
+            return connection.getChannels();
+        } finally {
+            if (connection != null && connection.isConnected()) {
+                cameraConnectionPool.returnObject(IDENTIFICATION, connection);
+            }
+        }
+    }
+
 
 }
