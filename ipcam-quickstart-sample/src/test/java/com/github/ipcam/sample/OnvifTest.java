@@ -2,7 +2,7 @@ package com.github.ipcam.sample;
 
 import com.github.ipcam.entity.CameraDriver;
 import com.github.ipcam.entity.NetworkCamera;
-import com.github.ipcam.entity.infos.PresetPointInfo;
+import com.github.ipcam.entity.PresetPointInfo;
 import com.github.ipcam.entity.onvif.OnvifExecutor;
 import com.github.ipcam.entity.onvif.OnvifResultData;
 import com.github.ipcam.entity.onvif.command.*;

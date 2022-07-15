@@ -1,12 +1,12 @@
 package com.github.ipcam.entity.hikvision;
 
 
+import com.github.ipcam.entity.NVRChannelInfo;
 import com.github.ipcam.entity.Temperature;
 import com.github.ipcam.entity.comm.LONG_STRUCTURE;
 import com.github.ipcam.entity.comm.STRUCTURE_CONTEXT;
 import com.github.ipcam.entity.exception.CameraConnectionException;
 import com.github.ipcam.entity.exception.HikException;
-import com.github.ipcam.entity.infos.NVRChannelInfo;
 import com.sun.jna.ptr.IntByReference;
 
 import java.math.RoundingMode;

@@ -1,6 +1,6 @@
 package com.github.ipcam.entity.onvif.command;
 
-import com.github.ipcam.entity.infos.PresetPointInfo;
+import com.github.ipcam.entity.PresetPointInfo;
 import com.github.ipcam.entity.onvif.OnvifCommand;
 import com.github.ipcam.entity.onvif.modes.OnvifMediaProfile;
 import com.github.ipcam.entity.onvif.xml.DefaultXmlPullParser;

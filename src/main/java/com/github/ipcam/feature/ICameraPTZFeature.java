@@ -1,8 +1,8 @@
 package com.github.ipcam.feature;
 
 import com.github.ipcam.entity.PTZ;
+import com.github.ipcam.entity.PresetPointInfo;
 import com.github.ipcam.entity.exception.CameraNotSupportException;
-import com.github.ipcam.entity.infos.PresetPointInfo;
 import com.github.ipcam.entity.reference.CruiseEnum;
 import com.github.ipcam.entity.reference.PTZControlEnum;
 import com.github.ipcam.entity.reference.PresetEnum;

@@ -1,7 +1,7 @@
 package com.github.ipcam.sample.service;
 
 import com.github.ipcam.ICameraConnection;
-import com.github.ipcam.entity.infos.CameraInfo;
+import com.github.ipcam.entity.CameraInfo;
 import com.github.ipcam.pool.CameraConnectionPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,12 +1,8 @@
 package com.github.ipcam.connection;
 
-import com.github.ipcam.entity.CameraDriver;
-import com.github.ipcam.entity.NetworkCamera;
-import com.github.ipcam.entity.PTZ;
+import com.github.ipcam.entity.*;
 import com.github.ipcam.entity.exception.CameraConnectionException;
 import com.github.ipcam.entity.exception.OnvifException;
-import com.github.ipcam.entity.infos.CameraInfo;
-import com.github.ipcam.entity.infos.PresetPointInfo;
 import com.github.ipcam.entity.onvif.OnvifExecutor;
 import com.github.ipcam.entity.onvif.OnvifResultData;
 import com.github.ipcam.entity.onvif.command.*;

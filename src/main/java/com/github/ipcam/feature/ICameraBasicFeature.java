@@ -1,7 +1,7 @@
 package com.github.ipcam.feature;
 
 
-import com.github.ipcam.entity.infos.CameraInfo;
+import com.github.ipcam.entity.CameraInfo;
 
 import java.util.List;
 
