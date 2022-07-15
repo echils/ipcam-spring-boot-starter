@@ -1,5 +1,7 @@
-package com.github.ipcam;
+package com.github.ipcam.connection;
 
+import com.github.ipcam.ICameraConnection;
+import com.github.ipcam.ICameraConnectionFactory;
 import com.github.ipcam.entity.NetworkCamera;
 import com.github.ipcam.entity.exception.CameraConnectionException;
 

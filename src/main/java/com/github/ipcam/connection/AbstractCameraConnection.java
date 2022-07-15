@@ -1,5 +1,6 @@
-package com.github.ipcam;
+package com.github.ipcam.connection;
 
+import com.github.ipcam.ICameraConnection;
 import com.github.ipcam.entity.NetworkCamera;
 
 import java.io.OutputStream;

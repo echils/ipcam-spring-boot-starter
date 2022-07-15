@@ -1,9 +1,9 @@
 package com.github.ipcam.pool;
 
-import com.github.ipcam.DefaultCameraConnectionFactory;
 import com.github.ipcam.ICameraConnection;
 import com.github.ipcam.ICameraConnectionFactory;
 import com.github.ipcam.ICameraSupplier;
+import com.github.ipcam.connection.DefaultCameraConnectionFactory;
 import com.github.ipcam.entity.NetworkCamera;
 import com.github.ipcam.entity.exception.CameraConnectionException;
 import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

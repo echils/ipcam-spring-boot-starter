@@ -1,4 +1,4 @@
-package com.github.ipcam;
+package com.github.ipcam.connection;
 
 import com.github.ipcam.entity.*;
 import com.github.ipcam.entity.comm.BYTE_ARRAY_STRUCTURE;

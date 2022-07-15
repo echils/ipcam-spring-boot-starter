@@ -18,7 +18,7 @@ public class CameraInfo {
     /**
      * The name of the camera
      */
-    private String name;
+    private String name = "UNKNOWN NAME";
 
     /**
      * The modelNo of the camera

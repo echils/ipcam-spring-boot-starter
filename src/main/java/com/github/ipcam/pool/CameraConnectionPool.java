@@ -113,8 +113,6 @@ public class CameraConnectionPool extends GenericKeyedObjectPool<String, ICamera
      * @param borrowMaxWaitMillis The time to wait in milliseconds for an object
      *                            to become available
      * @return object instance from the keyed pool
-     * @throws Exception if a keyed object instance cannot be returned due to an
-     *                   error
      */
     @Override
     public ICameraConnection borrowObject(String key, long borrowMaxWaitMillis) {
