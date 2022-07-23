@@ -39,7 +39,7 @@ source /etc/profile && ldconfig
 ##### 3、Implement the interface {@link [ICameraSupplier](./src/main/java/com/github/ipcam/ICameraSupplier.java) } and add it to the Spring container
 ````
 @Component
-public class DefaultCameraSupplier implements ICameraSupplier {
+public class DefaultCameraSupplier implements ICameraSupplier<String> {
 
     @Autowired
     private CameraMapper cameraMapper;
@@ -66,7 +66,7 @@ public class DefaultCameraSupplier implements ICameraSupplier {
         networkCamera.setPort(camera.getPort());
         networkCamera.setUsername(camera.getUsername());
         networkCamera.setPassword(camera.getPassword());
-        networkCamera.setDriverType(CameraSupportedDriver.valueOf(camera.getManufacturer()));
+        networkCamera.setDriverType(CameraDriver.HIKVISION);
 
         return networkCamera;
     }
@@ -80,7 +80,7 @@ public class DefaultCameraSupplier implements ICameraSupplier {
 public class Test {
 
     @Autowired
-    private CameraConnectionPool cameraConnectionPool;
+    private CameraConnectionPool<String> cameraConnectionPool;
 
     private static final String IDENTIFICATION = "Test";
     
