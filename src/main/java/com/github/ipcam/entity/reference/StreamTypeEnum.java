@@ -1,6 +1,5 @@
 package com.github.ipcam.entity.reference;
 
-
 /**
  * StreamTypeEnum
  *

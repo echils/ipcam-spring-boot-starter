@@ -1,6 +1,6 @@
 package com.github.ipcam.entity.comm;
 
-import com.github.ipcam.entity.hikvision.NET_DVR_DEVICEINFO_V30;
+import com.github.ipcam.hikvision.NET_DVR_DEVICEINFO_V30;
 
 /**
  * STRUCTURE_CONTEXT
@@ -90,6 +90,7 @@ public class STRUCTURE_CONTEXT {
     public static final int NET_DVR_SET_USERCFG_V30 = 1007;
     public static final int DEV_TYPE_NAME_LEN = 24;
     public static final int NET_DVR_GET_DEVICECFG_V40 = 1100;
+    public static final int NET_DVR_HARD_DISK_VOLUME_INFO = 4155;
 
 
     //    *********************** XMEYE ***********************

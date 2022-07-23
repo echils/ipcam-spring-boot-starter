@@ -2,10 +2,12 @@ package com.github.ipcam.connection;
 
 import com.github.ipcam.entity.*;
 import com.github.ipcam.entity.comm.BYTE_ARRAY_STRUCTURE;
-import com.github.ipcam.entity.exception.CameraConnectionException;
-import com.github.ipcam.entity.exception.HikException;
-import com.github.ipcam.entity.hikvision.*;
+import com.github.ipcam.entity.comm.STRUCTURE_CONTEXT;
 import com.github.ipcam.entity.reference.*;
+import com.github.ipcam.exception.CameraConnectionException;
+import com.github.ipcam.exception.HikException;
+import com.github.ipcam.hikvision.*;
+import com.github.ipcam.hikvision.NET_DVR_HARD_DISK_VOLUME_INFO;
 import com.github.ipcam.utils.RetryTemplate;
 import com.github.ipcam.utils.XmlToJsonUtils;
 import com.google.gson.Gson;
@@ -28,8 +30,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static com.github.ipcam.entity.comm.STRUCTURE_CONTEXT.*;
-import static com.github.ipcam.entity.hikvision.HCNetSDK.hcNetSDK;
-import static com.github.ipcam.entity.hikvision.NET_COMMON_INVOKE.*;
+import static com.github.ipcam.hikvision.HCNetSDK.hcNetSDK;
+import static com.github.ipcam.hikvision.NET_COMMON_INVOKE.*;
 import static com.github.ipcam.utils.FileUtils.createParentDirectory;
 import static java.util.Calendar.HOUR_OF_DAY;
 
@@ -59,7 +61,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection {
         if (userHandle < 0) {
             throw new CameraConnectionException("Connect to hikvision camera failed");
         }
-        logger.info("Connect to the hikvision camera success");
+        logger.info("Connect to the hikvision camera success,connection info:{}", this);
         this.networkCamera = camera;
     }
 
@@ -269,14 +271,14 @@ public class HikvisionCameraConnection extends AbstractCameraConnection {
                 deviceConfig.getPointer(), ISAPI_DATA_LEN, new IntByReference(deviceConfig.size()))) {
             throw new HikException(getErrorMsg());
         }
-        CameraInfo cameraInfo = new CameraInfo();
         deviceConfig.read();
+        CameraInfo cameraInfo = new CameraInfo(new String(deviceConfig.sDVRName).trim(),
+                new String(deviceConfig.byDevTypeName).trim(),
+                new String(deviceConfig.sSerialNumber).trim(),
+                deviceConfig.wDevClass, deviceConfig.byIPChanNum, deviceConfig.byDiskCtrlNum);
         cameraInfo.setIp(networkCamera.getIp());
         cameraInfo.setUsername(networkCamera.getUsername());
         cameraInfo.setPassword(networkCamera.getPassword());
-        cameraInfo.setName(new String(deviceConfig.sDVRName).trim());
-        cameraInfo.setModelNo(new String(deviceConfig.byDevTypeName).trim());
-        cameraInfo.setSerialNo(new String(deviceConfig.sSerialNumber).trim());
         return cameraInfo;
     }
 
@@ -457,6 +459,22 @@ public class HikvisionCameraConnection extends AbstractCameraConnection {
         }
     }
 
+    @Override
+    public List<NVRDiskInfo> getDiskInfo() {
+        NET_DVR_HARD_DISK_VOLUME_INFO info = new NET_DVR_HARD_DISK_VOLUME_INFO();
+        if (!hcNetSDK.NET_DVR_GetDVRConfig(Math.toIntExact(userHandle), STRUCTURE_CONTEXT.NET_DVR_HARD_DISK_VOLUME_INFO, 0xFFFFFFFF,
+                info.getPointer(), ISAPI_DATA_LEN, new IntByReference(info.size()))) {
+            throw new HikException(getErrorMsg());
+        }
+        info.read();
+        List<NVRDiskInfo> diskInfos = new LinkedList<>();
+        for (int i = 0; i < info.dwHDVolumeCount; i++) {
+            NET_DVR_HARD_DISK_SINGLE_VOLUME_INFO volumeInfo = info.struSingleVolumeInfo[i];
+            diskInfos.add(new NVRDiskInfo(volumeInfo.byHDVolumeNo + 1,
+                    volumeInfo.byType, volumeInfo.dwCapacity, volumeInfo.dwFreeSpace));
+        }
+        return diskInfos;
+    }
 
     @Override
     public List<NVRChannelInfo> getChannelInfo() {
@@ -548,11 +566,12 @@ public class HikvisionCameraConnection extends AbstractCameraConnection {
 
 
     @Override
-    public void presetExpand(String channel, PresetEnum presetEnum, int index) {
+    public int presetExpand(String channel, PresetEnum presetEnum, int index) {
         if (!hcNetSDK.NET_DVR_PTZPreset_Other
                 (Math.toIntExact(userHandle), handleChannel(channel), presetEnum.key(), index)) {
             throw new HikException(getErrorMsg());
         }
+        return index;
     }
 
 
@@ -672,16 +691,25 @@ public class HikvisionCameraConnection extends AbstractCameraConnection {
 
     @Override
     public void gotoPresetPoint(String channel, int presetIndex, PTZ ptz) throws InterruptedException {
+        this.gotoPresetPoint(channel, presetIndex, ptz, 30, TimeUnit.SECONDS);
+    }
+
+
+    @Override
+    public void gotoPresetPoint(String channel, int presetIndex, PTZ ptz, int timeout, TimeUnit timeUnit) throws InterruptedException {
         logger.info("Camera:{} goto preset point with channel:{} and index:{}", networkCamera.getIp(), channel, presetIndex);
-        this.presetExpand(channel, PresetEnum.GOTO_PRESET, presetIndex);
         long time = System.currentTimeMillis();
+        if (timeout < 10) timeout = 15;
+        if (timeUnit == null) timeUnit = TimeUnit.SECONDS;
+        long timeoutTime = timeUnit.toSeconds(timeout);
+        this.presetExpand(channel, PresetEnum.GOTO_PRESET, presetIndex);
         while (true) {
             PTZ curPTZ = this.getCurrentPosition(channel);
             if (curPTZ.equals(ptz)) {
                 break;
             }
-            if (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - time) > 30) {
-                throw new CameraConnectionException("Goto preset timeout 30 seconds");
+            if (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - time) > timeoutTime) {
+                throw new CameraConnectionException("Goto preset timeout " + timeoutTime + " seconds.");
             }
             Thread.sleep(500);
         }
@@ -895,7 +923,7 @@ public class HikvisionCameraConnection extends AbstractCameraConnection {
             temperature.setInfraredName(byteToStr(param.szRuleName, "GBK"));
             NET_VCA_POINT[] points = param.struRegion.struPos;
             for (int i = 0; i < INFRARED_POINT_NUM; i++) {
-                temperature.getRegions()[i] = new Temperature.Region(numFormat(points[i].fX, 3), numFormat(points[i].fY, 3));
+                temperature.getRegions()[i] = new Temperature.Region(points[i].fX, points[i].fY);
             }
             Temperature measure = this.measure(infraredNo);
             temperature.setMaxTemperature(measure.getMaxTemperature());

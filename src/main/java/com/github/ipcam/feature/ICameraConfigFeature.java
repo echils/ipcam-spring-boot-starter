@@ -1,8 +1,8 @@
 package com.github.ipcam.feature;
 
 import com.github.ipcam.entity.ScreenEffect;
-import com.github.ipcam.entity.exception.CameraNotSupportException;
 import com.github.ipcam.entity.reference.*;
+import com.github.ipcam.exception.CameraNotSupportException;
 
 import java.util.Calendar;
 

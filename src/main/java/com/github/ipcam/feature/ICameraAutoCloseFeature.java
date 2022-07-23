@@ -1,6 +1,6 @@
 package com.github.ipcam.feature;
 
-import com.github.ipcam.entity.exception.CameraConnectionException;
+import com.github.ipcam.exception.CameraConnectionException;
 
 /**
  * ICameraAutoCloseFeature

@@ -1,15 +1,15 @@
 package com.github.ipcam.connection;
 
 import com.github.ipcam.entity.*;
-import com.github.ipcam.entity.exception.CameraConnectionException;
-import com.github.ipcam.entity.exception.OnvifException;
-import com.github.ipcam.entity.onvif.OnvifExecutor;
-import com.github.ipcam.entity.onvif.OnvifResultData;
-import com.github.ipcam.entity.onvif.command.*;
-import com.github.ipcam.entity.onvif.modes.OnvifDeviceInfo;
-import com.github.ipcam.entity.onvif.modes.OnvifMediaProfile;
 import com.github.ipcam.entity.reference.PTZControlEnum;
 import com.github.ipcam.entity.reference.PresetEnum;
+import com.github.ipcam.exception.CameraConnectionException;
+import com.github.ipcam.exception.OnvifException;
+import com.github.ipcam.onvif.OnvifExecutor;
+import com.github.ipcam.onvif.OnvifResultData;
+import com.github.ipcam.onvif.command.*;
+import com.github.ipcam.onvif.models.OnvifDeviceInfo;
+import com.github.ipcam.onvif.models.OnvifMediaProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -50,12 +50,12 @@ public class OnvifCameraConnection extends AbstractCameraConnection {
         if (!onvifResultData.isSuccess() && CollectionUtils.isEmpty(onvifResultData.getData())) {
             throw new CameraConnectionException("Connect to onvif camera failed");
         }
-        logger.info("Connect to the onvif camera success");
         this.userHandle = 0L;
         this.networkCamera = camera;
         this.onvifExecutor = onvifExecutor;
         mediaProfileMap.putAll(onvifResultData.getData().stream().collect(Collectors.toMap(mediaProfile
                 -> "A" + mediaProfile.getToken().split("_")[1], mediaProfile -> mediaProfile)));
+        logger.info("Connect to the xmeye camera success,connection info:{}", this);
     }
 
 
@@ -172,16 +172,25 @@ public class OnvifCameraConnection extends AbstractCameraConnection {
 
     @Override
     public void gotoPresetPoint(String channel, int presetIndex, PTZ ptz) throws InterruptedException {
-        logger.info("Camera:{} goto preset point with channel:{} and index:{}", networkCamera.getIp(), channel, presetIndex);
-        this.preset(channel, PresetEnum.GOTO_PRESET, presetIndex);
+        this.gotoPresetPoint(channel, presetIndex, ptz, 30, TimeUnit.SECONDS);
+    }
+
+
+    @Override
+    public void gotoPresetPoint(String channel, int presetIndex, PTZ ptz, int timeout, TimeUnit timeUnit) throws InterruptedException {
+        logger.info("Camera:{} goto preset point with channel:{} and index:{} ", networkCamera.getIp(), channel, presetIndex);
         long time = System.currentTimeMillis();
+        if (timeout < 10) timeout = 15;
+        if (timeUnit == null) timeUnit = TimeUnit.SECONDS;
+        long timeoutTime = timeUnit.toSeconds(timeout);
+        this.preset(channel, PresetEnum.GOTO_PRESET, presetIndex);
         while (true) {
             PTZ curPTZ = this.getCurrentPosition(channel);
             if (curPTZ.equals(ptz)) {
                 break;
             }
-            if (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - time) > 30) {
-                throw new CameraConnectionException("Goto preset timeout 30 seconds.");
+            if (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - time) > timeoutTime) {
+                throw new CameraConnectionException("Goto preset timeout " + timeoutTime + " seconds.");
             }
             Thread.sleep(500);
         }

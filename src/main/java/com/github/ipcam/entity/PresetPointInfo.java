@@ -23,6 +23,6 @@ public class PresetPointInfo {
     /**
      * Has it been used,onvif driver maybe is null
      */
-    private Boolean enabled;
+    private boolean enabled;
 
 }

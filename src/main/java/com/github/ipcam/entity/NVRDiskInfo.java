@@ -1,6 +1,8 @@
 package com.github.ipcam.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * The disk info of NVR
@@ -8,6 +10,8 @@ import lombok.Data;
  * @author echils
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class NVRDiskInfo {
 
     /**
@@ -29,5 +33,6 @@ public class NVRDiskInfo {
      * The free capacity of the disk,unit: MB
      */
     private int freeSpace;
+
 
 }

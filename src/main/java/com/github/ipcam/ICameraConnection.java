@@ -10,7 +10,7 @@ import com.github.ipcam.feature.*;
  * @author echils
  */
 public interface ICameraConnection extends ICameraAutoCloseFeature, ICameraBasicFeature, ICameraConfigFeature,
-        ICameraNVRFeature, ICameraOutputFeature, ICameraPTZFeature, ICameraThermalFeature {
+        ICameraNVRFeature, ICameraOutputFeature, ICameraPTZFeature, ICameraThermalFeature, ICameraDriverFeature {
 
     /**
      * connect to network camera

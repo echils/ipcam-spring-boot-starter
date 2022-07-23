@@ -4,7 +4,6 @@ import com.github.ipcam.pool.CameraConnectionPool;
 import com.github.ipcam.pool.CameraConnectionPoolConfig;
 import com.github.ipcam.pool.CameraConnectionPoolFactory;
 import com.github.ipcam.pool.CameraConnectionPoolProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -22,30 +21,25 @@ import org.springframework.context.annotation.Scope;
 public class CameraAutoConfiguration {
 
 
-    @Autowired
-    private CameraConnectionPoolProperties networkConnectionPoolProperties;
-
-
     @Bean
     @Scope(value = "singleton")
-    public CameraConnectionPool netCameraConnectionPool(ICameraSupplier supplier) {
-        CameraConnectionPoolFactory cameraConnectionPoolFactory = new CameraConnectionPoolFactory(supplier);
+    public <T> CameraConnectionPool<T> netCameraConnectionPool(ICameraSupplier<T> supplier,
+                                                               CameraConnectionPoolProperties properties) {
+        CameraConnectionPoolFactory<T> cameraConnectionPoolFactory = new CameraConnectionPoolFactory<>(supplier, properties);
         CameraConnectionPoolConfig config = new CameraConnectionPoolConfig();
-        config.setLifo(networkConnectionPoolProperties.isLifo());
-        config.setFairness(networkConnectionPoolProperties.isFairness());
-        config.setMaxWaitMillis(networkConnectionPoolProperties.getMaxWaitMillis());
-        config.setMinEvictableIdleTimeMillis(networkConnectionPoolProperties.getMinEvictableIdleTimeMillis());
-        config.setSoftMinEvictableIdleTimeMillis(networkConnectionPoolProperties.getSoftMinEvictableIdleTimeMillis());
-        config.setEvictorShutdownTimeoutMillis(networkConnectionPoolProperties.getEvictorShutdownTimeoutMillis());
-        config.setNumTestsPerEvictionRun(networkConnectionPoolProperties.getNumTestsPerEvictionRun());
-        config.setTestOnCreate(networkConnectionPoolProperties.isTestOnCreate());
-        config.setTestOnBorrow(networkConnectionPoolProperties.isTestOnBorrow());
-        config.setTestOnReturn(networkConnectionPoolProperties.isTestOnReturn());
-        config.setTestWhileIdle(networkConnectionPoolProperties.isTestWhileIdle());
-        config.setTimeBetweenEvictionRunsMillis(networkConnectionPoolProperties.getTimeBetweenEvictionRunsMillis());
-        config.setBlockWhenExhausted(networkConnectionPoolProperties.isBlockWhenExhausted());
-        config.setJmxEnabled(networkConnectionPoolProperties.isJmxEnable());
+        config.setLifo(properties.isLifo());
+        config.setMaxWaitMillis(properties.getMaxWaitMillis());
+        config.setMinEvictableIdleTimeMillis(properties.getMinEvictableIdleTimeMillis());
+        config.setEvictorShutdownTimeoutMillis(properties.getEvictorShutdownTimeoutMillis());
+        config.setNumTestsPerEvictionRun(properties.getNumTestsPerEvictionRun());
+        config.setTestOnCreate(properties.isTestOnCreate());
+        config.setTestOnBorrow(properties.isTestOnBorrow());
+        config.setTestOnReturn(properties.isTestOnReturn());
+        config.setTestWhileIdle(properties.isTestWhileIdle());
+        config.setTimeBetweenEvictionRunsMillis(properties.getTimeBetweenEvictionRunsMillis());
+        config.setBlockWhenExhausted(properties.isBlockWhenExhausted());
         return new CameraConnectionPool(cameraConnectionPoolFactory, config);
     }
+
 
 }

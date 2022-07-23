@@ -17,7 +17,7 @@ import java.util.List;
 public class DefaultCameraService {
 
     @Autowired
-    private CameraConnectionPool cameraConnectionPool;
+    private CameraConnectionPool<String> cameraConnectionPool;
 
     private static final String IDENTIFICATION = "Test";
 

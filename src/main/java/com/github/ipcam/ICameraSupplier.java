@@ -8,7 +8,7 @@ import com.github.ipcam.entity.NetworkCamera;
  *
  * @author echils
  */
-public interface ICameraSupplier {
+public interface ICameraSupplier<T> {
 
 
     /**
@@ -17,7 +17,7 @@ public interface ICameraSupplier {
      * @param identification the unique identification of the camera
      * @return {@link NetworkCamera}
      */
-    NetworkCamera apply(String identification);
+    NetworkCamera apply(T identification);
 
 
 }

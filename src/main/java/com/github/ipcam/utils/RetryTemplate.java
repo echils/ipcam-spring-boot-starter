@@ -56,7 +56,8 @@ public abstract class RetryTemplate {
             } catch (Exception e) {
                 try {
                     Thread.sleep(retryInterval);
-                } catch (InterruptedException ignored) {}
+                } catch (InterruptedException ignored) {
+                }
             }
         }
         return success;

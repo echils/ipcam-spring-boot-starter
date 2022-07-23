@@ -10,6 +10,7 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 public class CameraConnectionPoolConfig extends GenericKeyedObjectPoolConfig {
 
     public CameraConnectionPoolConfig() {
+        setJmxEnabled(false);
     }
 
     public String toString() {

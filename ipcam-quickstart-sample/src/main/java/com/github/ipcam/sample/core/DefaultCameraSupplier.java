@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @author echils
  */
 @Component
-public class DefaultCameraSupplier implements ICameraSupplier {
+public class DefaultCameraSupplier implements ICameraSupplier<String> {
 
     @Override
     public NetworkCamera apply(String identification) {

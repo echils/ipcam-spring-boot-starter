@@ -23,14 +23,6 @@ public class CameraConnectionPoolProperties {
     private boolean lifo = true;
 
     /**
-     * The default value for the {@code fairness} configuration attribute.
-     *
-     * @see GenericObjectPool#getFairness()
-     * @see GenericKeyedObjectPool#getFairness()
-     */
-    private boolean fairness = false;
-
-    /**
      * The default value for the {@code maxWait} configuration attribute.
      *
      * @see GenericObjectPool#getMaxWaitMillis()
@@ -46,16 +38,15 @@ public class CameraConnectionPoolProperties {
      * @see GenericKeyedObjectPool#getMinEvictableIdleTimeMillis()
      */
     private long minEvictableIdleTimeMillis =
-            1000L * 60L * 25L;
+            1000L * 60L * 5L;
 
     /**
-     * The default value for the {@code softMinEvictableIdleTimeMillis}
-     * configuration attribute.
+     * The default value for max idle time.
      *
      * @see GenericObjectPool#getSoftMinEvictableIdleTimeMillis()
      * @see GenericKeyedObjectPool#getSoftMinEvictableIdleTimeMillis()
      */
-    private long softMinEvictableIdleTimeMillis = -1;
+    private long maxEvictableIdleTimeMillis = 1000L * 60L * 5L;
 
     /**
      * The default value for {@code evictorShutdownTimeoutMillis} configuration
@@ -126,16 +117,5 @@ public class CameraConnectionPoolProperties {
      * @see GenericKeyedObjectPool#getBlockWhenExhausted()
      */
     private boolean blockWhenExhausted = true;
-
-    /**
-     * The default value for enabling JMX for pools created with a configuration
-     * instance.
-     */
-    private boolean jmxEnable = false;
-
-    /**
-     * The connection max idle time
-     */
-    private long maxIdleMillis = 1000 * 60 * 5L;
 
 }

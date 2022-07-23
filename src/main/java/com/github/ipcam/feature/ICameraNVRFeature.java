@@ -2,7 +2,8 @@ package com.github.ipcam.feature;
 
 
 import com.github.ipcam.entity.NVRChannelInfo;
-import com.github.ipcam.entity.exception.CameraNotSupportException;
+import com.github.ipcam.entity.NVRDiskInfo;
+import com.github.ipcam.exception.CameraNotSupportException;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public interface ICameraNVRFeature {
      *
      * @return {@link NVRChannelInfo}
      */
-    default List<NVRChannelInfo> getDiskInfo() {
+    default List<NVRDiskInfo> getDiskInfo() {
         throw new CameraNotSupportException();
     }
 

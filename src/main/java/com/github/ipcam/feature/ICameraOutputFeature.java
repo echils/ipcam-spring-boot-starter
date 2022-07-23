@@ -1,8 +1,8 @@
 package com.github.ipcam.feature;
 
 
-import com.github.ipcam.entity.exception.CameraNotSupportException;
 import com.github.ipcam.entity.reference.StreamTypeEnum;
+import com.github.ipcam.exception.CameraNotSupportException;
 
 import java.io.OutputStream;
 import java.util.Date;

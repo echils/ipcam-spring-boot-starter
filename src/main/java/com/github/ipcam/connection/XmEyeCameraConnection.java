@@ -4,13 +4,13 @@ import com.github.ipcam.entity.CameraDriver;
 import com.github.ipcam.entity.CameraInfo;
 import com.github.ipcam.entity.NetworkCamera;
 import com.github.ipcam.entity.comm.BYTE_ARRAY_STRUCTURE;
-import com.github.ipcam.entity.exception.CameraConnectionException;
-import com.github.ipcam.entity.exception.XmEyeException;
 import com.github.ipcam.entity.reference.ResolutionEnum;
 import com.github.ipcam.entity.reference.StreamTypeEnum;
-import com.github.ipcam.entity.xmeye.CONF_MODIFY_PSW;
-import com.github.ipcam.entity.xmeye.H264_DVR_CLIENTINFO;
-import com.github.ipcam.entity.xmeye.H264_DVR_DEVICEINFO;
+import com.github.ipcam.exception.CameraConnectionException;
+import com.github.ipcam.exception.XmEyeException;
+import com.github.ipcam.xmeye.CONF_MODIFY_PSW;
+import com.github.ipcam.xmeye.H264_DVR_CLIENTINFO;
+import com.github.ipcam.xmeye.H264_DVR_DEVICEINFO;
 import com.sun.jna.ptr.IntByReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +23,12 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.github.ipcam.entity.comm.STRUCTURE_CONTEXT.*;
-import static com.github.ipcam.entity.xmeye.NetSDK.netSDK;
-import static com.github.ipcam.entity.xmeye.XNetSDK.xNetSDK;
-import static com.github.ipcam.entity.xmeye.XmEyeManager.getErrorMsg;
-import static com.github.ipcam.entity.xmeye.XmEyeManager.handleChannel;
 import static com.github.ipcam.utils.FileUtils.getFileSuffix;
 import static com.github.ipcam.utils.GraphicsUtils.createNewImage;
+import static com.github.ipcam.xmeye.NetSDK.netSDK;
+import static com.github.ipcam.xmeye.XNetSDK.xNetSDK;
+import static com.github.ipcam.xmeye.XmEyeManager.getErrorMsg;
+import static com.github.ipcam.xmeye.XmEyeManager.handleChannel;
 
 /**
  * XmEyeCameraConnection
@@ -58,7 +58,7 @@ public class XmEyeCameraConnection extends AbstractCameraConnection {
         if (userHandle < 0) {
             throw new CameraConnectionException("Connect to xmeye camera failed");
         }
-        logger.info("Connect to the xmeye camera success");
+        logger.info("Connect to the xmeye camera success,connection info:{}", this);
         this.networkCamera = camera;
     }
 

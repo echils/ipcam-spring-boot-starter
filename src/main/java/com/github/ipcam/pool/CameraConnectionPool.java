@@ -1,7 +1,7 @@
 package com.github.ipcam.pool;
 
 import com.github.ipcam.ICameraConnection;
-import com.github.ipcam.entity.exception.CameraConnectionException;
+import com.github.ipcam.exception.CameraConnectionException;
 import org.apache.commons.pool2.KeyedPooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author echils
  */
-public class CameraConnectionPool extends GenericKeyedObjectPool<String, ICameraConnection> {
+public class CameraConnectionPool<T> extends GenericKeyedObjectPool<T, ICameraConnection> {
 
 
     private static final Logger logger = LoggerFactory.getLogger(CameraConnectionPool.class);
@@ -25,7 +25,7 @@ public class CameraConnectionPool extends GenericKeyedObjectPool<String, ICamera
      *
      * @param factory the factory to be used to create entries
      */
-    public CameraConnectionPool(KeyedPooledObjectFactory<String, ICameraConnection> factory) {
+    public CameraConnectionPool(KeyedPooledObjectFactory<T, ICameraConnection> factory) {
         super(factory);
     }
 
@@ -40,7 +40,7 @@ public class CameraConnectionPool extends GenericKeyedObjectPool<String, ICamera
      *                the configuration object will not be reflected in the
      *                pool.
      */
-    public CameraConnectionPool(CameraConnectionPoolFactory factory, GenericKeyedObjectPoolConfig config) {
+    public CameraConnectionPool(CameraConnectionPoolFactory<T> factory, GenericKeyedObjectPoolConfig config) {
         super(factory, config);
         logger.info("factory finder:{}", factory.getCameraSupplier().getClass());
         logger.info("pool config:{}", config);
@@ -56,7 +56,7 @@ public class CameraConnectionPool extends GenericKeyedObjectPool<String, ICamera
      * @param key
      */
     @Override
-    public ICameraConnection borrowObject(String key) {
+    public ICameraConnection borrowObject(T key) {
         try {
             return super.borrowObject(key);
         } catch (Exception e) {
@@ -115,7 +115,7 @@ public class CameraConnectionPool extends GenericKeyedObjectPool<String, ICamera
      * @return object instance from the keyed pool
      */
     @Override
-    public ICameraConnection borrowObject(String key, long borrowMaxWaitMillis) {
+    public ICameraConnection borrowObject(T key, long borrowMaxWaitMillis) {
         try {
             return super.borrowObject(key, borrowMaxWaitMillis);
         } catch (Exception e) {
@@ -143,7 +143,7 @@ public class CameraConnectionPool extends GenericKeyedObjectPool<String, ICamera
      *                               returned to the pool multiple times
      */
     @Override
-    public void returnObject(String key, ICameraConnection cameraConnection) {
+    public void returnObject(T key, ICameraConnection cameraConnection) {
         if (cameraConnection != null) {
             super.returnObject(key, cameraConnection);
         }

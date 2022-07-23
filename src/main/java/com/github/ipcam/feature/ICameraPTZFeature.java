@@ -2,13 +2,14 @@ package com.github.ipcam.feature;
 
 import com.github.ipcam.entity.PTZ;
 import com.github.ipcam.entity.PresetPointInfo;
-import com.github.ipcam.entity.exception.CameraNotSupportException;
 import com.github.ipcam.entity.reference.CruiseEnum;
 import com.github.ipcam.entity.reference.PTZControlEnum;
 import com.github.ipcam.entity.reference.PresetEnum;
 import com.github.ipcam.entity.reference.TrackEnum;
+import com.github.ipcam.exception.CameraNotSupportException;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -66,7 +67,7 @@ public interface ICameraPTZFeature {
      * @param presetEnum camera preset command
      * @param index      camera preset index
      */
-    default void presetExpand(String channel, PresetEnum presetEnum, int index) {
+    default int presetExpand(String channel, PresetEnum presetEnum, int index) {
         throw new CameraNotSupportException();
     }
 
@@ -162,6 +163,19 @@ public interface ICameraPTZFeature {
      * @param ptz         the position to be reached
      */
     default void gotoPresetPoint(String channel, int presetIndex, PTZ ptz) throws InterruptedException {
+        throw new CameraNotSupportException();
+    }
+
+    /**
+     * Goto the preset point of the network camera,PTZ will used to check
+     *
+     * @param channel     camera ip channel
+     * @param presetIndex the presetIndex to be reached
+     * @param ptz         the position to be reached
+     * @param timeout     the timeout value
+     * @param timeUnit    the timeout unit
+     */
+    default void gotoPresetPoint(String channel, int presetIndex, PTZ ptz, int timeout, TimeUnit timeUnit) throws InterruptedException {
         throw new CameraNotSupportException();
     }
 

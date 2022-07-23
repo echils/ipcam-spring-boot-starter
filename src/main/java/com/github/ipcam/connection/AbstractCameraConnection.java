@@ -65,7 +65,6 @@ public abstract class AbstractCameraConnection implements ICameraConnection {
      */
     private boolean health = true;
 
-
     @Override
     public boolean isConnected() {
         return networkCamera != null && userHandle != null && userHandle >= 0;

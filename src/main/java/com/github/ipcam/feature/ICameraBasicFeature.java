@@ -6,11 +6,11 @@ import com.github.ipcam.entity.CameraInfo;
 import java.util.List;
 
 /**
- * ICameraBasicSupport
+ * ICameraBasicFeature
  *
  * @author echils
  */
-public interface ICameraBasicFeature extends ICameraDriverFeature {
+public interface ICameraBasicFeature {
 
 
     /**

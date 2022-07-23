@@ -2,7 +2,7 @@ package com.github.ipcam.feature;
 
 
 import com.github.ipcam.entity.Temperature;
-import com.github.ipcam.entity.exception.CameraNotSupportException;
+import com.github.ipcam.exception.CameraNotSupportException;
 
 import java.util.List;
 

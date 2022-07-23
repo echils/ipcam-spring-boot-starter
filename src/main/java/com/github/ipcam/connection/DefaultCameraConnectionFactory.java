@@ -3,7 +3,7 @@ package com.github.ipcam.connection;
 import com.github.ipcam.ICameraConnection;
 import com.github.ipcam.ICameraConnectionFactory;
 import com.github.ipcam.entity.NetworkCamera;
-import com.github.ipcam.entity.exception.CameraConnectionException;
+import com.github.ipcam.exception.CameraConnectionException;
 
 import java.util.ServiceLoader;
 
@@ -18,8 +18,7 @@ public class DefaultCameraConnectionFactory implements ICameraConnectionFactory 
 
     @Override
     public ICameraConnection create(NetworkCamera camera) {
-        for (AbstractCameraConnection connection :
-                ServiceLoader.load(AbstractCameraConnection.class)) {
+        for (AbstractCameraConnection connection : ServiceLoader.load(AbstractCameraConnection.class)) {
             if (connection.support() == camera.getDriverType()) {
                 connection.connect(camera);
                 return connection;

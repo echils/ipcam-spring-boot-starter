@@ -119,7 +119,7 @@ public interface W32API extends StdCallLibrary, W32Errors {
 
     class HANDLEByReference extends ByReference {
         public HANDLEByReference() {
-            this((W32API.HANDLE) null);
+            this(null);
         }
 
         public HANDLEByReference(W32API.HANDLE h) {
@@ -243,4 +243,5 @@ public interface W32API extends StdCallLibrary, W32Errors {
             }
         }
     }
+
 }
